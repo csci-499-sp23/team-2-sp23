@@ -1,0 +1,26 @@
+nav {
+  height: var(--navbar-height);
+  background-color: hsl(25, 50%, 45%);
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.navbar-content {
+  width: var(--content-width);
+  height: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 2rem;
+}
+
+.right-logo {
+  margin-left: auto;
+}
+
+.github-logo {
+  width: 36px;
+  height: 36px;
+}
