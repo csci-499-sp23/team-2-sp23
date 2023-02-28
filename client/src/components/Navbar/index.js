@@ -14,7 +14,13 @@ export default function Navbar() {
         <div>Search</div>
         <div>Saved</div>
         <div className="right-logo">
-          <img src={githubLogo} className="github-logo" alt="github-logo" />
+          <a
+            href="https://github.com/csci-499-sp23/team-2-sp23"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <img src={githubLogo} className="github-logo" alt="github-logo" />
+          </a>
         </div>
       </div>
     </nav>
