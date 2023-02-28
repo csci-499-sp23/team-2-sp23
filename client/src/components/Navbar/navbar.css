@@ -9,6 +9,7 @@ nav {
 
 .navbar-content {
   width: var(--content-width);
+  height: 100%;
   display: flex;
   justify-content: flex-start;
   align-items: center;
