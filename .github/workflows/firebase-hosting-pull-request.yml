@@ -12,6 +12,6 @@ jobs:
       - run: (cd client && npm ci) && (cd client && npm run build)
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
-          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          repoToken: '${{ secrets.ORIGIN_GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_BUDGET_EATS }}'
           projectId: budget-eats
