@@ -6,7 +6,6 @@ function App() {
       <Navbar />
       <div className="page-container">
         The quick brown fox jumped over the lazy dog
-        test integration
       </div>
     </>
   );
