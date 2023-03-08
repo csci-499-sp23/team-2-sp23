@@ -3,7 +3,7 @@ import listEndpoints from "express-list-endpoints";
 import ExampleRouter from "./example";
 import mongoose from "mongoose";
 
-import * as dotenv from  "dotenv";
+import * as dotenv from "dotenv";
 dotenv.config();
 
 async function generateRoutes(app: Express): Promise<void> {
@@ -12,8 +12,9 @@ async function generateRoutes(app: Express): Promise<void> {
     .connect(process.env.CONNECTION_URL!)
     .then(() => {
       console.log("Successfully Connected To MongoDB");
+      console.log("yo");
     })
-    .catch(console.error)
+    .catch(console.error);
   console.table(listEndpoints(app));
 }
 
