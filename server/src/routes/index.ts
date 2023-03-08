@@ -12,7 +12,7 @@ async function generateRoutes(app: Express): Promise<void> {
     .connect(process.env.CONNECTION_URL!)
     .then(() => {
       console.log("Successfully Connected To MongoDB");
-      console.log("yo");
+      console.log("yo this is cool");
     })
     .catch(console.error);
   console.table(listEndpoints(app));
