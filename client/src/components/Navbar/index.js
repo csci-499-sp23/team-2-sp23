@@ -1,7 +1,13 @@
 import React from "react";
 import githubLogo from "../../assets/images/github-logo.png";
+import { Link } from "react-router-dom";
 import logo from "../../assets/images/logo.png";
 import "./navbar.css";
+
+const linkStyle = {
+  color: "white",
+  textDecoration: "none",
+};
 
 export default function Navbar() {
   return (
@@ -10,9 +16,15 @@ export default function Navbar() {
         <div>
           <img src={logo} className="github-logo" alt="github-logo" />
         </div>
-        <div>Home</div>
-        <div>Search</div>
-        <div>Saved</div>
+        <Link style={linkStyle} to="/home">
+          Home
+        </Link>
+        <Link style={linkStyle } to="/search">
+          Search
+        </Link>
+        <Link style={linkStyle} to="/saved">
+          Saved
+        </Link>
         <div className="right-logo">
           <a
             href="https://github.com/csci-499-sp23/team-2-sp23"
