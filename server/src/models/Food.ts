@@ -7,26 +7,25 @@ export interface FoodAttributes {
   price: number;
 }
 
-
 //templating the interface as a schema
 export const FoodSchema: Schema<FoodAttributes> = new Schema<FoodAttributes>({
-    _id: {
-        type: Schema.Types.ObjectId,
-        required: true,
-        auto : true
-    },
-    name: {
-        type: String, 
-        required: true,
-    },
-    description: {
-        type: String,
-        required: false,
-    },
-    price: {
-        type: Number,
-        required: true
-    }
+  _id: {
+    type: Schema.Types.ObjectId,
+    required: true,
+    auto: true,
+  },
+  name: {
+    type: String,
+    required: true,
+  },
+  description: {
+    type: String,
+    required: false,
+  },
+  price: {
+    type: Number,
+    required: true,
+  },
 });
 
-export const FoodModel : Model<FoodAttributes> =  model("Food", FoodSchema);
+export const FoodModel: Model<FoodAttributes> = model("Food", FoodSchema);
