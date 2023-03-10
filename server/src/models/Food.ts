@@ -1,4 +1,4 @@
-import mongoose, { ObjectId, Schema, Model, model } from "mongoose";
+import { ObjectId, Schema, Model, model } from "mongoose";
 
 export interface FoodAttributes {
   _id: ObjectId;
