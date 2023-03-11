@@ -12,6 +12,7 @@ function removeExtraWhiteSpace(phrase: string): string {
 }
 
 // Dig into a price table to retrieve the lowest price
+// Used when a menu item has multiple prices - we decided to just take the cheapest one
 function lowestTablePrice(table: HTMLTableElement): number {
   const prices = [...table.querySelectorAll("td")].map((cell) => {
     const priceCellContent = cell.textContent!;
@@ -62,6 +63,7 @@ function scrapeFromDetails(detailsDiv: HTMLElement): FoodItem {
 }
 
 export function scrapeYelp(document: Document): FoodItem[] {
+  // Case 1: Food item has image
   const foodsWithImage: FoodItem[] = [
     ...document.querySelectorAll<HTMLElement>(".menu-item"),
   ]
@@ -70,8 +72,12 @@ export function scrapeYelp(document: Document): FoodItem[] {
       const [imageDiv, detailsDiv]: HTMLElement[] =
         getItemCardDetailsNode(itemCard);
 
-      const imageSrc: string =  imageDiv.querySelector<HTMLImageElement>(".photo-box-img")!.src;
+      const imageSrc: string =
+        imageDiv.querySelector<HTMLImageElement>(".photo-box-img")!.src;
 
+      // Little hack - get full resolution of image by text replacement
+      // Size on website: https://s3-media0.fl.yelpcdn.com/bphoto/saiZeLbnPNTrPOjt3REjYg/60s.jpg
+      // Full resolution: https://s3-media0.fl.yelpcdn.com/bphoto/saiZeLbnPNTrPOjt3REjYg/o.jpg
       const fullImageSrc: string = imageSrc.replace("60s.jpg", "o.jpg");
 
       const details: FoodItem = {
@@ -82,6 +88,7 @@ export function scrapeYelp(document: Document): FoodItem[] {
       return details;
     });
 
+  // Case 2 : Food item has placeholder image
   const foodWithPlaceholderImage = [
     ...document.querySelectorAll<HTMLElement>(".menu-item"),
   ]
@@ -93,6 +100,7 @@ export function scrapeYelp(document: Document): FoodItem[] {
       return details;
     });
 
+  // Case 3 : Food item has no image
   const foodWithNoImage = [...document.querySelectorAll(".menu-item")]
     .filter((el) => el.className.includes("menu-item menu-item-no-photo"))
     .map((itemCard) => {
