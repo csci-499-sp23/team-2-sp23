@@ -5,18 +5,20 @@ interface FoodItem {
   image_url?: string | null;
 }
 
+// removes extra whitespaces in text
+// source: https://stackoverflow.com/questions/16974664/how-to-remove-the-extra-spaces-in-a-string
+function removeExtraWhiteSpace(phrase: string): string {
+  return phrase.replace(/\s+/g, " ").trim();
+}
+
 // Dig into a price table to retrieve the lowest price
 function lowestTablePrice(table: HTMLTableElement): number {
-  const priceOptions: string[] = table.innerText.split(/\n/);
-  const prices = priceOptions.map((option: string) => {
-    // the actual is price after a \t character
-    const [_, priceString] = option.split(/\t/);
+  const prices = [...table.querySelectorAll("td")].map((cell) => {
+    const priceCellContent = cell.textContent!;
+    const price = removeExtraWhiteSpace(priceCellContent);
 
-    // parse `$123` to `123`
-    const price = parseFloat(priceString.slice(1));
-    return price;
+    return parseFloat(price.slice(1));
   });
-
   const lowestPrice = Math.min(...prices);
 
   return lowestPrice;
@@ -37,24 +39,24 @@ function scrapeFromDetails(detailsDiv: HTMLElement): FoodItem {
   const descriptionTag: HTMLElement = details.querySelector(
     ".menu-item-details-description"
   )!;
-  const foodName: string = (details.children[0] as HTMLElement).innerText;
+  const foodName: string = details.children[0].textContent!;
 
   const description: string | null = descriptionTag
-    ? descriptionTag.innerText
+    ? descriptionTag.textContent
     : null;
 
-  const priceTable = priceDiv.querySelector("table");
+  const priceTable = priceDiv.querySelector("table")!;
   const hasPriceTable = !!priceTable;
 
-  const priceString = priceDiv.innerText;
+  const priceString = removeExtraWhiteSpace(priceDiv.textContent!);
   const price = hasPriceTable
     ? lowestTablePrice(priceTable)
     : parseFloat(priceString.slice(1));
 
   return {
     image_url: null,
-    name: foodName,
-    description: description,
+    name: removeExtraWhiteSpace(foodName),
+    description: !!description ? removeExtraWhiteSpace(description) : null,
     price: price,
   };
 }
@@ -68,8 +70,7 @@ export function scrapeYelp(document: Document): FoodItem[] {
       const [imageDiv, detailsDiv]: HTMLElement[] =
         getItemCardDetailsNode(itemCard);
 
-      const imageSrc: string =
-        imageDiv.querySelector<HTMLImageElement>(".photo-box-img")!.src;
+      const imageSrc: string =  imageDiv.querySelector<HTMLImageElement>(".photo-box-img")!.src;
 
       const fullImageSrc: string = imageSrc.replace("60s.jpg", "o.jpg");
 
@@ -98,37 +99,10 @@ export function scrapeYelp(document: Document): FoodItem[] {
       const [detailsDiv]: HTMLElement[] = [
         ...itemCard.children[0].children,
       ] as HTMLElement[];
-
       const details = scrapeFromDetails(detailsDiv);
 
       return details;
     });
 
-  console.table(foodsWithImage);
-  console.table(foodWithPlaceholderImage);
-  console.table(foodWithNoImage);
-
-  const scrapedFoods = [
-    ...foodsWithImage,
-    ...foodWithPlaceholderImage,
-    ...foodWithNoImage,
-  ];
-
-  const totalScraped = scrapedFoods.length;
-
-  const expectedMenuItems = document.querySelectorAll(".menu-item").length;
-
-  if (expectedMenuItems !== totalScraped) {
-    throw Error(
-      `
-      Expected ${expectedMenuItems}\n
-      Scraped ${totalScraped}\n
-      Missing${expectedMenuItems - totalScraped}
-      `
-    );
-  }
-
-  console.log(`Successfully scraped all ${totalScraped} items!`);
-
-  return scrapedFoods;
+  return [...foodsWithImage, ...foodWithPlaceholderImage, ...foodWithNoImage];
 }
