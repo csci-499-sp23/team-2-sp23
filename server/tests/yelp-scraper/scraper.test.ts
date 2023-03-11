@@ -6,6 +6,7 @@ import tacoBellHTML from "./restaurant-doms/taco-bell-cantina-brooklyn-2";
 import rollNRoaster from "./restaurant-doms/roll-n-roaster-brooklyn";
 import { JSDOM } from "jsdom";
 import { scrapeYelp } from "../../src/jobs/yelp-scraper";
+import { expect, test } from "@jest/globals";
 
 function menuItemCount(DOM: Document): number {
   const menuItemClassName = ".menu-item";
