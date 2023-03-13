@@ -1,14 +1,12 @@
 import { ObjectId, Schema, Model, model } from "mongoose";
 
-export interface FoodAttributes {
+export interface FoodDocument extends FoodAttributes {
   _id: ObjectId;
-  name: string;
-  description?: string;
-  price: number;
+  created_at: Date;
 }
 
 //templating the interface as a schema
-export const FoodSchema: Schema<FoodAttributes> = new Schema<FoodAttributes>({
+export const FoodSchema: Schema<FoodDocument> = new Schema<FoodDocument>({
   _id: {
     type: Schema.Types.ObjectId,
     required: true,
@@ -26,6 +24,14 @@ export const FoodSchema: Schema<FoodAttributes> = new Schema<FoodAttributes>({
     type: Number,
     required: true,
   },
+  image_url: {
+    type: String,
+    required: false,
+  },
+  created_at: {
+    type: Date,
+    required: true,
+  },
 });
 
-export const FoodModel: Model<FoodAttributes> = model("Food", FoodSchema);
+export const FoodModel: Model<FoodDocument> = model("Food", FoodSchema);

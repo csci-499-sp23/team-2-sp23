@@ -1,5 +1,4 @@
 import mongoose, { ObjectId } from "mongoose";
-import { FoodAttributes } from "../models/Food";
 import { FoodModel } from "../models/Food";
 
 // Create a single new food item
@@ -13,8 +12,12 @@ async function createMany(foods: FoodAttributes[]): Promise<FoodAttributes[]> {
 }
 
 // Delete a single food item by an id
-async function deleteFoodById(foodId: ObjectId): Promise<void> {
-  FoodModel.deleteOne(foodId);
+async function deleteFoodById(foodId: ObjectId): Promise<number> {
+  const deletedCount = await FoodModel.deleteOne(foodId).then(
+    (res) => res.deletedCount
+  );
+  
+  return deletedCount;
 }
 
 // Find all foods that match the given query
@@ -23,7 +26,7 @@ async function findAll(query: any): Promise<FoodAttributes[]> {
 }
 
 // Find a single food by an id
-async function findFoodById(foodId: ObjectId): Promise<FoodAttributes | null> {
+async function findFoodById(foodId: any): Promise<FoodAttributes | null> {
   return FoodModel.findById(foodId);
 }
 
