@@ -1,5 +1,12 @@
 import { ObjectId, Schema, Model, model } from "mongoose";
 
+export interface FoodAttributes {
+  name: string;
+  description: string | null;
+  price: number;
+  image_url: string | null;
+}
+
 export interface FoodDocument extends FoodAttributes {
   _id: ObjectId;
   created_at: Date;
