@@ -1,6 +1,6 @@
 import { Express } from "express";
-import listEndpoints from "express-list-endpoints";
 import ExampleRouter from "./example";
+import listEndpoints from "express-list-endpoints";
 import mongoose from "mongoose";
 
 import * as dotenv from "dotenv";
