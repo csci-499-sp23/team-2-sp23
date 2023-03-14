@@ -16,14 +16,14 @@ export const manyTestFoods: FoodAttributes[] = [
   },
   {
     name: "test food name2",
-    description: "test food description2",
+    description: null,
     image_url: "test food image2",
     price: 2.22,
   },
   {
     name: "test food name3",
     description: "test food description3",
-    image_url: "test food image3",
+    image_url: null,
     price: 3.33,
   },
 ];

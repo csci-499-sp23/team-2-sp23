@@ -1,9 +1,12 @@
 import mongoose from "mongoose";
-import { singleTestFood, foodKeys, manyTestFoods } from "./constants";
-import { FoodModel, FoodDocument } from "../../../src/models/Food";
+import { singleTestFood, manyTestFoods } from "./constants";
+import {
+  FoodModel,
+  FoodDocument,
+  FoodAttributes,
+} from "../../../src/models/Food";
 import FoodService from "../../../src/services/food";
-import { expect, test } from "@jest/globals";
-import { pick } from "lodash";
+import { expect, test, beforeAll, afterAll } from "@jest/globals";
 
 import * as dotenv from "dotenv";
 dotenv.config();
@@ -11,23 +14,36 @@ dotenv.config();
 const CONNECT_SUCCESS = "Connected to MongoDB";
 async function connectToDB(): Promise<string> {
   return mongoose
-    .connect(process.env.CONNECTION_URL!)
+    .connect(process.env.CONNECTION_URL_TEST!)
     .then(() => CONNECT_SUCCESS);
 }
 
-test("Connects to MongoDB", async () => {
+// expects two food objects to have the same values
+function expectFoodEquality(
+  foodA: FoodAttributes,
+  foodB: FoodAttributes
+): void {
+  expect(foodA.name).toBe(foodB.name);
+  expect(foodA.description).toBe(foodB.description);
+  expect(foodA.price).toBe(foodB.price);
+  expect(foodA.image_url).toBe(foodB.image_url);
+}
+
+beforeAll(async () => {
   const connectionResult = await connectToDB();
   expect(connectionResult).toBe(CONNECT_SUCCESS);
 });
 
+afterAll(async () => {
+  mongoose.connection.close();
+});
+
 test("Creates a food", async () => {
   const createdFood = await FoodService.create(singleTestFood);
-  // ensure not null
+
   expect(createdFood).toBeDefined();
-  // ensure input match
-  expect(pick(createdFood, foodKeys)).toStrictEqual(singleTestFood);
-  // ensure date not null
   expect(createdFood.created_at).toBeDefined();
+  expectFoodEquality(createdFood, singleTestFood);
 
   // delete test document
   if (!!createdFood) {
@@ -42,11 +58,10 @@ test("Creates many foods", async () => {
   // ensure creation
   expect(createdFoods.length).toBe(manyTestFoods.length);
 
+  // ensure exact match
   createdFoods.forEach((createdFood, index) => {
-    // ensure equality
-    expect(pick(createdFood, foodKeys)).toStrictEqual(manyTestFoods[index]);
-    // ensure date
     expect(createdFood.created_at).toBeDefined();
+    expectFoodEquality(createdFood, manyTestFoods[index]);
   });
 
   // delete test documents
@@ -67,10 +82,11 @@ test("Finds a food by ID", async () => {
     createdFoodId
   );
 
-  // ensure not null
+  // ensure retrieval
   expect(foundFood).toBeDefined();
-  // ensure input match
-  expect(JSON.stringify(foundFood)).toBe(JSON.stringify(createdFood));
+  expect(foundFood!._id).toStrictEqual(createdFood._id);
+  expect(foundFood!.created_at).toStrictEqual(createdFood.created_at);
+  expectFoodEquality(foundFood!, createdFood);
 
   // delete test document
   if (!!createdFood) {
@@ -85,12 +101,9 @@ test("Deletes a food by ID", async () => {
   });
 
   const deleteCount = await FoodService.deleteFoodById(createdFood._id);
-
   expect(deleteCount).toBe(1);
-  const foundCount: number = await FoodModel.countDocuments({
-    _id: createdFood._id,
-  });
 
+  const foundCount = await FoodModel.countDocuments({ _id: createdFood._id });
   expect(foundCount).toBe(0);
 });
 
@@ -102,8 +115,13 @@ test("Finds all foods that fit a budget", async () => {
   const retrievedFoods = await FoodService.findAll(budgetQuery);
 
   expect(retrievedFoods.length).toBe(foodsWithinBudget.length);
+
+  // ensure exact match
   retrievedFoods.forEach((retrievedFood, index) => {
-    // ensure equality
-    expect(retrievedFood).toStrictEqual(foodsWithinBudget[index]);
+    const expectedFood = foodsWithinBudget[index];
+
+    expect(retrievedFood!._id).toStrictEqual(expectedFood._id);
+    expect(retrievedFood!.created_at).toStrictEqual(expectedFood.created_at);
+    expectFoodEquality(retrievedFood!, expectedFood);
   });
 });
