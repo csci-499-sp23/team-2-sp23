@@ -21,7 +21,7 @@ async function createMany(foods: FoodAttributes[]): Promise<FoodDocument[]> {
 
 // Delete a single food item by an id
 async function deleteFoodById(foodId: ObjectId): Promise<number> {
-  const deletedCount = await FoodModel.deleteOne(foodId).then(
+  const deletedCount = await FoodModel.deleteOne({ _id: foodId }).then(
     (res) => res.deletedCount
   );
 
