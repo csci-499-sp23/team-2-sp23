@@ -6,8 +6,7 @@ import {
   RestaurantModel,
 } from "../models/Restaurant";
 
-/* Remove `| null` after completion for each function */
-
+// Remove `| null` after completion
 async function create(
   restaurant: RestaurantAttributes
 ): Promise<RestaurantDocument | null> {

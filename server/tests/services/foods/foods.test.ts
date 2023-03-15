@@ -1,9 +1,7 @@
 import { ObjectId } from "mongoose";
-import { singleTestFood, manyTestFoods, testRestaurant } from "./constants";
-import {
-  FoodModel,
-  FoodDocument,
-} from "../../../src/models/Food";
+import { singleTestFood, manyTestFoods } from "./constants";
+import { testRestaurant } from "../restaurants/constants";
+import { FoodModel, FoodDocument } from "../../../src/models/Food";
 import {
   RestaurantAttributes,
   RestaurantModel,

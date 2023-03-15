@@ -2,10 +2,10 @@ import MenuService from "../../../src/services/menu";
 import { MenuDocument, MenuModel } from "../../../src/models/Menu";
 import { connectToDatabase, resetDatabase } from "../database";
 import { testMenu } from "./constants";
-import { generateRestaurantId, testRestaurant } from "../restaurants/constants";
+import { testRestaurant } from "../restaurants/constants";
+import { generateRestaurantId } from "../restaurants/utils";
 import { expect, test, beforeAll, afterAll } from "@jest/globals";
 import {
-  FoodAttributes,
   FoodDocument,
   FoodModel,
 } from "../../../src/models/Food";

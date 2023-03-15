@@ -30,7 +30,7 @@ export interface RestaurantAttributes {
   review_count: number;
   location: Location;
   transactions: string[];
-  price_category: string;
+  price_category?: string | null;
   address: RestaurantAddress;
   phone: string;
   display_phone: string;
@@ -91,7 +91,7 @@ export const RestaurantSchema: Schema<RestaurantDocument> =
     },
     price_category: {
       type: String,
-      required: true,
+      required: false,
     },
     address: {
       type: Object,
@@ -99,11 +99,11 @@ export const RestaurantSchema: Schema<RestaurantDocument> =
     },
     phone: {
       type: String,
-      required: true,
+      required: false,
     },
     display_phone: {
       type: String,
-      required: true,
+      required: false,
     },
     menu_id: {
       type: Schema.Types.ObjectId,
