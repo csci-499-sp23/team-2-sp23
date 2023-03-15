@@ -29,7 +29,7 @@ export const manyTestFoods: TestFoodAttributes[] = [
     image_url: null,
     price: 3.33,
   },
-];
+]; 
 
 export const testRestaurant: RestaurantAttributes = {
   yelp_id: "oe8GEFE4QLFAKt87y7zcgA",
