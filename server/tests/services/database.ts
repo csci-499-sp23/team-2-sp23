@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import { FoodModel } from "../../src/models/Food";
 import { RestaurantModel } from "../../src/models/Restaurant";
+import { MenuModel } from "../../src/models/Menu";
 import { expect } from "@jest/globals";
 
 import * as dotenv from "dotenv";
@@ -19,7 +20,8 @@ export async function connectToDatabase(): Promise<void> {
 export async function resetDatabase(): Promise<void> {
   expect(databaseFolder).toBe(EXPECTED_DB_FOLDER);
 
-  await FoodModel.collection.drop();
-  await RestaurantModel.collection.drop();
-  mongoose.connection.close();
+  await FoodModel.deleteMany();
+  await MenuModel.deleteMany();
+  await RestaurantModel.deleteMany();
+  await mongoose.connection.close();
 }

@@ -1,20 +1,20 @@
 import { ObjectId } from "mongoose";
-import { MenuAttributes, MenuDocument } from "../models/Menu";
+import { MenuAttributes, MenuDocument, MenuModel } from "../models/Menu";
+import { FoodDocument } from "../models/Food";
 
-/* Remove `| null` after completion for each function */
-
+// Remove `| null` after completion*
 async function create(menu: MenuAttributes): Promise<MenuDocument | null> {
   return null;
 }
 
-async function insertMany(
+async function setFoods(
   menuId: ObjectId,
   foodIds: ObjectId[]
 ): Promise<MenuDocument | null> {
   return null;
 }
 
-async function getFoods(menuId: ObjectId): Promise<MenuDocument | null> {
+async function getFoods(menuId: ObjectId): Promise<FoodDocument[] | null> {
   return null;
 }
 
@@ -24,7 +24,7 @@ async function markDeprecated(menuId: ObjectId): Promise<MenuDocument | null> {
 
 export default {
   create,
-  insertMany,
+  setFoods,
   getFoods,
   markDeprecated,
 };
