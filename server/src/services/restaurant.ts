@@ -3,6 +3,7 @@ import {
   Coordinates,
   RestaurantAttributes,
   RestaurantDocument,
+  RestaurantModel,
 } from "../models/Restaurant";
 
 /* Remove `| null` after completion for each function */
@@ -14,6 +15,7 @@ async function create(
 }
 
 async function updateMenu(
+  restaurantId: ObjectId,
   menuId: ObjectId
 ): Promise<RestaurantDocument | null> {
   return null;
