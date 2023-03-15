@@ -1,6 +1,6 @@
 import { ObjectId, Schema, Model, model } from "mongoose";
 
-export interface RestaurantLocation {
+export interface RestaurantAddress {
   address1: string | null;
   address2: string | null;
   address3: string | null;
@@ -11,9 +11,12 @@ export interface RestaurantLocation {
   display_address: string[];
 }
 
-export interface Coordinates {
-  latitude: number;
-  longitude: number;
+type Longitude = number;
+type Latitude = number;
+export type Coordinates = [Longitude, Latitude];
+export interface Location {
+  type: string;
+  coordinates: Coordinates;
 }
 
 export interface RestaurantAttributes {
@@ -25,10 +28,10 @@ export interface RestaurantAttributes {
   food_categories: string[];
   rating: number;
   review_count: number;
-  coordinates: Coordinates;
+  location: Location;
   transactions: string[];
   price_category: string;
-  location: RestaurantLocation;
+  address: RestaurantAddress;
   phone: string;
   display_phone: string;
   menu_id?: ObjectId;
@@ -78,7 +81,7 @@ export const RestaurantSchema: Schema<RestaurantDocument> =
       type: Number,
       required: true,
     },
-    coordinates: {
+    location: {
       type: Object,
       required: true,
     },
@@ -90,7 +93,7 @@ export const RestaurantSchema: Schema<RestaurantDocument> =
       type: String,
       required: true,
     },
-    location: {
+    address: {
       type: Object,
       required: true,
     },
@@ -112,6 +115,10 @@ export const RestaurantSchema: Schema<RestaurantDocument> =
       required: true,
     },
   });
+
+RestaurantSchema.index({
+  location: "2dsphere",
+});
 
 export const RestaurantModel: Model<RestaurantDocument> =
   model<RestaurantDocument>("Restaurant", RestaurantSchema);
