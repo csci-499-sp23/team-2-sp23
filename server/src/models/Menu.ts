@@ -3,6 +3,7 @@ import { ObjectId, Schema, Model, model } from "mongoose";
 export interface MenuAttributes {
   foods: ObjectId[];
   deprecated: false;
+  restaurant_id: ObjectId;
 }
 
 export interface MenuDocument extends MenuAttributes {
@@ -21,15 +22,23 @@ export const MenuSchema: Schema<MenuDocument> = new Schema<MenuDocument>({
     required: true,
     ref: "Food",
   },
-  created_at: {
-    type: Date,
-    required: true,
-  },
   deprecated: {
     type: Boolean,
     default: false,
     required: true,
   },
+  restaurant_id: {
+    type: Schema.Types.ObjectId,
+    required: true,
+    ref: "Restaurant",
+  },
+  created_at: {
+    type: Date,
+    required: true,
+  },
 });
 
-export const MenuModel: Model<MenuDocument> = model<MenuDocument>("Menu", MenuSchema);
+export const MenuModel: Model<MenuDocument> = model<MenuDocument>(
+  "Menu",
+  MenuSchema
+);
