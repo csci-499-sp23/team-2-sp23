@@ -1,4 +1,4 @@
-import mongoose, { ObjectId } from "mongoose";
+import { ObjectId } from "mongoose";
 import { singleTestFood, manyTestFoods, testRestaurant } from "./constants";
 import {
   FoodModel,
@@ -11,16 +11,7 @@ import {
 } from "../../../src/models/Restaurant";
 import FoodService from "../../../src/services/food";
 import { expect, test, beforeAll, afterAll } from "@jest/globals";
-
-import * as dotenv from "dotenv";
-dotenv.config();
-
-const CONNECT_SUCCESS = "Connected to MongoDB";
-async function connectToDB(): Promise<string> {
-  return mongoose
-    .connect(process.env.CONNECTION_URL_TEST!)
-    .then(() => CONNECT_SUCCESS);
-}
+import { connectToDatabase, resetDatabase } from "../database";
 
 // expects two food objects to have the same values
 function expectFoodEquality(
@@ -34,15 +25,11 @@ function expectFoodEquality(
 }
 
 beforeAll(async () => {
-  const connectionResult = await connectToDB();
-  expect(connectionResult).toBe(CONNECT_SUCCESS);
+  await connectToDatabase();
 });
 
 afterAll(async () => {
-  // Clear test database
-  await FoodModel.collection.drop();
-  await RestaurantModel.collection.drop();
-  mongoose.connection.close();
+  await resetDatabase();
 });
 
 async function generateRestaurantId(
