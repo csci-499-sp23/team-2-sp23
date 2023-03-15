@@ -5,6 +5,7 @@ export interface FoodAttributes {
   description: string | null;
   price: number;
   image_url: string | null;
+  restaurant_id: ObjectId;
 }
 
 export interface FoodDocument extends FoodAttributes {
@@ -34,6 +35,11 @@ export const FoodSchema: Schema<FoodDocument> = new Schema<FoodDocument>({
   image_url: {
     type: String,
     required: false,
+  },
+  restaurant_id: {
+    type: Schema.Types.ObjectId,
+    required: true,
+    ref: "Restaurant",
   },
   created_at: {
     type: Date,

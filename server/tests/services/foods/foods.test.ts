@@ -1,10 +1,14 @@
-import mongoose from "mongoose";
-import { singleTestFood, manyTestFoods } from "./constants";
+import mongoose, { ObjectId } from "mongoose";
+import { singleTestFood, manyTestFoods, testRestaurant } from "./constants";
 import {
   FoodModel,
   FoodDocument,
   FoodAttributes,
 } from "../../../src/models/Food";
+import {
+  RestaurantAttributes,
+  RestaurantModel,
+} from "../../../src/models/Restaurant";
 import FoodService from "../../../src/services/food";
 import { expect, test, beforeAll, afterAll } from "@jest/globals";
 
@@ -35,25 +39,43 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
+  // Clear test database
+  await FoodModel.collection.drop();
+  await RestaurantModel.collection.drop();
   mongoose.connection.close();
 });
 
+async function generateRestaurantId(
+  restaurant: RestaurantAttributes
+): Promise<ObjectId> {
+  return RestaurantModel.create({
+    ...restaurant,
+    created_at: new Date(),
+  }).then((restaurant) => restaurant._id)!;
+}
+
 test("Creates a food", async () => {
-  const createdFood = await FoodService.create(singleTestFood);
+  const restaurantId = await generateRestaurantId(testRestaurant);
+  const testFoodWithRestaurantId = {
+    ...singleTestFood,
+    restaurant_id: restaurantId,
+  };
+  const createdFood = await FoodService.create(testFoodWithRestaurantId);
 
   expect(createdFood).toBeDefined();
   expect(createdFood.created_at).toBeDefined();
-  expectFoodEquality(createdFood, singleTestFood);
-
-  // delete test document
-  if (!!createdFood) {
-    await FoodModel.deleteOne({ _id: createdFood._id });
-  }
+  expectFoodEquality(createdFood, testFoodWithRestaurantId);
 });
 
 test("Creates many foods", async () => {
+  const restaurantId = await generateRestaurantId(testRestaurant);
+
+  const testFoodsWithRestaurantId = manyTestFoods.map((food) => ({
+    ...food,
+    restaurant_id: restaurantId,
+  }));
   const createdFoods: FoodDocument[] = await FoodService.createMany(
-    manyTestFoods
+    testFoodsWithRestaurantId
   );
   // ensure creation
   expect(createdFoods.length).toBe(manyTestFoods.length);
@@ -61,7 +83,7 @@ test("Creates many foods", async () => {
   // ensure exact match
   createdFoods.forEach((createdFood, index) => {
     expect(createdFood.created_at).toBeDefined();
-    expectFoodEquality(createdFood, manyTestFoods[index]);
+    expectFoodEquality(createdFood, testFoodsWithRestaurantId[index]);
   });
 
   // delete test documents
@@ -72,8 +94,10 @@ test("Creates many foods", async () => {
 });
 
 test("Finds a food by ID", async () => {
+  const restaurantId = await generateRestaurantId(testRestaurant);
   const createdFood: FoodDocument = await FoodModel.create({
     ...singleTestFood,
+    restaurant_id: restaurantId,
     created_at: new Date(),
   });
   const createdFoodId = createdFood._id;
@@ -87,16 +111,13 @@ test("Finds a food by ID", async () => {
   expect(foundFood!._id).toStrictEqual(createdFood._id);
   expect(foundFood!.created_at).toStrictEqual(createdFood.created_at);
   expectFoodEquality(foundFood!, createdFood);
-
-  // delete test document
-  if (!!createdFood) {
-    await FoodModel.deleteOne({ _id: createdFoodId });
-  }
 });
 
 test("Deletes a food by ID", async () => {
+  const restaurantId = await generateRestaurantId(testRestaurant);
   const createdFood: FoodDocument = await FoodModel.create({
     ...singleTestFood,
+    restaurant_id: restaurantId,
     created_at: new Date(),
   });
 
@@ -108,14 +129,24 @@ test("Deletes a food by ID", async () => {
 });
 
 test("Finds all foods that fit a budget", async () => {
-  const BUDGET = 17;
+  const BUDGET = 3;
   const budgetQuery = { price: { $lte: BUDGET } };
+
+  const restaurantId = await generateRestaurantId(testRestaurant);
+
+  const testFoodsWithRestaurantId = manyTestFoods.map((food) => ({
+    ...food,
+    restaurant_id: restaurantId,
+    created_at: new Date(),
+  }));
+
+  // insert some food
+  await FoodModel.insertMany(testFoodsWithRestaurantId);
 
   const foodsWithinBudget = await FoodModel.find(budgetQuery);
   const retrievedFoods = await FoodService.findAll(budgetQuery);
 
   expect(retrievedFoods.length).toBe(foodsWithinBudget.length);
-
   // ensure exact match
   retrievedFoods.forEach((retrievedFood, index) => {
     const expectedFood = foodsWithinBudget[index];
