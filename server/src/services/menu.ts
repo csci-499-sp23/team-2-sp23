@@ -18,7 +18,11 @@ async function setFoods(
 }
 
 async function getFoods(menuId: ObjectId): Promise<FoodDocument[] | null> {
-  return null;
+  return MenuModel.findById(menuId)
+    .populate("foods")
+    .then((menu: MenuDocument | null) => menu?.foods) as Promise<
+    FoodDocument[] | null
+  >;
 }
 
 async function markDeprecated(menuId: ObjectId): Promise<MenuDocument | null> {
