@@ -2,9 +2,12 @@ import { ObjectId } from "mongoose";
 import { MenuAttributes, MenuDocument, MenuModel } from "../models/Menu";
 import { FoodDocument } from "../models/Food";
 
-/* Remove `| null` after completion */
-async function create(menu: MenuAttributes): Promise<MenuDocument | null> {
-  return null;
+// Create a new menu
+async function create(menu: MenuAttributes): Promise<MenuDocument> {
+  return MenuModel.create({
+    ...menu,
+    created_at: new Date(),
+  });
 }
 
 async function setFoods(
