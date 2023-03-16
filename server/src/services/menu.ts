@@ -22,7 +22,11 @@ async function getFoods(menuId: ObjectId): Promise<FoodDocument[] | null> {
 }
 
 async function markDeprecated(menuId: ObjectId): Promise<MenuDocument | null> {
-  return null;
+  return MenuModel.findOneAndUpdate(
+    { _id: menuId },
+    { deprecated: true },
+    { new: true }
+  );
 }
 
 export default {
