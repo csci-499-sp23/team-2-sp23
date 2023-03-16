@@ -14,7 +14,11 @@ async function setFoods(
   menuId: ObjectId,
   foodIds: ObjectId[]
 ): Promise<MenuDocument | null> {
-  return null;
+  return MenuModel.findOneAndUpdate(
+    { _id: menuId },
+    { foods: foodIds },
+    { new: true }
+  );
 }
 
 async function getFoods(menuId: ObjectId): Promise<FoodDocument[] | null> {
