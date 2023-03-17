@@ -6,6 +6,7 @@ import {
   RestaurantModel,
 } from "../models/Restaurant";
 import { MenuModel } from "../models/Menu";
+
 // Remove `| null` after completion
 async function create(
   restaurant: RestaurantAttributes
