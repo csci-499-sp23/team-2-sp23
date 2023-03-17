@@ -7,11 +7,13 @@ import {
 } from "../models/Restaurant";
 import { MenuModel } from "../models/Menu";
 
-// Remove `| null` after completion
 async function create(
   restaurant: RestaurantAttributes
 ): Promise<RestaurantDocument | null> {
-  return null;
+  return RestaurantModel.create({
+    ...restaurant,
+    created_at: new Date(),
+  });
 }
 
 async function updateMenu(
