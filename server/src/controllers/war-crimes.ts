@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { scrapeYelp } from "../jobs/yelp-scraper";
+import { scrapeYelp } from "../yelp-services/yelp-scraper";
 import { JSDOM } from "jsdom";
 import axios from "axios";
 
@@ -9,7 +9,7 @@ export async function warCrimes(
 ): Promise<void> {
   const restaurantId = request.query.restaurant;
   const yelpURL = `https://www.yelp.com/menu/${restaurantId}`;
-  console.log(yelpURL);
+
   try {
     const scrapedMenu = await axios
       .get(yelpURL)
