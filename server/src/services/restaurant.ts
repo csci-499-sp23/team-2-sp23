@@ -38,7 +38,16 @@ async function findNear(
   coordinates: Coordinates,
   searchRadius: Meters
 ): Promise<RestaurantDocument[] | null> {
-  return null;
+  return RestaurantModel.aggregate([
+    {
+      $geoNear: {
+        near: { type: "Point", coordinates: coordinates },
+        distanceField: "distance",
+        maxDistance: searchRadius,
+        spherical: true,
+      },
+    },
+  ]);
 }
 
 export default {
