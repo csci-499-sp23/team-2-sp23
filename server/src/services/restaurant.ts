@@ -5,7 +5,7 @@ import {
   RestaurantDocument,
   RestaurantModel,
 } from "../models/Restaurant";
-
+import { MenuModel } from "../models/Menu";
 // Remove `| null` after completion
 async function create(
   restaurant: RestaurantAttributes
@@ -17,7 +17,17 @@ async function updateMenu(
   restaurantId: ObjectId,
   menuId: ObjectId
 ): Promise<RestaurantDocument | null> {
-  return null;
+  const restaurant = await RestaurantModel.findById(restaurantId);
+  await MenuModel.findOneAndUpdate(
+    { _id: restaurant?.menu_id },
+    { deprecated: true }
+  );
+
+  return RestaurantModel.findOneAndUpdate(
+    { _id: restaurantId },
+    { menu_id: menuId },
+    { new: true }
+  );
 }
 
 type Meters = number;
