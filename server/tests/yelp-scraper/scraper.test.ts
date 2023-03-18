@@ -5,7 +5,7 @@ import mcdonaldsHTML from "./restaurant-doms/mcdonalds-new-york-137";
 import tacoBellHTML from "./restaurant-doms/taco-bell-cantina-brooklyn-2";
 import rollNRoaster from "./restaurant-doms/roll-n-roaster-brooklyn";
 import { JSDOM } from "jsdom";
-import { scrapeYelp } from "../../src/jobs/yelp-scraper";
+import { scrapeYelp } from "../../src/middleware/yelp-scraper";
 import { expect, test } from "@jest/globals";
 
 function menuItemCount(DOM: Document): number {
