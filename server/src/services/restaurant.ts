@@ -9,11 +9,21 @@ import { MenuModel } from "../models/Menu";
 
 async function create(
   restaurant: RestaurantAttributes
-): Promise<RestaurantDocument | null> {
+): Promise<RestaurantDocument> {
   return RestaurantModel.create({
     ...restaurant,
     created_at: new Date(),
   });
+}
+
+async function upsert(
+  query: any, restaurant: RestaurantAttributes
+): Promise<RestaurantDocument> {
+  return RestaurantModel.findOneAndUpdate(
+    query,
+    restaurant,
+    { new: true, upsert: true }
+  );
 }
 
 async function updateMenu(
