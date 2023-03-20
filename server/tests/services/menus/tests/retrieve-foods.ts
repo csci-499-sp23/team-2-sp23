@@ -6,13 +6,16 @@ import { testMenu } from "../../constants/menus";
 import { generateRestaurantId } from "../../restaurants/utils";
 import MenuService from "../../../../src/services/menu";
 import { testRestaurant } from "../../constants/restaurants";
-import { expectFoodEquality } from "../../foods/tests/utils";
+import { expectFoodEquality } from "../../foods/utils";
+import { generateMenuId } from "./utils";
 
 export async function testRetrieveFoodsFromMenu() {
   const testRestaurantId = await generateRestaurantId(testRestaurant);
+  const testMenuId = await generateMenuId(testRestaurantId);
   const someFoods = manyTestFoods.map((food) => ({
     ...food,
     restaurant_id: testRestaurantId,
+    menu_id: testMenuId,
     created_at: new Date(),
   }));
 

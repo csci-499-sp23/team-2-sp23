@@ -1,23 +1,19 @@
 import { expect } from "@jest/globals";
-import { FoodModel } from "../../../../src/models/Food";
-import { MenuModel } from "../../../../src/models/Menu";
+import { FoodAttributes, FoodModel } from "../../../../src/models/Food";
 import MenuService from "../../../../src/services/menu";
 import { manyTestFoods } from "../../constants/foods";
-import { testMenu } from "../../constants/menus";
 import { generateRestaurantId } from "../../restaurants/utils";
 import { testRestaurant } from "../../constants/restaurants";
+import { generateMenuId } from "./utils";
 
 export async function testSetFoodsToMenu() {
-  const testRestaurantId = await generateRestaurantId(testRestaurant);
-  const createdMenu = await MenuModel.create({
-    ...testMenu,
-    restaurant_id: testRestaurantId,
-    created_at: new Date(),
-  });
+  const restaurantId = await generateRestaurantId(testRestaurant);
+  const menuId = await generateMenuId(restaurantId);
 
-  const validFoods = manyTestFoods.map((food) => ({
+  const validFoods: FoodAttributes[] = manyTestFoods.map((food) => ({
     ...food,
-    restaurant_id: testRestaurantId,
+    restaurant_id: restaurantId,
+    menu_id: menuId,
     created_at: new Date(),
   }));
 
@@ -25,6 +21,6 @@ export async function testSetFoodsToMenu() {
     foods.map((food) => food._id)
   );
 
-  const updatedMenu = await MenuService.setFoods(createdMenu!._id, foodIds);
+  const updatedMenu = await MenuService.setFoods(menuId, foodIds);
   expect(updatedMenu?.foods).toEqual(foodIds);
 }
