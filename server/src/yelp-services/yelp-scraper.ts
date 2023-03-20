@@ -1,9 +1,8 @@
-interface FoodItem {
-  name: string;
-  description: string | null;
-  price: number;
-  image_url?: string | null;
-}
+import axios, { AxiosResponse } from "axios";
+import { JSDOM } from "jsdom";
+import { FoodAttributes } from "../models/Food";
+
+type FoodItem = Omit<FoodAttributes, "restaurant_id" | "menu_id">;
 
 // removes extra whitespaces in text
 // source: https://stackoverflow.com/questions/16974664/how-to-remove-the-extra-spaces-in-a-string
@@ -113,4 +112,25 @@ export function scrapeYelp(document: Document): FoodItem[] {
     });
 
   return [...foodsWithImage, ...foodWithPlaceholderImage, ...foodWithNoImage];
+}
+
+export async function retrieveFoodsFromYelp(
+  yelpRestaurantId: string
+): Promise<FoodItem[]> {
+  const yelpURL = `https://www.yelp.com/menu/${yelpRestaurantId}`;
+
+  const scrapedMenu: FoodItem[] = await axios
+    .get(yelpURL)
+    .then((res: AxiosResponse) => res.data)
+    .then((html: string) => {
+      const yelpDOM = new JSDOM(html).window.document;
+      return scrapeYelp(yelpDOM);
+    })
+    .catch(function (err: any) {
+      console.warn("Something went wrong.", err);
+      return [];
+    });
+
+  // filter foods without prices
+  return scrapedMenu.filter((food) => !isNaN(food.price));
 }
