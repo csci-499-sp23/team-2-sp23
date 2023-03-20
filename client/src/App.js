@@ -9,7 +9,6 @@ function App() {
     <>
       <Navbar />
       <div className="page-container">
-        The quick brown fox jumped over the lazy dog
         <Routes>
           <Route path="/search" element={<Search />} />
           <Route path="/home" element={<Home />} />
