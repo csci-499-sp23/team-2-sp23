@@ -1,22 +1,18 @@
 import { expect } from "@jest/globals";
 import { FoodDocument, FoodModel } from "../../../../src/models/Food";
-import { singleTestFood } from "../../constants/foods";
-import { testRestaurant } from "../../constants/restaurants";
-import { generateRestaurantId } from "../../restaurants/utils";
-import { expectFoodEquality } from "./utils";
+import { expectFoodEquality, generateFoodAttributes } from "../utils";
 import FoodService from "../../../../src/services/food";
 
 export async function testGetFoodById() {
-  const restaurantId = await generateRestaurantId(testRestaurant);
-  const createdFood: FoodDocument = await FoodModel.create({
-    ...singleTestFood,
-    restaurant_id: restaurantId,
+  const generatedFood = await generateFoodAttributes();
+
+  const createdFood = await FoodModel.create({
+    ...generatedFood,
     created_at: new Date(),
   });
-  const createdFoodId = createdFood._id;
 
   const foundFood: FoodDocument | null = await FoodService.findFoodById(
-    createdFoodId
+    createdFood._id
   );
 
   // ensure retrieval

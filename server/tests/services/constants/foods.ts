@@ -1,7 +1,6 @@
 import { FoodAttributes } from "../../../src/models/Food";
-import { RestaurantAttributes } from "../../../src/models/Restaurant";
 
-type TestFoodAttributes = Omit<FoodAttributes, "restaurant_id">;
+type TestFoodAttributes = Omit<FoodAttributes, "restaurant_id" | "menu_id">;
 
 export const singleTestFood: TestFoodAttributes = {
   name: "test food name",
@@ -29,6 +28,6 @@ export const manyTestFoods: TestFoodAttributes[] = [
     image_url: null,
     price: 3.33,
   },
-]; 
+];
 
 export const foodKeys = Object.keys(singleTestFood);

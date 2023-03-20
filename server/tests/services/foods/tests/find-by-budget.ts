@@ -4,17 +4,20 @@ import FoodService from "../../../../src/services/food";
 import { manyTestFoods } from "../../constants/foods";
 import { testRestaurant } from "../../constants/restaurants";
 import { generateRestaurantId } from "../../restaurants/utils";
-import { expectFoodEquality } from "./utils";
+import { expectFoodEquality } from "../utils";
+import { generateMenuId } from "../../menus/tests/utils";
 
 export async function findFoodsWithinBudget() {
   const BUDGET = 3;
   const budgetQuery = { price: { $lte: BUDGET } };
 
   const restaurantId = await generateRestaurantId(testRestaurant);
+  const menuId = await generateMenuId(restaurantId);
 
   const testFoodsWithRestaurantId = manyTestFoods.map((food) => ({
     ...food,
     restaurant_id: restaurantId,
+    menu_id: menuId,
     created_at: new Date(),
   }));
 
