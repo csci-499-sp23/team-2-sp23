@@ -2,16 +2,16 @@ import { Express } from "express";
 import ExampleRouter from "./example";
 import RestaurantRouter from "./restaurant";
 import listEndpoints from "express-list-endpoints";
-import mongoose from "mongoose";
+import Models from "../models";
 
 import * as dotenv from "dotenv";
 dotenv.config();
 
 async function generateRoutes(app: Express): Promise<void> {
-  app.use("/example", ExampleRouter);  
+  app.use("/example", ExampleRouter);
   app.use("/restaurant", RestaurantRouter);
 
-  mongoose
+  Models.mongoose
     .connect(process.env.CONNECTION_URL!)
     .then(() => {
       console.log("Successfully Connected To MongoDB");
