@@ -14,9 +14,9 @@ const yelpAPI = axios.create({
 // yelpAPI returns at most 50 restaurants per call.
 // There is a page option, but the result appear inconsistent per query.
 // We'll use a fixed search radius to get a rough 100% encapsulation for restaurants in a location.
-const OPTIMAL_SEARCH_RADIUS = 300;
+const OPTIMAL_SEARCH_RADIUS = 269;
 
-type Coordinates = { longitude: number; latitude: number };
+export type Coordinates = { longitude: number; latitude: number };
 interface YelpResponse {
   businesses: YelpRestaurant[];
   total: number;

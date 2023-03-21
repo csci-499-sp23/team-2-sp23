@@ -40,6 +40,7 @@ export interface RestaurantAttributes {
 export interface RestaurantDocument extends RestaurantAttributes {
   _id: ObjectId;
   created_at: Date;
+  updated_at?: Date;
 }
 
 export const RestaurantSchema: Schema<RestaurantDocument> =
@@ -113,6 +114,10 @@ export const RestaurantSchema: Schema<RestaurantDocument> =
     created_at: {
       type: Date,
       required: true,
+    },
+    updated_at: {
+      type: Date,
+      required: false,
     },
   });
 

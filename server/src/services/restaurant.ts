@@ -16,12 +16,18 @@ async function create(
   });
 }
 
+async function exists(query: any): Promise<boolean> {
+  const found = await RestaurantModel.exists(query);
+  return !!found;
+}
+
 async function upsert(
-  query: any, restaurant: RestaurantAttributes
+  query: any,
+  restaurant: RestaurantAttributes
 ): Promise<RestaurantDocument> {
   return RestaurantModel.findOneAndUpdate(
     query,
-    restaurant,
+    { ...restaurant, updated_at: new Date() },
     { new: true, upsert: true }
   );
 }
@@ -31,10 +37,12 @@ async function updateMenu(
   menuId: ObjectId
 ): Promise<RestaurantDocument | null> {
   const restaurant = await RestaurantModel.findById(restaurantId);
-  await MenuModel.findOneAndUpdate(
-    { _id: restaurant?.menu_id },
-    { deprecated: true }
-  );
+  if (restaurant?.menu_id !== null) {
+    await MenuModel.findOneAndUpdate(
+      { _id: restaurant?.menu_id },
+      { deprecated: true }
+    );
+  }
 
   return RestaurantModel.findOneAndUpdate(
     { _id: restaurantId },
@@ -62,6 +70,8 @@ async function findNear(
 
 export default {
   create,
+  upsert,
+  exists,
   updateMenu,
   findNear,
 };
