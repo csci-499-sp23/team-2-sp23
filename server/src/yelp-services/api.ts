@@ -16,7 +16,7 @@ const yelpAPI = axios.create({
 // We'll use a fixed search radius to get a rough 100% encapsulation for restaurants in a location.
 const OPTIMAL_SEARCH_RADIUS = 300;
 
-type Coordinates = { longitude: number; latitude: number };
+export type Coordinates = { longitude: number; latitude: number };
 interface YelpResponse {
   businesses: YelpRestaurant[];
   total: number;
