@@ -17,17 +17,19 @@ async function create(
 }
 
 async function exists(query: any): Promise<boolean> {
-  return !!RestaurantModel.exists(query);
+  const found = await RestaurantModel.exists(query);
+  return !!found;
 }
 
 async function upsert(
   query: any,
   restaurant: RestaurantAttributes
 ): Promise<RestaurantDocument> {
-  return RestaurantModel.findOneAndUpdate(query, restaurant, {
-    new: true,
-    upsert: true,
-  });
+  return RestaurantModel.findOneAndUpdate(
+    query,
+    { ...restaurant, updated_at: new Date() },
+    { new: true, upsert: true }
+  );
 }
 
 async function updateMenu(
