@@ -1,6 +1,6 @@
 import { RestaurantAttributes } from "../models/Restaurant";
 import { sleep, randomNumberBetween } from "./yelp-utils";
-import { Coordinates, fetchRestaurants } from "./api";
+import { fetchRestaurants } from "./api";
 import { retrieveFoodsFromYelp } from "./yelp-scraper";
 import RestaurantService from "../services/restaurant";
 import MenuService from "../services/menu";
@@ -56,8 +56,7 @@ async function taskGenerator(restaurant: RestaurantAttributes) {
   return await populateTask();
 }
 
-export async function warCrimes() {
-  const coordinates: Coordinates = { longitude: -73.9645, latitude: 40.7678 };
+export async function warCrimes(coordinates: Coordinates) {
   const nearbyRestaurants: RestaurantAttributes[] = await fetchRestaurants(
     coordinates
   );

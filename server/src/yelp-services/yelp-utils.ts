@@ -64,8 +64,8 @@ export function yelpRestaurantParser(
 }
 
 export function randomNumberBetween(min: number, max: number) {
-  const range = max - min + 1;
-  return Math.floor(Math.random() * range + min);
+  const range = max - min;
+  return Math.random() * range + min;
 }
 
 export function sleep(ms: number): Promise<void> {

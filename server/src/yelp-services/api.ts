@@ -2,6 +2,7 @@ import axios from "axios";
 import * as dotenv from "dotenv";
 import { RestaurantAttributes } from "../models/Restaurant";
 import { YelpRestaurant, yelpRestaurantParser } from "./yelp-utils";
+import { OPTIMAL_SEARCH_RADIUS } from "./constants";
 dotenv.config();
 
 const yelpAPI = axios.create({
@@ -11,12 +12,6 @@ const yelpAPI = axios.create({
   },
 });
 
-// yelpAPI returns at most 50 restaurants per call.
-// There is a page option, but the result appear inconsistent per query.
-// We'll use a fixed search radius to get a rough 100% encapsulation for restaurants in a location.
-const OPTIMAL_SEARCH_RADIUS = 269;
-
-export type Coordinates = { longitude: number; latitude: number };
 interface YelpResponse {
   businesses: YelpRestaurant[];
   total: number;
