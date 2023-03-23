@@ -53,32 +53,18 @@ async function updateMenu(
 }
 
 type Meters = number;
-async function findNear(
-  coordinates: Coordinates,
-  searchRadius: Meters
-): Promise<RestaurantDocument[] | null> {
-  return RestaurantModel.aggregate([
-    {
-      $geoNear: {
-        near: { type: "Point", coordinates: coordinates },
-        distanceField: "distance",
-        maxDistance: searchRadius,
-        spherical: true,
-      },
-    },
-  ]);
-}
-
 export type RestaurantResult = {
   restaurant: RestaurantDocument;
   foods: FoodDocument;
 };
 
-async function findNearWithinBudget(
+// generates an aggregrate pipeline from coordinates and search radius
+// to be used in RestaurantModel.aggregate(queryPipeline)
+// aggregrate pipeline returns type RestaurantResult
+function generateNearbyQuery(
   coordinates: Coordinates,
-  searchRadius: Meters,
-  budget: number
-): Promise<RestaurantResult[]> {
+  searchRadius: Meters
+): any[] {
   const filterNearbyRestaurants = {
     $geoNear: {
       near: {
@@ -118,6 +104,31 @@ async function findNearWithinBudget(
   const removeMenuField = {
     $unset: ["menu"],
   };
+
+  return [
+    filterNearbyRestaurants,
+    setRestaurantInObject,
+    leftJoinMenus,
+    unwindMenus,
+    leftJoinFoods,
+    removeMenuField,
+  ];
+}
+
+async function findNear(
+  coordinates: Coordinates,
+  searchRadius: Meters
+): Promise<RestaurantResult[]> {
+  const nearbyQuery = generateNearbyQuery(coordinates, searchRadius);
+  return RestaurantModel.aggregate(nearbyQuery);
+}
+
+async function findNearWithinBudget(
+  coordinates: Coordinates,
+  searchRadius: Meters,
+  budget: number
+): Promise<RestaurantResult[]> {
+  const nearbyQuery = generateNearbyQuery(coordinates, searchRadius);
   const filterFoodsInBudget = {
     $addFields: {
       foods: {
@@ -140,19 +151,14 @@ async function findNearWithinBudget(
     },
   };
 
-  const fatassQuery: any[] = [
-    filterNearbyRestaurants,
-    setRestaurantInObject,
-    leftJoinMenus,
-    unwindMenus,
-    leftJoinFoods,
-    removeMenuField,
+  const nearbyBudgetQuery: any[] = [
+    ...nearbyQuery,
     filterFoodsInBudget,
     addFoodCountField,
     pickRestaurantsInBudget,
   ];
 
-  return RestaurantModel.aggregate(fatassQuery);
+  return RestaurantModel.aggregate(nearbyBudgetQuery);
 }
 
 export default {
