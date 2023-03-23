@@ -2,7 +2,7 @@ import RestaurantService from "../../../../src/services/restaurant";
 import { RestaurantModel } from "../../../../src/models/Restaurant";
 import { testRestaurants } from "../../constants/restaurants";
 import { expect } from "@jest/globals";
-import { generateMenuId } from "../../menus/tests/utils";
+import { generateMenuId } from "../../menus/utils";
 import { manyTestFoods } from "../../constants/foods";
 import { FoodModel } from "../../../../src/models/Food";
 import { MenuModel } from "../../../../src/models/Menu";
