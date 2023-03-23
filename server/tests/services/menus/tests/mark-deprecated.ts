@@ -4,7 +4,7 @@ import MenuService from "../../../../src/services/menu";
 import { testMenu } from "../../constants/menus";
 import { testRestaurant } from "../../constants/restaurants";
 import { generateRestaurantId } from "../../restaurants/utils";
-import { expectInitialMenu } from "./utils";
+import { expectInitialMenu } from "../utils";
 
 export async function testMarkDeprecated() {
   const testRestaurantId = await generateRestaurantId(testRestaurant);

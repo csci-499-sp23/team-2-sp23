@@ -5,7 +5,7 @@ import { manyTestFoods } from "../../constants/foods";
 import { testRestaurant } from "../../constants/restaurants";
 import { generateRestaurantId } from "../../restaurants/utils";
 import { expectFoodEquality } from "../utils";
-import { generateMenuId } from "../../menus/tests/utils";
+import { generateMenuId } from "../../menus/utils";
 
 export async function findFoodsWithinBudget() {
   const BUDGET = 3;

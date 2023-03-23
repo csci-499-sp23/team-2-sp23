@@ -4,7 +4,7 @@ import FoodService from "../../../../src/services/food";
 import { manyTestFoods } from "../../constants/foods";
 import { testRestaurant } from "../../constants/restaurants";
 import { generateRestaurantId } from "../../restaurants/utils";
-import { generateMenuId } from "../../menus/tests/utils";
+import { generateMenuId } from "../../menus/utils";
 
 export async function deleteFoodById() {
   const restaurantId = await generateRestaurantId(testRestaurant);

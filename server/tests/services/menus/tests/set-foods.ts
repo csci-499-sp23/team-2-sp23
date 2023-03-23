@@ -4,7 +4,7 @@ import MenuService from "../../../../src/services/menu";
 import { manyTestFoods } from "../../constants/foods";
 import { generateRestaurantId } from "../../restaurants/utils";
 import { testRestaurant } from "../../constants/restaurants";
-import { generateMenuId } from "./utils";
+import { generateMenuId } from "../utils";
 
 export async function testSetFoodsToMenu() {
   const restaurantId = await generateRestaurantId(testRestaurant);

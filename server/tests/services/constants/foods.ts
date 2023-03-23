@@ -1,6 +1,6 @@
 import { FoodAttributes } from "../../../src/models/Food";
 
-type TestFoodAttributes = Omit<FoodAttributes, "restaurant_id" | "menu_id">;
+export type TestFoodAttributes = Omit<FoodAttributes, "restaurant_id" | "menu_id">;
 
 export const singleTestFood: TestFoodAttributes = {
   name: "test food name",

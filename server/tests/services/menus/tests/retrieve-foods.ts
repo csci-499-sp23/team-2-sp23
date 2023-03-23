@@ -7,7 +7,7 @@ import { generateRestaurantId } from "../../restaurants/utils";
 import MenuService from "../../../../src/services/menu";
 import { testRestaurant } from "../../constants/restaurants";
 import { expectFoodEquality } from "../../foods/utils";
-import { generateMenuId } from "./utils";
+import { generateMenuId } from "../utils";
 
 export async function testRetrieveFoodsFromMenu() {
   const testRestaurantId = await generateRestaurantId(testRestaurant);
