@@ -7,6 +7,7 @@ import {
 } from "../models/Restaurant";
 import { MenuModel } from "../models/Menu";
 import { FoodDocument } from "../models/Food";
+import MenuService from "../services/menu";
 
 async function create(
   restaurant: RestaurantAttributes
@@ -161,6 +162,21 @@ async function findNearWithinBudget(
   return RestaurantModel.aggregate(nearbyBudgetQuery);
 }
 
+async function findByYelpId(yelpId: string): Promise<{
+  restaurant: RestaurantDocument;
+  foods: FoodDocument[];
+} | null> {
+  const restaurant = await RestaurantModel.findOne({ yelp_id: yelpId });
+  const foods: FoodDocument[] = await MenuService.getFoods(
+    restaurant!.menu_id!
+  );
+
+  return {
+    restaurant: restaurant!,
+    foods: foods,
+  };
+}
+
 export default {
   create,
   upsert,
@@ -168,4 +184,5 @@ export default {
   updateMenu,
   findNear,
   findNearWithinBudget,
+  findByYelpId,
 };
