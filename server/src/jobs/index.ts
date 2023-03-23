@@ -4,7 +4,6 @@ import { scrapeCoordinates } from "./tasks/scrape-coordinates";
 function scheduleJobs() {
   const everyThirtyMinutes = "*/30 * * * *";
 
-  scrapeCoordinates();
   cron.schedule(everyThirtyMinutes, async () => {
     // pick a random coordinate and scrape it
     await scrapeCoordinates();

@@ -1,10 +1,13 @@
 import { ObjectId, Schema, Model, model } from "mongoose";
 
-export interface FoodAttributes {
+export interface FoodItem {
   name: string;
   description: string | null;
   price: number;
   image_url: string | null;
+}
+
+export interface FoodAttributes extends FoodItem {
   restaurant_id: ObjectId;
   menu_id: ObjectId;
 }

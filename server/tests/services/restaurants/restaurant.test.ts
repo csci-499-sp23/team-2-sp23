@@ -7,6 +7,7 @@ import { test, beforeAll, afterAll, afterEach } from "@jest/globals";
 import { createRestaurant } from "./tests/create";
 import { testUpdateRestaurantMenu } from "./tests/update-menu";
 import { testRetrieveNearbyRestaurants } from "./tests/retrieve-nearby";
+import { testRetrieveNearbyRestaurantsInBudget } from "./tests/retrieve-nearby-budget";
 
 beforeAll(async () => {
   await connectToDatabase();
@@ -30,4 +31,8 @@ test("Updates a restaurant's menu", async () => {
 
 test("Retrieves nearby restaurants", async () => {
   await testRetrieveNearbyRestaurants();
+});
+
+test("Retrieves nearby restaurants fitting budget", async () => {
+  await testRetrieveNearbyRestaurantsInBudget();
 });
