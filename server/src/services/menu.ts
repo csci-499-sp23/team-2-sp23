@@ -21,11 +21,11 @@ async function setFoods(
   );
 }
 
-async function getFoods(menuId: ObjectId): Promise<FoodDocument[] | null> {
+async function getFoods(menuId: ObjectId): Promise<FoodDocument[]> {
   return MenuModel.findById(menuId)
     .populate("foods")
     .then((menu: MenuDocument | null) => menu?.foods) as Promise<
-    FoodDocument[] | null
+    FoodDocument[]
   >;
 }
 
