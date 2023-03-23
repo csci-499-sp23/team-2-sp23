@@ -40,7 +40,30 @@ async function findNearbyRestaurants(
     response.status(500).json(error);
   }
 }
-
+async function findNearWithinBudget(
+  request: Request,
+  response: Response
+): Promise<void> {
+  try {
+    const latitude: number = parseFloat(request.query.latitude as string);
+    const longitude: number = parseFloat(request.query.longitude as string);
+    const search_radius: number = parseInt(request.query.meters as string);
+    const budget: number = parseFloat(request.query.budget as string);
+    const restaurants = await RestaurantService.findNearWithinBudget(
+      [longitude, latitude],
+      search_radius,
+      budget
+    );
+    
+    response.status(200).json({
+      count: restaurants.length,
+      rows: restaurants.map((restaurant) => presentRestaurant(restaurant)),
+    });
+  } catch (error) {
+    response.status(500).json(error);
+  }
+}
 export default {
   findNearbyRestaurants,
+  findNearWithinBudget,
 };
