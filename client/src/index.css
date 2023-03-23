@@ -8,6 +8,10 @@
   src: url("./assets/fonts/Roboto-Regular.ttf");
 }
 
+html {
+  font-size: 16px;
+}
+
 body {
   margin: 0;
   font-family: Roboto, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
@@ -23,9 +27,8 @@ code {
 }
 
 #root {
-  background-color: hsl(40.67, 10%, 20%);
-  color: white;
-  font-size: 16px;
+  background-color: hsl(35, 10%, 90%);
+  color: black;
   font-family: Roboto;
   display: flex;
   flex-direction: column;
@@ -34,7 +37,9 @@ code {
 }
 
 .page-container {
+  box-sizing: border-box;
   width: min(var(--content-width), 100%);
   min-height: 100vh;
-  background-color: black;
+  background-color: hsl(35, 10%, 80%);
+  padding: 1rem;
 }
