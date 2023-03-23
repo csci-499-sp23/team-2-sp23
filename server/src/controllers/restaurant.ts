@@ -54,7 +54,7 @@ async function findNearWithinBudget(
       search_radius,
       budget
     );
-    
+
     response.status(200).json({
       count: restaurants.length,
       rows: restaurants.map((restaurant) => presentRestaurant(restaurant)),
@@ -63,7 +63,21 @@ async function findNearWithinBudget(
     response.status(500).json(error);
   }
 }
+
+async function findByYelpId(
+  request: Request,
+  response: Response
+): Promise<void> {
+  try {
+    const yelpId: string = request.query.yelp_id as string;
+    const restaurant = await RestaurantService.findByYelpId(yelpId);
+    response.status(200).json(restaurant);
+  } catch (error) {
+    response.status(500).json(error);
+  }
+}
 export default {
   findNearbyRestaurants,
   findNearWithinBudget,
+  findByYelpId,
 };

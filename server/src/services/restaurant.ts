@@ -165,7 +165,7 @@ async function findNearWithinBudget(
 async function findByYelpId(yelpId: string): Promise<{
   restaurant: RestaurantDocument;
   foods: FoodDocument[];
-} | null> {
+}> {
   const restaurant = await RestaurantModel.findOne({ yelp_id: yelpId });
   const foods: FoodDocument[] = await MenuService.getFoods(
     restaurant!.menu_id!
