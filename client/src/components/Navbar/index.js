@@ -16,14 +16,8 @@ export default function Navbar() {
         <div>
           <img src={logo} className="github-logo" alt="github-logo" />
         </div>
-        <Link style={linkStyle} to="/home">
-          Home
-        </Link>
         <Link style={linkStyle } to="/search">
           Search
-        </Link>
-        <Link style={linkStyle} to="/saved">
-          Saved
         </Link>
         <div className="right-logo">
           <a
