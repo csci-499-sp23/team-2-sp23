@@ -6,7 +6,7 @@ import {
 } from "../../../src/models/Food";
 import { testRestaurant } from "../constants/restaurants";
 import { generateRestaurantId } from "../restaurants/utils";
-import { generateMenuId } from "../menus/tests/utils";
+import { generateMenuId } from "../menus/utils";
 import { singleTestFood } from "../constants/foods";
 
 // expects two food objects to have the same values

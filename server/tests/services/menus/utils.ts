@@ -1,7 +1,7 @@
 import { expect } from "@jest/globals";
-import { MenuDocument, MenuModel } from "../../../../src/models/Menu";
+import { MenuDocument, MenuModel } from "../../../src/models/Menu";
 import { ObjectId } from "mongoose";
-import { testMenu } from "../../constants/menus";
+import { testMenu } from "../constants/menus";
 
 export function expectInitialMenu(menu: MenuDocument): void {
   expect(menu.created_at).toBeTruthy();

@@ -1,6 +1,8 @@
 import { MenuAttributes } from "../../../src/models/Menu";
 
-export const testMenu: Omit<MenuAttributes, "restaurant_id"> = {
+export type TestMenuAttributes = Omit<MenuAttributes, "restaurant_id">;
+
+export const testMenu: TestMenuAttributes = {
   foods: [],
   deprecated: false,
 };

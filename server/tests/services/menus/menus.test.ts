@@ -8,6 +8,7 @@ import { testCreateMenu } from "./tests/create";
 import { testSetFoodsToMenu } from "./tests/set-foods";
 import { testRetrieveFoodsFromMenu } from "./tests/retrieve-foods";
 import { testMarkDeprecated } from "./tests/mark-deprecated";
+import { testDeleteDeprecated } from "./tests/delete-deprecated";
 
 beforeAll(async () => {
   await connectToDatabase();
@@ -35,4 +36,8 @@ test("Retrieve all foods from menu", async () => {
 
 test("Marks a menu as deprecated", async () => {
   await testMarkDeprecated();
+});
+
+test("Deletes deprecated menus", async () => {
+  await testDeleteDeprecated();
 });
