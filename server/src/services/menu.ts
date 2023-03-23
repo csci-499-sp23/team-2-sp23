@@ -1,6 +1,6 @@
 import { ObjectId } from "mongoose";
 import { MenuAttributes, MenuDocument, MenuModel } from "../models/Menu";
-import { FoodDocument } from "../models/Food";
+import { FoodDocument, FoodModel } from "../models/Food";
 
 // Create a new menu
 async function create(menu: MenuAttributes): Promise<MenuDocument> {
@@ -37,9 +37,18 @@ async function markDeprecated(menuId: ObjectId): Promise<MenuDocument | null> {
   );
 }
 
+async function deleteDeprecatedMenus(): Promise<void> {
+  const deprecatedMenus = await MenuModel.find({ deprecated: true });
+  const allDeprecatedMenuIds = deprecatedMenus.map((menu) => menu._id);
+
+  FoodModel.deleteMany({ menu_id: { $in: allDeprecatedMenuIds } });
+  MenuModel.deleteMany({ _id: { $in: allDeprecatedMenuIds } });
+}
+
 export default {
   create,
   setFoods,
   getFoods,
   markDeprecated,
+  deleteDeprecatedMenus,
 };
