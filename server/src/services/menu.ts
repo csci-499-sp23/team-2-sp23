@@ -37,12 +37,25 @@ async function markDeprecated(menuId: ObjectId): Promise<MenuDocument | null> {
   );
 }
 
-async function deleteDeprecatedMenus(): Promise<void> {
+interface DeletionResult {
+  deleted_foods_count: number;
+  deleted_menus_count: number;
+}
+async function deleteDeprecatedMenus(): Promise<DeletionResult> {
   const deprecatedMenus = await MenuModel.find({ deprecated: true });
   const allDeprecatedMenuIds = deprecatedMenus.map((menu) => menu._id);
 
-  FoodModel.deleteMany({ menu_id: { $in: allDeprecatedMenuIds } });
-  MenuModel.deleteMany({ _id: { $in: allDeprecatedMenuIds } });
+  const deletedFoodsCount = await FoodModel.deleteMany({
+    menu_id: { $in: allDeprecatedMenuIds },
+  }).then((res) => res.deletedCount);
+  const deletedMenusCount = await MenuModel.deleteMany({
+    _id: { $in: allDeprecatedMenuIds },
+  }).then((res) => res.deletedCount);
+
+  return {
+    deleted_foods_count: deletedFoodsCount,
+    deleted_menus_count: deletedMenusCount,
+  };
 }
 
 export default {
