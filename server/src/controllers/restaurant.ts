@@ -1,6 +1,24 @@
 import { Request, Response } from "express";
-import RestaurantService from "../services/restaurant";
+import RestaurantService, { RestaurantResult } from "../services/restaurant";
+import { FoodDocument, FoodItem } from "../models/Food";
+import { pick, omit } from "lodash";
 
+// Presenter functions to remove unused fields
+function presentFoods(foods: FoodDocument[]): FoodItem[] {
+  return foods.map((food) =>
+    pick(food, ["name", "price", "description", "image_url"])
+  );
+}
+
+function presentRestaurant(result: RestaurantResult) {
+  const mongoFields = ["_id", "created_at", "updated_at", "__v"];
+  return {
+    restaurant: omit(result.restaurant, mongoFields),
+    foods: presentFoods(result.foods),
+  };
+}
+
+// Controllers
 async function findNearbyRestaurants(
   request: Request,
   response: Response
@@ -15,8 +33,8 @@ async function findNearbyRestaurants(
     );
 
     response.status(200).json({
-      count: restaurants!.length,
-      rows: restaurants,
+      count: restaurants.length,
+      rows: restaurants.map((restaurant) => presentRestaurant(restaurant)),
     });
   } catch (error) {
     response.status(500).json(error);

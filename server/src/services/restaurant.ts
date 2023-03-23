@@ -55,7 +55,7 @@ async function updateMenu(
 type Meters = number;
 export type RestaurantResult = {
   restaurant: RestaurantDocument;
-  foods: FoodDocument;
+  foods: FoodDocument[];
 };
 
 // generates an aggregrate pipeline from coordinates and search radius
