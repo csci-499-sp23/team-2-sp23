@@ -1,8 +1,10 @@
 import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
-import * as dotenv from "dotenv";
 import generateRoutes from "./routes";
+import scheduleJobs from "./jobs";
+
+import * as dotenv from "dotenv";
 dotenv.config();
 
 // Singleton app for handling server requests
@@ -24,3 +26,4 @@ app.listen(port, async () => {
 });
 
 generateRoutes(app);
+scheduleJobs();

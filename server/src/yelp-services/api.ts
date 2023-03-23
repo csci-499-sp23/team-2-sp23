@@ -32,6 +32,7 @@ export async function fetchRestaurants(
           term: "food",
           radius: OPTIMAL_SEARCH_RADIUS,
           limit: 50,
+          sort_by: "distance",
         },
       })
       .then((res) => res.data);
