@@ -12,7 +12,7 @@ export async function scrapeCoordinates() {
   });
 
   const { longitude, latitude } = randomCoordinatesNearHunter;
-  console.log(`scraping (${longitude},${latitude}) at ${new Date()}`);
+  console.log(`Scraping (${longitude},${latitude}) at ${new Date()}`);
 
   warCrimes(randomCoordinatesNearHunter).then((result) => {
     console.log(result);
