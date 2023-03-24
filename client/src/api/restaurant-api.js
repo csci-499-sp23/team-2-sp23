@@ -20,7 +20,7 @@ async function getNearbyRestaurantsInBudget({
 }) {
   return api({
     method: "get",
-    endpoint: "/restaurant/nearby",
+    endpoint: "/restaurant/nearby-in-budget",
     query: {
       longitude: longitude,
       latitude: latitude,

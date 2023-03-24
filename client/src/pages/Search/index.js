@@ -1,38 +1,38 @@
-import React from "react";
-import foods from "./foods";
+import CardView from "./CardView";
+import RestaurantAPI from "../../api/restaurant-api";
+import { useEffect, useState } from "react";
 
-export default function Search() {
+export default function Search({ coordinates }) {
+  const [restaurants, setRestaurants] = useState([]);
+  async function retrieveRestaurants({ longitude, latitude, meters, budget }) {
+    const query = {
+      longitude,
+      latitude,
+      meters,
+      budget,
+    };
+    const retrievedRestaurants =
+      await RestaurantAPI.getNearbyRestaurantsInBudget(query);
+
+    console.log(retrievedRestaurants);
+
+    setRestaurants(retrievedRestaurants.rows);
+  }
+
+  useEffect(() => {
+    if (!coordinates.longitude) return;
+
+    retrieveRestaurants({
+      longitude: -73.96455592421076,
+      latitude: 40.767851967738736,
+      meters: 300,
+      budget: 100,
+    });
+  }, [coordinates]);
+
   return (
     <div>
-      {foods.map((food) => {
-        return (
-          <div
-            style={{
-              display: "flex",
-              gap: "0.5rem",
-              padding: "0.75rem",
-              boxSizing: "border-box",
-            }}
-          >
-            <div style={{ display: "flex", columnGap: "0.5rem" }}>
-              <img
-                src={food.image_url}
-                style={{ width: "80px", height: "60px", objectFit: "cover" }}
-                alt={food.name}
-              />
-
-              <div>
-                <span>{food.name}</span>
-                <br />
-                <span style={{ color: "rgbx(200,200,200)", fontSize: "10px" }}>
-                  {food.description}
-                </span>
-              </div>
-            </div>
-            <div style={{ marginLeft: "auto" }}>{food.price}</div>
-          </div>
-        );
-      })}
+      <CardView rows={restaurants} />
     </div>
   );
 }
