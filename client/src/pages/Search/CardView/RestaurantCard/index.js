@@ -52,6 +52,7 @@ function RestaurantCard({ restaurant, foods }) {
           state={restaurant.address.state}
           zipCode={restaurant.address.zip_code}
           restaurantId={restaurant.yelp_id}
+          foodCategories={restaurant.food_categories}
         />
       </div>
       <div style={classes.foodInfo}>

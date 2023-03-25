@@ -20,6 +20,9 @@ const classes = {
     textOverflow: "ellipsis",
     color: " hsl(35,80%,40%)",
   },
+  reviewContainer: {
+    fontSize: "0.75rem",
+  },
   reviews: {
     display: "flex",
     alignItems: "center",
@@ -28,6 +31,14 @@ const classes = {
   reviewCount: {
     fontSize: "0.6rem",
     color: "#5a5a5a",
+  },
+  foodCategoryText: {
+    fontSize: `${9 / 16}rem`,
+    color: "#3d3d3d",
+    marginTop: "auto",
+    overflow: "hidden",
+    whiteSpace: "nowrap",
+    textOverflow: "ellipsis",
   },
 };
 
@@ -39,6 +50,7 @@ function Details({
   state,
   zipCode,
   restaurantId,
+  foodCategories,
 }) {
   return (
     <div style={classes.detailContainer}>
@@ -46,12 +58,13 @@ function Details({
       <div style={classes.address}>
         {address} {state}, {zipCode}
       </div>
-      <div style={{ fontSize: "0.75rem" }}>
+      <div style={classes.reviewContainer}>
         <div style={classes.reviews}>
           <ReviewStars rating={rating} restaurantId={restaurantId} />
           <div style={classes.reviewCount}>({reviewCount})</div>
         </div>
       </div>
+      <div style={classes.foodCategoryText}>{foodCategories.join(" • ")}</div>
     </div>
   );
 }
