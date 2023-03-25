@@ -4,7 +4,6 @@ import { deleteDeprecatedMenus } from "./tasks/delete-deprecated-menus";
 
 function scheduleJobs() {
   const everyThirtyMinutes = "*/30 * * * *";
-   deleteDeprecatedMenus();
 
   cron.schedule(everyThirtyMinutes, async () => {
     // pick a random coordinate and scrape it
