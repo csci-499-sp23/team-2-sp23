@@ -1,4 +1,4 @@
-import CardView from "./CardView";
+import GridView from "./GridView";
 import RestaurantAPI from "../../api/restaurant-api";
 import { useEffect, useState } from "react";
 
@@ -32,7 +32,7 @@ export default function Search({ coordinates }) {
 
   return (
     <div>
-      <CardView rows={restaurants} />
+      <GridView rows={restaurants} />
     </div>
   );
 }
