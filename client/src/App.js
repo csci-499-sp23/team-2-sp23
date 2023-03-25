@@ -2,15 +2,19 @@ import { useEffect, useState } from "react";
 import Navbar from "./components/Navbar";
 import Search from "./pages/Search";
 import { Route, Routes } from "react-router-dom";
-import getLocation from "./utils/getLocation";
+import getUserCoordinates from "./utils/getUserCoordinates";
 
 function App() {
   const [coordinates, setCoordinates] = useState({});
 
   useEffect(() => {
-    getLocation().then((coordinates) => {
-      setCoordinates(coordinates);
-    });
+    getUserCoordinates()
+      .then((resolved) => {
+        setCoordinates(resolved.coordinates);
+      })
+      .catch((res) => {
+        console.error(res);
+      });
   }, []);
 
   return (
