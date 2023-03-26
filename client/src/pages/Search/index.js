@@ -3,6 +3,7 @@ import RestaurantAPI from "../../api/restaurant-api";
 import { useEffect, useState } from "react";
 import SearchHeader from "./SearchHeader";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import MapView from "./MapView";
 
 const DEFAULT_SEARCH = {
   longitude: -73.96455592421076,
@@ -13,6 +14,8 @@ const DEFAULT_SEARCH = {
 
 export default function Search({ coordinates }) {
   const [restaurants, setRestaurants] = useState([]);
+  const [latitude, setLatitude] = useState(DEFAULT_SEARCH.latitude);
+  const [longitude, setLongitude] = useState(DEFAULT_SEARCH.longitude);
   async function retrieveRestaurants({ longitude, latitude, meters, budget }) {
     const query = {
       longitude,
@@ -25,6 +28,8 @@ export default function Search({ coordinates }) {
 
     console.log(retrievedRestaurants);
 
+    setLatitude(latitude);
+    setLongitude(longitude);
     setRestaurants(retrievedRestaurants.rows);
   }
 
@@ -44,13 +49,6 @@ export default function Search({ coordinates }) {
   useEffect(() => {
     if (!coordinates.longitude) return;
 
-    const DEFAULT_SEARCH = {
-      longitude: -73.96455592421076,
-      latitude: 40.767851967738736,
-      meters: 300,
-      budget: 100,
-    };
-
     retrieveRestaurants(DEFAULT_SEARCH);
   }, [coordinates]);
 
@@ -61,6 +59,7 @@ export default function Search({ coordinates }) {
           retrieveRestaurants={retrieveRestaurants}
           initialSearch={DEFAULT_SEARCH}
         />
+        <MapView latitude={latitude} longitude={longitude} />
         <GridView rows={restaurants} />
       </ThemeProvider>
     </div>
