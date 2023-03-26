@@ -59,7 +59,7 @@ export default function Search({ coordinates }) {
           retrieveRestaurants={retrieveRestaurants}
           initialSearch={DEFAULT_SEARCH}
         />
-        <MapView latitude={latitude} longitude={longitude} />
+        <MapView latitude={latitude} longitude={longitude} rows={restaurants} />
         <GridView rows={restaurants} />
       </ThemeProvider>
     </div>

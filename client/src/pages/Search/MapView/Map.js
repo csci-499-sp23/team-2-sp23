@@ -1,12 +1,12 @@
 import React from "react";
-import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
+import { GoogleMap, useJsApiLoader, Marker } from "@react-google-maps/api";
 
 const containerStyle = {
   width: "100%",
   height: "80vh",
 };
 
-function Map({ longitude, latitude }) {
+function Map({ longitude, latitude, rows }) {
   const center = {
     lat: latitude,
     lng: longitude,
@@ -29,13 +29,28 @@ function Map({ longitude, latitude }) {
 
   return isLoaded ? (
     <GoogleMap
+      state={map}
       mapContainerStyle={containerStyle}
       center={center}
-      zoom={10}
       onLoad={onLoad}
       onUnmount={onUnmount}
     >
-      {/* Child components, such as markers, info windows, etc. */}
+      <Marker position={{ lng: longitude, lat: latitude }} />
+      {rows.map((row) => {
+        const { restaurant } = row;
+        const coordinates = restaurant.location.coordinates;
+        const [longitude, latitude] = coordinates;
+        return (
+          <Marker
+            key={row.restaurant.yelp_id}
+            position={{
+              lng: longitude,
+              lat: latitude,
+            }}
+          />
+        );
+      })}
+
       <></>
     </GoogleMap>
   ) : (
