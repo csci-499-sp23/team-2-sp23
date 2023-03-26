@@ -1,9 +1,9 @@
 import GridView from "./GridView";
+import MapView from "./MapView";
 import RestaurantAPI from "../../api/restaurant-api";
 import { useEffect, useState } from "react";
 import SearchHeader from "./SearchHeader";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import MapView from "./MapView";
 
 const DEFAULT_SEARCH = {
   longitude: -73.96455592421076,
@@ -16,6 +16,8 @@ export default function Search({ coordinates }) {
   const [restaurants, setRestaurants] = useState([]);
   const [latitude, setLatitude] = useState(DEFAULT_SEARCH.latitude);
   const [longitude, setLongitude] = useState(DEFAULT_SEARCH.longitude);
+  const [viewMode, setViewMode] = useState("map");
+
   async function retrieveRestaurants({ longitude, latitude, meters, budget }) {
     const query = {
       longitude,
@@ -58,9 +60,17 @@ export default function Search({ coordinates }) {
         <SearchHeader
           retrieveRestaurants={retrieveRestaurants}
           initialSearch={DEFAULT_SEARCH}
+          viewMode={viewMode}
+          setViewMode={setViewMode}
         />
-        <MapView latitude={latitude} longitude={longitude} rows={restaurants} />
-        <GridView rows={restaurants} />
+        {viewMode === "grid" && <GridView rows={restaurants} />}
+        {viewMode === "map" && (
+          <MapView
+            latitude={latitude}
+            longitude={longitude}
+            rows={restaurants}
+          />
+        )}
       </ThemeProvider>
     </div>
   );
