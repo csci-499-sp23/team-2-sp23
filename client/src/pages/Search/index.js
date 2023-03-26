@@ -16,7 +16,8 @@ export default function Search({ coordinates }) {
   const [restaurants, setRestaurants] = useState([]);
   const [latitude, setLatitude] = useState(DEFAULT_SEARCH.latitude);
   const [longitude, setLongitude] = useState(DEFAULT_SEARCH.longitude);
-  const [viewMode, setViewMode] = useState("grid");
+  const [viewMode, setViewMode] = useState("map");
+
   async function retrieveRestaurants({ longitude, latitude, meters, budget }) {
     const query = {
       longitude,
@@ -62,7 +63,6 @@ export default function Search({ coordinates }) {
           viewMode={viewMode}
           setViewMode={setViewMode}
         />
-        <GridView rows={restaurants} />
         {viewMode === "grid" && <GridView rows={restaurants} />}
         {viewMode === "map" && (
           <MapView
