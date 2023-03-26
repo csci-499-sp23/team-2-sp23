@@ -23,4 +23,4 @@ function CardView({ coordinates, rows }) {
   );
 }
 
-export default CardView
+export default CardView;
