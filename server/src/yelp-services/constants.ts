@@ -1,10 +1,10 @@
 export const OPTIMAL_SEARCH_RADIUS = 1100;
 
-// https://www.google.com/maps/search/40.768,-73.960
-// Some location near Hunter College, used as the center for generating coordinates
+// 3-21-2023: https://www.google.com/maps/search/40.768,-73.960, Hunter College
+// 3-26-2023: https://www.google.com/maps/search/40.759,-73.979, Rockefeller Center
 export const CENTER_COORDINATES: Coordinates = {
-  longitude: -73.96,
-  latitude: 40.768,
+  longitude: -73.979,
+  latitude: 40.759,
 };
 
 // around 3-4 avenues
