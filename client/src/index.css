@@ -27,7 +27,7 @@ code {
 }
 
 #root {
-  background-color: hsl(35, 10%, 90%);
+  background-color: hsl(35, 10%, 80%);
   color: black;
   font-family: Roboto;
   display: flex;
@@ -40,7 +40,7 @@ code {
   box-sizing: border-box;
   width: min(var(--content-width), 100%);
   min-height: 100vh;
-  background-color: hsl(35, 10%, 80%);
+  background-color: hsl(35, 10%, 93%);
   padding: 1rem;
   margin-top: calc(var(--navbar-height) + 1rem + 2px);
 }

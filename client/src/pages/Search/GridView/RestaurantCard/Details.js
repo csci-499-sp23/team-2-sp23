@@ -18,7 +18,7 @@ const classes = {
     overflow: "hidden",
     whiteSpace: "nowrap",
     textOverflow: "ellipsis",
-    color: " hsl(35,80%,40%)",
+    color: "hsl(30,80%,40%)",
   },
   reviewContainer: {
     fontSize: "0.75rem",
