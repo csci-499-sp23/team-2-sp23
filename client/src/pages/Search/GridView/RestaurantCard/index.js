@@ -15,7 +15,7 @@ const classes = {
     display: "flex",
     alignItems: "center",
     gap: "0.25rem",
-    backgroundColor: "hsl(35,10%,90%)",
+    backgroundColor: "hsl(35,0%,97%)",
   },
   retaurantInfo: {
     display: "flex",
@@ -59,7 +59,7 @@ function RestaurantCard({ restaurant, foods }) {
         <div style={classes.foodCount}>
           <div style={{ fontSize: "0.75rem" }}>{foods.length}</div>
           <FastfoodIcon
-            style={{ color: "hsl(30,90%,40%)", fontSize: "0.75rem" }}
+            style={{ color: "hsl(30,90%,50%)", fontSize: "0.75rem" }}
           />
         </div>
         <IconButton style={{ padding: 0 }}>

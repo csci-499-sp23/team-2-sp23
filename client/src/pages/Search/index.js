@@ -38,7 +38,7 @@ export default function Search({ coordinates }) {
   const theme = createTheme({
     palette: {
       primary: {
-        main: "hsl(20,80%,50%)",
+        main: "hsl(25,80%,50%)",
       },
     },
     typography: {

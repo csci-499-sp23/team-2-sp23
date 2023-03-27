@@ -10,7 +10,6 @@ const classes = {
     columnGap: "1rem",
     rowGap: "0.5rem",
     width: "100%",
-    marginBottom: "1rem",
     flexWrap: "wrap",
   },
   searchButton: {
