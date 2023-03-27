@@ -19,16 +19,16 @@ const classes = {
 };
 
 export default function SearchHeader({
-  retrieveRestaurants,
-  initialSearch,
+  updateFields,
+  searchFields,
   viewMode,
   setViewMode,
 }) {
   return (
     <div style={classes.headerContainer}>
       <SearchField
-        retrieveRestaurants={retrieveRestaurants}
-        initialSearch={initialSearch}
+        updateFields={updateFields}
+        searchFields={searchFields}
       />
       <Box sx={classes.separator} />
       <ViewToggler viewMode={viewMode} setViewMode={setViewMode} />
