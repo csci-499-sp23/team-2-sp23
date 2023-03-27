@@ -47,7 +47,7 @@ function SearchField(props) {
     meters: yup
       .number()
       .min(20)
-      .max(1000)
+      .max(2000)
       .required("Search radius is required"),
     budget: yup.number().min(0).required("Budget should be at least $0"),
   });
