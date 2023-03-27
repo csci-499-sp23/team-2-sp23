@@ -1,7 +1,7 @@
 import React from "react";
 import githubLogo from "../../assets/images/github-logo.png";
 import { Link } from "react-router-dom";
-import logo from "../../assets/images/logo.png";
+import logo from "../../assets/images/logo-white.png";
 import "./navbar.css";
 
 const linkStyle = {
