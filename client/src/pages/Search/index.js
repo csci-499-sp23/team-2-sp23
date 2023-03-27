@@ -12,11 +12,19 @@ const DEFAULT_SEARCH = {
   budget: 10,
 };
 
-export default function Search({ coordinates }) {
+export default function Search() {
   const [restaurants, setRestaurants] = useState([]);
-  const [latitude, setLatitude] = useState(DEFAULT_SEARCH.latitude);
-  const [longitude, setLongitude] = useState(DEFAULT_SEARCH.longitude);
+  const [searchFields, setSearchFields] = useState({
+    latitude: DEFAULT_SEARCH.latitude,
+    longitude: DEFAULT_SEARCH.longitude,
+    meters: DEFAULT_SEARCH.meters,
+    budget: DEFAULT_SEARCH.budget,
+  });
   const [viewMode, setViewMode] = useState("map");
+
+  function updateFields(updatedFields) {
+    setSearchFields({ ...searchFields, ...updatedFields });
+  }
 
   async function retrieveRestaurants({ longitude, latitude, meters, budget }) {
     const query = {
@@ -28,10 +36,7 @@ export default function Search({ coordinates }) {
     const retrievedRestaurants =
       await RestaurantAPI.getNearbyRestaurantsInBudget(query);
 
-    console.log(retrievedRestaurants);
-
-    setLatitude(latitude);
-    setLongitude(longitude);
+    updateFields({ latitude, longitude, meters, budget });
     setRestaurants(retrievedRestaurants.rows);
   }
 
@@ -48,27 +53,30 @@ export default function Search({ coordinates }) {
     },
   });
 
-  useEffect(() => {
-    if (!coordinates.longitude) return;
+  const { longitude, latitude, meters, budget } = searchFields;
 
-    retrieveRestaurants(DEFAULT_SEARCH);
-  }, [coordinates]);
+  useEffect(() => {
+    const searchQuery = { ...searchFields };
+    retrieveRestaurants(searchQuery);
+    // eslint-disable-next-line
+  }, [longitude, latitude, meters, budget]);
 
   return (
     <div>
       <ThemeProvider theme={theme}>
         <SearchHeader
-          retrieveRestaurants={retrieveRestaurants}
-          initialSearch={DEFAULT_SEARCH}
+          updateFields={updateFields}
+          searchFields={searchFields}
           viewMode={viewMode}
           setViewMode={setViewMode}
         />
         {viewMode === "grid" && <GridView rows={restaurants} />}
         {viewMode === "map" && (
           <MapView
-            latitude={latitude}
-            longitude={longitude}
+            latitude={searchFields.latitude}
+            longitude={searchFields.longitude}
             rows={restaurants}
+            updateFields={updateFields}
           />
         )}
       </ThemeProvider>

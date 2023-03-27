@@ -6,7 +6,7 @@ const containerStyle = {
   height: "80vh",
 };
 
-function Map({ longitude, latitude, rows }) {
+function Map({ longitude, latitude, rows, updateFields }) {
   const center = {
     lat: latitude,
     lng: longitude,
@@ -27,7 +27,7 @@ function Map({ longitude, latitude, rows }) {
     setMap(null);
   }, []);
 
-  const AMONGUS = require('../../../assets/images/among-us.webp')
+  const AMONGUS = require("../../../assets/images/among-us.webp");
 
   return isLoaded ? (
     <GoogleMap
@@ -45,6 +45,15 @@ function Map({ longitude, latitude, rows }) {
         icon={{
           url: AMONGUS,
           scaledSize: new google.maps.Size(40, 48),
+        }}
+        draggable={true}
+        onDragEnd={(event) => {
+          const updatedLatitude = event.latLng.lat();
+          const updatedLongitude = event.latLng.lng();
+          updateFields({
+            longitude: updatedLongitude,
+            latitude: updatedLatitude,
+          });
         }}
       />
       {rows.map((row) => {

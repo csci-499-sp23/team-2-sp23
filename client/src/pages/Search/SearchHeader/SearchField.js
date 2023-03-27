@@ -52,11 +52,11 @@ function SearchField(props) {
   });
 
   const formik = useFormik({
-    initialValues: props.initialSearch,
+    initialValues: props.searchFields,
+    enableReinitialize: true,
     validationSchema: validation,
     onSubmit: (data) => {
-      console.log(data);
-      props.retrieveRestaurants(data);
+      props.updateFields(data);
     },
   });
 
