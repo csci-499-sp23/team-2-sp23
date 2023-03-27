@@ -1,6 +1,6 @@
+/*global google*/
 import React from "react";
 import { GoogleMap, useJsApiLoader, Marker } from "@react-google-maps/api";
-
 const containerStyle = {
   width: "100%",
   height: "80vh",
@@ -27,6 +27,8 @@ function Map({ longitude, latitude, rows }) {
     setMap(null);
   }, []);
 
+  const AMONGUS = require('../../../assets/images/among-us.webp')
+
   return isLoaded ? (
     <GoogleMap
       state={map}
@@ -35,14 +37,23 @@ function Map({ longitude, latitude, rows }) {
       onLoad={onLoad}
       onUnmount={onUnmount}
     >
-      <Marker position={{ lng: longitude, lat: latitude }} />
+      <Marker
+        position={{
+          lng: longitude,
+          lat: latitude,
+        }}
+        icon={{
+          url: AMONGUS,
+          scaledSize: new google.maps.Size(40, 48),
+        }}
+      />
       {rows.map((row) => {
         const { restaurant } = row;
         const coordinates = restaurant.location.coordinates;
         const [longitude, latitude] = coordinates;
         return (
           <Marker
-            key={row.restaurant.yelp_id}
+            key={restaurant.yelp_id}
             position={{
               lng: longitude,
               lat: latitude,
