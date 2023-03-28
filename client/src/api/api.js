@@ -2,7 +2,7 @@ import axios from "axios";
 
 export default async function Api({ method, endpoint, query, body }) {
   const api = axios.create({
-    baseURL: "http://localhost:3001",
+    baseURL: "https://budget-eats.onrender.com",
   });
 
   const request = {
