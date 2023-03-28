@@ -13,10 +13,8 @@ export default function Navbar() {
   return (
     <nav>
       <div className="navbar-content">
-        <div>
-          <img src={logo} className="github-logo" alt="github-logo" />
-        </div>
-        <Link style={linkStyle } to="/search">
+        <img src={logo} className="github-logo" alt="github-logo" />
+        <Link style={linkStyle} to="/search">
           Search
         </Link>
         <div className="right-logo">
