@@ -62,7 +62,12 @@ function RestaurantCard({ restaurant, foods }) {
             style={{ color: "hsl(30,90%,50%)", fontSize: "0.75rem" }}
           />
         </div>
-        <IconButton style={{ padding: 0 }}>
+        <IconButton
+          style={{ padding: 0 }}
+          onClick={() => {
+            window.open(restaurant.yelp_url, "_blank", "noreferrer");
+          }}
+        >
           <ChevronRightIcon style={{ padding: 0 }} />
         </IconButton>
       </div>
