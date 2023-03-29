@@ -13,9 +13,12 @@ export default function Navbar() {
   return (
     <nav>
       <div className="navbar-content">
-        <img src={logo} className="github-logo" alt="github-logo" />
+        <img src={logo} className="logo" alt="logo" />
         <Link style={linkStyle} to="/search">
           Search
+        </Link>
+        <Link style={linkStyle} to="/restaurant">
+          Restaurant
         </Link>
         <div className="right-logo">
           <a
@@ -23,7 +26,7 @@ export default function Navbar() {
             target="_blank"
             rel="noreferrer"
           >
-            <img src={githubLogo} className="github-logo" alt="github-logo" />
+            <img src={githubLogo} className="logo" alt="github-logo" />
           </a>
         </div>
       </div>
