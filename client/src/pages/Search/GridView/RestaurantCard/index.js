@@ -4,6 +4,7 @@ import Details from "./Details";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import FastfoodIcon from "@mui/icons-material/Fastfood";
 import { IconButton } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const classes = {
   cardContainer: {
@@ -40,6 +41,7 @@ const classes = {
 };
 
 function RestaurantCard({ restaurant, foods }) {
+  const navigate = useNavigate();
   return (
     <div style={classes.cardContainer}>
       <div style={classes.retaurantInfo}>
@@ -65,7 +67,7 @@ function RestaurantCard({ restaurant, foods }) {
         <IconButton
           style={{ padding: 0 }}
           onClick={() => {
-            window.open(restaurant.yelp_url, "_blank", "noreferrer");
+            navigate(`/restaurant?yelp_id=${restaurant.yelp_id}`);
           }}
         >
           <ChevronRightIcon style={{ padding: 0 }} />

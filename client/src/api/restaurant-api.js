@@ -30,9 +30,20 @@ async function getNearbyRestaurantsInBudget({
   });
 }
 
+async function getRestaurantByYelpId(yelpId) {
+  return api({
+    method: "get",
+    endpoint: "restaurant/find-yelp-id",
+    query: {
+      yelp_id: yelpId,
+    },
+  });
+}
+
 const RestaurantAPI = {
   getNearbyRestaurants,
   getNearbyRestaurantsInBudget,
+  getRestaurantByYelpId,
 };
 
 export default RestaurantAPI;
