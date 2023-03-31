@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { parseQueryParams } from "../../utils/parseQueryParams";
 import RestaurantAPI from "../../api/restaurant-api";
-import Header from "./Header";
+import RestaurantView from "./RestaurantView";
+import FallbackView from "./FallBackView";
 
 function Restaurant() {
   const { search } = useLocation();
@@ -28,13 +29,9 @@ function Restaurant() {
   }, [search]);
 
   return !!restaurant ? (
-    <div>
-      <Header />
-      {restaurant.name}
-      {foods.length}
-    </div>
+    <RestaurantView restaurant={restaurant} foods={foods} />
   ) : (
-    <div>No restaurant found</div>
+    <FallbackView />
   );
 }
 
