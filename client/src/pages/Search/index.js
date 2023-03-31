@@ -1,9 +1,11 @@
+import { useEffect, useState } from "react";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { useDispatch } from "react-redux";
+import { setFinished, setLoading } from "../../store/reducers/progress";
+import RestaurantAPI from "../../api/restaurant-api";
 import GridView from "./GridView";
 import MapView from "./MapView";
-import RestaurantAPI from "../../api/restaurant-api";
-import { useEffect, useState } from "react";
 import SearchHeader from "./SearchHeader";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 const DEFAULT_SEARCH = {
   longitude: -73.96455592421076,
@@ -13,6 +15,7 @@ const DEFAULT_SEARCH = {
 };
 
 export default function Search() {
+  const dispatch = useDispatch();
   const [restaurants, setRestaurants] = useState([]);
   const [searchFields, setSearchFields] = useState({
     latitude: DEFAULT_SEARCH.latitude,
@@ -33,11 +36,21 @@ export default function Search() {
       meters,
       budget,
     };
+
+    dispatch(setLoading(true));
+    dispatch(setFinished(false));
+
     const retrievedRestaurants =
       await RestaurantAPI.getNearbyRestaurantsInBudget(query);
 
+    dispatch(setFinished(true));
+
     updateFields({ latitude, longitude, meters, budget });
     setRestaurants(retrievedRestaurants.rows);
+
+    setTimeout(() => {
+      dispatch(setLoading(false));
+    }, 600);
   }
 
   const theme = createTheme({

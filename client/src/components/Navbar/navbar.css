@@ -1,4 +1,11 @@
 nav {
+  position: fixed;
+  top: 0;
+  z-index: 1;
+  width: 100%;
+}
+
+.navbar-wrapper {
   height: var(--navbar-height);
   background-color: hsl(25, 85%, 57.5%);
   width: 100%;
@@ -6,9 +13,6 @@ nav {
   justify-content: center;
   align-items: center;
   border-bottom: 2px solid hsl(35, 100%, 40%);
-  position: fixed;
-  top: 0;
-  z-index: 1;
 }
 
 .navbar-content {
