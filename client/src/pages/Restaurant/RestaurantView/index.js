@@ -12,6 +12,7 @@ export default function RestaurantView({ restaurant, foods }) {
         imageUrl={restaurant.image_url}
         name={restaurant.name}
         foodCategories={restaurant.food_categories}
+        lastUpdated={restaurant.updated_at ?? restaurant.created_at}
       />
       <RedirectButton image={YelpLogo} url={restaurant.yelp_url} />
       <RedirectButton

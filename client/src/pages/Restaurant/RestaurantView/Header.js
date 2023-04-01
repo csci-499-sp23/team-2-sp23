@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { FastAverageColor } from "fast-average-color";
+import { getAverageColor } from "../../../utils/getAverageColor";
+import { formatDate } from "../../../utils/formatDate";
 
 const classes = {
   container: {
@@ -23,15 +24,23 @@ const classes = {
       "linear-gradient(0deg, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.025))",
   },
   content: {
+    boxSizing: "border-box",
     position: "absolute",
     bottom: 0,
+    width: "100%",
     marginTop: "auto",
+
+    display: "flex",
+    justifyContent: "space-between",
+    flexWrap: "wrap",
+    rowGap: "0.5rem",
+    padding: "1rem",
+    color: "white",
+  },
+  wrapper: {
     display: "flex",
     alignItems: "flex-end",
     gap: "1rem",
-    paddingInline: "1rem",
-    paddingBottom: "1rem",
-    color: "white",
   },
   profile: {
     width: "84px",
@@ -39,6 +48,7 @@ const classes = {
     objectFit: "cover",
     borderRadius: "1rem",
     border: "2px solid white",
+    marginBottom: "-0.25rem",
   },
   restaurantName: {
     fontSize: "1.25rem",
@@ -47,23 +57,23 @@ const classes = {
     fontSize: "0.75rem",
     color: "#c9c9c9",
   },
+  lastUpdated: {
+    fontSize: "0.75rem",
+    color: "hsl(25,80%,80%)",
+    marginRight: "auto",
+  },
 };
 
-function Header({ imageUrl, name, foodCategories }) {
-  const [headerColor, setHeaderColor] = useState(null);
-  const colorRender = new FastAverageColor();
+function Header({ imageUrl, name, foodCategories, lastUpdated }) {
+  const [headerColor, setHeaderColor] = useState("white");
 
-  // calculates the average color of an image
-  // sets headerColor when completed, otherwise uses white
-  async function getAverageColor(imageUrl) {
-    await colorRender
-      .getColorAsync(imageUrl)
-      .then((color) => setHeaderColor(color.hex))
-      .catch(() => setHeaderColor("white"));
+  async function renderHeaderColor(imageUrl) {
+    const averageColor = await getAverageColor(imageUrl);
+    setHeaderColor(averageColor);
   }
 
   useEffect(() => {
-    getAverageColor(imageUrl);
+    renderHeaderColor(imageUrl);
     // eslint-disable-next-line
   }, [imageUrl]);
 
@@ -71,10 +81,17 @@ function Header({ imageUrl, name, foodCategories }) {
     <div style={{ ...classes.container, backgroundColor: headerColor }}>
       <div style={classes.bottomBlur} />
       <div style={classes.content}>
-        <img src={imageUrl} style={classes.profile} alt={name} />
-        <div style={{ marginBottom: "0.25rem" }}>
-          <div style={classes.restaurantName}>{name}</div>
-          <div style={classes.categories}>{foodCategories.join(" • ")}</div>
+        <div style={classes.wrapper}>
+          <img src={imageUrl} style={classes.profile} alt={name} />
+          <div>
+            <div style={classes.restaurantName}>{name}</div>
+            <div style={classes.categories}>{foodCategories.join(" • ")}</div>
+          </div>
+        </div>
+        <div style={classes.wrapper}>
+          <span style={classes.lastUpdated}>
+            Last updated: {formatDate(lastUpdated)}
+          </span>
         </div>
       </div>
     </div>
