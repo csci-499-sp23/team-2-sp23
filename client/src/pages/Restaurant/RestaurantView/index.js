@@ -9,6 +9,9 @@ export default function RestaurantView({ restaurant, foods }) {
   return (
     <div>
       <Header
+        restaurantId={restaurant.yelp_id}
+        rating={restaurant.rating}
+        reviewCount={restaurant.review_count}
         imageUrl={restaurant.image_url}
         name={restaurant.name}
         foodCategories={restaurant.food_categories}

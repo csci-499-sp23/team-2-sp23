@@ -3,13 +3,14 @@ import FullStar from "@mui/icons-material/Star";
 import PartStar from "@mui/icons-material/StarHalf";
 import ZeroStar from "@mui/icons-material/StarOutline";
 
-const starStyle = {
-  color: "hsl(35,100%,45%)",
-  width: "12px",
-  height: "12px",
-};
+function ReviewStars({ rating, restaurantId, style }) {
+  const starStyle = {
+    color: "hsl(35,100%,45%)",
+    width: "12px",
+    height: "12px",
+    ...style,
+  };
 
-function ReviewStars({ rating, restaurantId }) {
   const MAX_STARS = 5;
   const fullStarCount = Math.floor(rating);
   const partStarCount = rating % 1 !== 0;

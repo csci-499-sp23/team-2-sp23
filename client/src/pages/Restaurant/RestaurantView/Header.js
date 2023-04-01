@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { getAverageColor } from "../../../utils/getAverageColor";
 import { formatDate } from "../../../utils/formatDate";
+import ReviewStars from "../../../components/ReviewStars";
 
 const classes = {
   container: {
@@ -53,19 +54,26 @@ const classes = {
   restaurantName: {
     fontSize: "1.25rem",
   },
-  categories: {
+  smallText: {
     fontSize: "0.75rem",
-    color: "#c9c9c9",
   },
   lastUpdated: {
-    fontSize: "0.75rem",
+    fontSize: "0.9rem",
     color: "hsl(25,80%,80%)",
     marginRight: "auto",
   },
 };
 
-function Header({ imageUrl, name, foodCategories, lastUpdated }) {
-  const [headerColor, setHeaderColor] = useState("white");
+function Header({
+  restaurantId,
+  rating,
+  reviewCount,
+  imageUrl,
+  name,
+  foodCategories,
+  lastUpdated,
+}) {
+  const [headerColor, setHeaderColor] = useState(null);
 
   async function renderHeaderColor(imageUrl) {
     const averageColor = await getAverageColor(imageUrl);
@@ -85,7 +93,21 @@ function Header({ imageUrl, name, foodCategories, lastUpdated }) {
           <img src={imageUrl} style={classes.profile} alt={name} />
           <div>
             <div style={classes.restaurantName}>{name}</div>
-            <div style={classes.categories}>{foodCategories.join(" • ")}</div>
+            <div style={{ display: "flex", gap: "0.25rem" }}>
+              <ReviewStars
+                rating={rating}
+                restaurantId={restaurantId}
+                style={{
+                  color: "hsl(25,80%,60%)",
+                  height: "14px",
+                  width: "14px",
+                }}
+              />
+              <span style={classes.smallText}>({reviewCount})</span>
+            </div>
+            <div style={{ ...classes.smallText, color: "#c9c9c9" }}>
+              {foodCategories.join(" • ")}
+            </div>
           </div>
         </div>
         <div style={classes.wrapper}>
