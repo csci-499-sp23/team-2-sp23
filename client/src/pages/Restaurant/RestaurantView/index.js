@@ -8,15 +8,7 @@ export default function RestaurantView({ restaurant, foods }) {
 
   return (
     <div>
-      <Header
-        restaurantId={restaurant.yelp_id}
-        rating={restaurant.rating}
-        reviewCount={restaurant.review_count}
-        imageUrl={restaurant.image_url}
-        name={restaurant.name}
-        foodCategories={restaurant.food_categories}
-        lastUpdated={restaurant.updated_at ?? restaurant.created_at}
-      />
+      <Header restaurant={restaurant} />
       <RedirectButton image={YelpLogo} url={restaurant.yelp_url} />
       <RedirectButton
         image={GoogleMapsLogo}

@@ -34,8 +34,9 @@ const classes = {
     display: "flex",
     justifyContent: "space-between",
     flexWrap: "wrap",
-    rowGap: "0.5rem",
+    gap: "0.5rem",
     padding: "1rem",
+    paddingBottom: "0.5rem",
     color: "white",
   },
   wrapper: {
@@ -49,7 +50,6 @@ const classes = {
     objectFit: "cover",
     borderRadius: "1rem",
     border: "2px solid white",
-    marginBottom: "-0.25rem",
   },
   restaurantName: {
     fontSize: "1.25rem",
@@ -64,15 +64,19 @@ const classes = {
   },
 };
 
-function Header({
-  restaurantId,
-  rating,
-  reviewCount,
-  imageUrl,
-  name,
-  foodCategories,
-  lastUpdated,
-}) {
+function Header({ restaurant }) {
+  const {
+    restaurant_id,
+    rating,
+    review_count,
+    price_category,
+    image_url,
+    name,
+    food_categories,
+    updated_at,
+    created_at,
+  } = restaurant;
+  const lastUpdated = updated_at ?? created_at;
   const [headerColor, setHeaderColor] = useState(null);
 
   async function renderHeaderColor(imageUrl) {
@@ -81,32 +85,35 @@ function Header({
   }
 
   useEffect(() => {
-    renderHeaderColor(imageUrl);
+    renderHeaderColor(image_url);
     // eslint-disable-next-line
-  }, [imageUrl]);
+  }, [image_url]);
 
   return (
     <div style={{ ...classes.container, backgroundColor: headerColor }}>
       <div style={classes.bottomBlur} />
       <div style={classes.content}>
         <div style={classes.wrapper}>
-          <img src={imageUrl} style={classes.profile} alt={name} />
+          <img src={image_url} style={classes.profile} alt={name} />
           <div>
             <div style={classes.restaurantName}>{name}</div>
             <div style={{ display: "flex", gap: "0.25rem" }}>
               <ReviewStars
                 rating={rating}
-                restaurantId={restaurantId}
+                restaurantId={restaurant_id}
                 style={{
                   color: "hsl(25,80%,60%)",
                   height: "14px",
                   width: "14px",
                 }}
               />
-              <span style={classes.smallText}>({reviewCount})</span>
+              <span style={classes.smallText}>({review_count})</span>
+              {!!price_category && (
+                <span style={classes.smallText}>• {price_category}</span>
+              )}
             </div>
             <div style={{ ...classes.smallText, color: "#c9c9c9" }}>
-              {foodCategories.join(" • ")}
+              {food_categories.join(" • ")}
             </div>
           </div>
         </div>
