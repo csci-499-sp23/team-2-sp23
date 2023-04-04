@@ -6,7 +6,7 @@ const containerStyle = {
   height: "80vh",
 };
 
-function Map({ longitude, latitude, rows, updateFields }) {
+function Map({ longitude, latitude, rows, updateFields, showRestaurant }) {
   const center = {
     lat: latitude,
     lng: longitude,
@@ -67,6 +67,7 @@ function Map({ longitude, latitude, rows, updateFields }) {
               lng: longitude,
               lat: latitude,
             }}
+            onClick={() => showRestaurant(restaurant)}
           />
         );
       })}
