@@ -7,6 +7,7 @@ import GridView from "./GridView";
 import MapView from "./MapView";
 import SearchHeader from "./SearchHeader";
 import { useJsApiLoader } from "@react-google-maps/api";
+import AddressSearch from "./AddressSearch";
 
 const DEFAULT_SEARCH = {
   longitude: -73.96455592421076,
@@ -14,6 +15,8 @@ const DEFAULT_SEARCH = {
   meters: 300,
   budget: 10,
 };
+
+const LIBRARIES = ["places"];
 
 export default function Search() {
   const dispatch = useDispatch();
@@ -28,7 +31,8 @@ export default function Search() {
 
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
-    googleMapsApiKey: "",
+    googleMapsApiKey: process.env.REACT_APP_GOOGLE_API_KEY,
+    libraries: LIBRARIES,
   });
 
   function updateFields(updatedFields) {
@@ -83,20 +87,27 @@ export default function Search() {
   return (
     <div>
       <ThemeProvider theme={theme}>
-        <SearchHeader
-          updateFields={updateFields}
-          searchFields={searchFields}
-          viewMode={viewMode}
-          setViewMode={setViewMode}
-        />
-        {viewMode === "grid" && <GridView rows={restaurants} />}
-        {viewMode === "map" && isLoaded && (
-          <MapView
-            latitude={searchFields.latitude}
-            longitude={searchFields.longitude}
-            rows={restaurants}
-            updateFields={updateFields}
-          />
+        {isLoaded && (
+          <>
+            <SearchHeader
+              updateFields={updateFields}
+              searchFields={searchFields}
+              viewMode={viewMode}
+              setViewMode={setViewMode}
+            />
+            <AddressSearch updateFields={updateFields} />
+            {viewMode === "grid" && <GridView rows={restaurants} />}
+            {viewMode === "map" && (
+              <>
+                <MapView
+                  latitude={searchFields.latitude}
+                  longitude={searchFields.longitude}
+                  rows={restaurants}
+                  updateFields={updateFields}
+                />
+              </>
+            )}
+          </>
         )}
       </ThemeProvider>
     </div>
