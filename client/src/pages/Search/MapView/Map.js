@@ -1,6 +1,6 @@
 /*global google*/
 import React from "react";
-import { GoogleMap, useJsApiLoader, Marker } from "@react-google-maps/api";
+import { GoogleMap, useJsApiLoader, MarkerF } from "@react-google-maps/api";
 const containerStyle = {
   width: "100%",
   height: "80vh",
@@ -37,7 +37,7 @@ function Map({ longitude, latitude, rows, updateFields, showRestaurant }) {
       onLoad={onLoad}
       onUnmount={onUnmount}
     >
-      <Marker
+      <MarkerF
         position={{
           lng: longitude,
           lat: latitude,
@@ -61,7 +61,7 @@ function Map({ longitude, latitude, rows, updateFields, showRestaurant }) {
         const coordinates = restaurant.location.coordinates;
         const [longitude, latitude] = coordinates;
         return (
-          <Marker
+          <MarkerF
             key={restaurant.yelp_id}
             position={{
               lng: longitude,
