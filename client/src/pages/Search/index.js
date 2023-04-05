@@ -6,6 +6,7 @@ import RestaurantAPI from "../../api/restaurant-api";
 import GridView from "./GridView";
 import MapView from "./MapView";
 import SearchHeader from "./SearchHeader";
+import { useJsApiLoader } from "@react-google-maps/api";
 
 const DEFAULT_SEARCH = {
   longitude: -73.96455592421076,
@@ -24,6 +25,11 @@ export default function Search() {
     budget: DEFAULT_SEARCH.budget,
   });
   const [viewMode, setViewMode] = useState("map");
+
+  const { isLoaded } = useJsApiLoader({
+    id: "google-map-script",
+    googleMapsApiKey: "",
+  });
 
   function updateFields(updatedFields) {
     setSearchFields({ ...searchFields, ...updatedFields });
@@ -84,7 +90,7 @@ export default function Search() {
           setViewMode={setViewMode}
         />
         {viewMode === "grid" && <GridView rows={restaurants} />}
-        {viewMode === "map" && (
+        {viewMode === "map" && isLoaded && (
           <MapView
             latitude={searchFields.latitude}
             longitude={searchFields.longitude}
