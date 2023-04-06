@@ -1,12 +1,15 @@
 /*global google*/
 import React from "react";
 import { GoogleMap, MarkerF } from "@react-google-maps/api";
+import { useSelector } from "react-redux";
+
 const containerStyle = {
   width: "100%",
   height: "80vh",
 };
 
 function Map({ longitude, latitude, rows, updateFields, showRestaurant }) {
+  const progress = useSelector((state) => state.progress);
   const center = {
     lat: latitude,
     lng: longitude,
@@ -42,7 +45,7 @@ function Map({ longitude, latitude, rows, updateFields, showRestaurant }) {
           url: AMONGUS,
           scaledSize: new google.maps.Size(40, 48),
         }}
-        draggable={true}
+        draggable={progress.finishedLoading}
         onDragEnd={(event) => {
           const updatedLatitude = event.latLng.lat();
           const updatedLongitude = event.latLng.lng();
