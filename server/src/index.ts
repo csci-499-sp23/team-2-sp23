@@ -5,6 +5,7 @@ import generateRoutes from "./routes";
 import scheduleJobs from "./jobs";
 
 import * as dotenv from "dotenv";
+import { generateRandomManhattanCoordinates } from "./yelp-services/manhattan-random";
 dotenv.config();
 
 // Singleton app for handling server requests
