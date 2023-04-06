@@ -11,6 +11,10 @@ export default function MapView({ longitude, latitude, rows, updateFields }) {
     setShowing(true);
   }
 
+  function handleHideRestaurant() {
+    setShowing(false);
+  }
+
   return (
     <>
       <Map
@@ -20,7 +24,12 @@ export default function MapView({ longitude, latitude, rows, updateFields }) {
         updateFields={updateFields}
         showRestaurant={handleShowRestaurant}
       />
-      {!!showing && <RestaurantPreview restaurant={selectedRestaurant} />}
+      {!!showing && (
+        <RestaurantPreview
+          restaurant={selectedRestaurant}
+          hideRestaurant={handleHideRestaurant}
+        />
+      )}
     </>
   );
 }
