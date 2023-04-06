@@ -1,6 +1,7 @@
-import { TextField } from "@mui/material";
+import { IconButton, InputAdornment, TextField } from "@mui/material";
 import { usePlacesWidget } from "react-google-autocomplete";
 import { HUNTER_COLLEGE_ADDRESS } from "./constants";
+import ClearIcon from "@mui/icons-material/Clear";
 
 export default function AddressSearch({ updateFields }) {
   const { ref: googlePlacesRef } = usePlacesWidget({
@@ -26,6 +27,20 @@ export default function AddressSearch({ updateFields }) {
       variant="standard"
       sx={{ width: "100%", marginBottom: "0.25rem" }}
       defaultValue={HUNTER_COLLEGE_ADDRESS}
+      InputProps={{
+        endAdornment: (
+          <InputAdornment position="end" padding={0}>
+            <IconButton
+              onClick={() => {
+                googlePlacesRef.current.value = "";
+              }}
+              sx={{ p: 0.25 }}
+            >
+              <ClearIcon />
+            </IconButton>
+          </InputAdornment>
+        ),
+      }}
     />
   );
 }
