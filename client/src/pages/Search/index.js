@@ -6,24 +6,21 @@ import RestaurantAPI from "../../api/restaurant-api";
 import GridView from "./GridView";
 import MapView from "./MapView";
 import SearchHeader from "./SearchHeader";
-
-const DEFAULT_SEARCH = {
-  longitude: -73.96455592421076,
-  latitude: 40.767851967738736,
-  meters: 300,
-  budget: 10,
-};
+import { useJsApiLoader } from "@react-google-maps/api";
+import AddressSearch from "./AddressSearch";
+import { DEFAULT_SEARCH_QUERY, SEARCH_LOCATION_TYPES } from "./constants";
 
 export default function Search() {
   const dispatch = useDispatch();
   const [restaurants, setRestaurants] = useState([]);
-  const [searchFields, setSearchFields] = useState({
-    latitude: DEFAULT_SEARCH.latitude,
-    longitude: DEFAULT_SEARCH.longitude,
-    meters: DEFAULT_SEARCH.meters,
-    budget: DEFAULT_SEARCH.budget,
-  });
+  const [searchFields, setSearchFields] = useState(DEFAULT_SEARCH_QUERY);
   const [viewMode, setViewMode] = useState("map");
+
+  const { isLoaded } = useJsApiLoader({
+    id: "google-map-script",
+    googleMapsApiKey: process.env.REACT_APP_GOOGLE_API_KEY,
+    libraries: SEARCH_LOCATION_TYPES,
+  });
 
   function updateFields(updatedFields) {
     setSearchFields({ ...searchFields, ...updatedFields });
@@ -75,24 +72,27 @@ export default function Search() {
   }, [longitude, latitude, meters, budget]);
 
   return (
-    <div>
-      <ThemeProvider theme={theme}>
-        <SearchHeader
-          updateFields={updateFields}
-          searchFields={searchFields}
-          viewMode={viewMode}
-          setViewMode={setViewMode}
-        />
-        {viewMode === "grid" && <GridView rows={restaurants} />}
-        {viewMode === "map" && (
-          <MapView
-            latitude={searchFields.latitude}
-            longitude={searchFields.longitude}
-            rows={restaurants}
+    <ThemeProvider theme={theme}>
+      {isLoaded && (
+        <>
+          <SearchHeader
             updateFields={updateFields}
+            searchFields={searchFields}
+            viewMode={viewMode}
+            setViewMode={setViewMode}
           />
-        )}
-      </ThemeProvider>
-    </div>
+          <AddressSearch updateFields={updateFields} />
+          {viewMode === "grid" && <GridView rows={restaurants} />}
+          {viewMode === "map" && (
+            <MapView
+              latitude={searchFields.latitude}
+              longitude={searchFields.longitude}
+              rows={restaurants}
+              updateFields={updateFields}
+            />
+          )}
+        </>
+      )}
+    </ThemeProvider>
   );
 }
