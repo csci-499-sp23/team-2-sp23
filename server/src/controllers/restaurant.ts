@@ -76,8 +76,22 @@ async function findByYelpId(
     response.status(500).json(error);
   }
 }
+
+async function findFoodCategories(
+  request: Request,
+  response: Response
+): Promise<void> {
+  try {
+    const foodCategories: string[] = await RestaurantService.findFoodCategories();
+    response.status(200).json(foodCategories);
+  } catch (error) {
+    response.status(500).json(error);
+  }
+}
+
 export default {
   findNearbyRestaurants,
   findNearWithinBudget,
   findByYelpId,
+  findFoodCategories,
 };
