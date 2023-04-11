@@ -35,7 +35,7 @@ function FoodCard({ name, price, description, imageUrl }) {
       borderRadius: "2px",
     },
   };
-  
+
   return (
     <div style={classes.cardContainer}>
       <img src={imageUrl} style={classes.image} alt="Food Item" />
