@@ -9,12 +9,15 @@ import SearchHeader from "./SearchHeader";
 import { useJsApiLoader } from "@react-google-maps/api";
 import AddressSearch from "./AddressSearch";
 import { DEFAULT_SEARCH_QUERY, SEARCH_LOCATION_TYPES } from "./constants";
+import useMenuModal from "../../hooks/useMenuModal";
+import { Button } from "@mui/material";
 
 export default function Search() {
   const dispatch = useDispatch();
   const [restaurants, setRestaurants] = useState([]);
   const [searchFields, setSearchFields] = useState(DEFAULT_SEARCH_QUERY);
   const [viewMode, setViewMode] = useState("map");
+  const { openModal, MenuModal } = useMenuModal();
 
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
@@ -73,6 +76,8 @@ export default function Search() {
 
   return (
     <ThemeProvider theme={theme}>
+      <Button onClick={openModal}>open Modal</Button>
+      <MenuModal />
       {isLoaded && (
         <>
           <SearchHeader

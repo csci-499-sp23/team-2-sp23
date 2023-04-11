@@ -1,8 +1,7 @@
 import React from "react";
 import SearchField from "./SearchField";
 import ViewToggler from "./ViewToggler";
-import { Box, Button } from "@mui/material";
-import useMenuModal from "../../../hooks/useMenuModal";
+import { Box } from "@mui/material";
 
 const classes = {
   headerContainer: {
@@ -25,11 +24,8 @@ export default function SearchHeader({
   viewMode,
   setViewMode,
 }) {
-  const { openModal, MenuModal } = useMenuModal();
   return (
     <div style={classes.headerContainer}>
-      <Button onClick={openModal}>open Modal</Button>
-      <MenuModal />
       <SearchField updateFields={updateFields} searchFields={searchFields} />
       <Box sx={classes.separator} />
       <ViewToggler viewMode={viewMode} setViewMode={setViewMode} />
