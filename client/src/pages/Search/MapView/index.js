@@ -2,7 +2,14 @@ import React, { useState } from "react";
 import Map from "./Map";
 import RestaurantPreview from "./RestaurantPreview";
 
-export default function MapView({ longitude, latitude, rows, updateFields }) {
+export default function MapView({
+  longitude,
+  latitude,
+  rows,
+  updateFields,
+  setModalFoods,
+  openModal,
+}) {
   const [selectedRestaurant, setSelectedRestaurant] = useState({});
   const [showing, setShowing] = useState(false);
 
@@ -28,6 +35,8 @@ export default function MapView({ longitude, latitude, rows, updateFields }) {
         <RestaurantPreview
           restaurant={selectedRestaurant}
           hideRestaurant={handleHideRestaurant}
+          setModalFoods={setModalFoods}
+          openModal={openModal}
         />
       )}
     </>
