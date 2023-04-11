@@ -1,10 +1,8 @@
 import React from "react";
 import ImageCard from "./ImageCard";
 import Details from "./Details";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import FastfoodIcon from "@mui/icons-material/Fastfood";
-import { Button, IconButton } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { Button } from "@mui/material";
 
 const classes = {
   cardContainer: {
@@ -45,7 +43,6 @@ const classes = {
 };
 
 function RestaurantCard({ restaurant, foods, setModalFoods, openModal }) {
-  const navigate = useNavigate();
   return (
     <div style={classes.cardContainer}>
       <div style={classes.retaurantInfo}>
@@ -77,14 +74,6 @@ function RestaurantCard({ restaurant, foods, setModalFoods, openModal }) {
             style={{ color: "hsl(30,90%,50%)", fontSize: "0.75rem" }}
           />
         </Button>
-        <IconButton
-          style={{ padding: 0 }}
-          onClick={() => {
-            navigate(`/restaurant?yelp_id=${restaurant.yelp_id}`);
-          }}
-        >
-          <ChevronRightIcon style={{ padding: 0 }} />
-        </IconButton>
       </div>
     </div>
   );
