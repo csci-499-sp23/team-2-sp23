@@ -32,7 +32,6 @@ const classes = {
   },
   nameContainer: {
     fontSize: "1.25rem",
-    textDecoration: "underline",
     color: "black",
     width: "fit-content",
   },
