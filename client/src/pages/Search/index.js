@@ -10,14 +10,13 @@ import { useJsApiLoader } from "@react-google-maps/api";
 import AddressSearch from "./AddressSearch";
 import { DEFAULT_SEARCH_QUERY, SEARCH_LOCATION_TYPES } from "./constants";
 import useMenuModal from "../../hooks/useMenuModal";
-import { Button } from "@mui/material";
 
 export default function Search() {
   const dispatch = useDispatch();
   const [restaurants, setRestaurants] = useState([]);
   const [searchFields, setSearchFields] = useState(DEFAULT_SEARCH_QUERY);
   const [viewMode, setViewMode] = useState("map");
-  const { openModal, MenuModal } = useMenuModal();
+  const { openModal, setFoods, MenuModal } = useMenuModal();
 
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
@@ -76,7 +75,6 @@ export default function Search() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Button onClick={openModal}>open Modal</Button>
       <MenuModal />
       {isLoaded && (
         <>
@@ -87,13 +85,21 @@ export default function Search() {
             setViewMode={setViewMode}
           />
           <AddressSearch updateFields={updateFields} />
-          {viewMode === "grid" && <GridView rows={restaurants} />}
+          {viewMode === "grid" && (
+            <GridView
+              rows={restaurants}
+              setModalFoods={setFoods}
+              openModal={openModal}
+            />
+          )}
           {viewMode === "map" && (
             <MapView
               latitude={searchFields.latitude}
               longitude={searchFields.longitude}
               rows={restaurants}
               updateFields={updateFields}
+              setModalFoods={setFoods}
+              openModal={openModal}
             />
           )}
         </>

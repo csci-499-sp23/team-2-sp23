@@ -9,7 +9,7 @@ const classes = {
   },
 };
 
-function CardView({ coordinates, rows }) {
+function CardView({ rows, setModalFoods, openModal }) {
   return (
     <div style={classes.restaurantList}>
       {rows.map((row) => (
@@ -17,6 +17,8 @@ function CardView({ coordinates, rows }) {
           key={row.restaurant.yelp_id}
           restaurant={row.restaurant}
           foods={row.foods}
+          setModalFoods={setModalFoods}
+          openModal={openModal}
         />
       ))}
     </div>

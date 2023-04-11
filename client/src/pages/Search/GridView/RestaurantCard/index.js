@@ -3,7 +3,7 @@ import ImageCard from "./ImageCard";
 import Details from "./Details";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import FastfoodIcon from "@mui/icons-material/Fastfood";
-import { IconButton } from "@mui/material";
+import { Button, IconButton } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 const classes = {
@@ -31,16 +31,20 @@ const classes = {
   },
   foodCount: {
     display: "flex",
-    flexDirection: "column",
     alignItems: "center",
-    width: "100%",
+    gap: "0.25rem",
+    minHeight: 0,
+    minWidth: 0,
+    padding: 0,
+    paddingInline: "0.5rem",
+    marginRight: "0.5rem",
   },
   title: {
     fontSize: "0.9rem",
   },
 };
 
-function RestaurantCard({ restaurant, foods }) {
+function RestaurantCard({ restaurant, foods, setModalFoods, openModal }) {
   const navigate = useNavigate();
   return (
     <div style={classes.cardContainer}>
@@ -58,12 +62,21 @@ function RestaurantCard({ restaurant, foods }) {
         />
       </div>
       <div style={classes.foodInfo}>
-        <div style={classes.foodCount}>
-          <div style={{ fontSize: "0.75rem" }}>{foods.length}</div>
+        <Button
+          style={classes.foodCount}
+          variant="outlined"
+          onClick={() => {
+            setModalFoods(foods);
+            openModal();
+          }}
+        >
+          <span style={{ fontSize: "0.75rem", fontWeight: 400 }}>
+            {foods.length}
+          </span>
           <FastfoodIcon
             style={{ color: "hsl(30,90%,50%)", fontSize: "0.75rem" }}
           />
-        </div>
+        </Button>
         <IconButton
           style={{ padding: 0 }}
           onClick={() => {
