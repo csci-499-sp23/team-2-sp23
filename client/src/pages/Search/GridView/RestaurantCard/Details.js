@@ -1,5 +1,6 @@
 import React from "react";
 import ReviewStars from "../../../../components/ReviewStars";
+import { Link } from "react-router-dom";
 
 const classes = {
   detailContainer: {
@@ -12,6 +13,7 @@ const classes = {
     overflow: "hidden",
     whiteSpace: "nowrap",
     textOverflow: "ellipsis",
+    color: "black",
   },
   address: {
     fontSize: "0.7rem",
@@ -54,7 +56,9 @@ function Details({
 }) {
   return (
     <div style={classes.detailContainer}>
-      <div style={classes.title}>{name}</div>
+      <Link style={classes.title} to={`/restaurant?yelp_id=${restaurantId}`}>
+        {name}
+      </Link>
       <div style={classes.address}>
         {address} {state}, {zipCode}
       </div>
