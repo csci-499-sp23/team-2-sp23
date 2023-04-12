@@ -38,7 +38,7 @@ function FoodCard({ name, price, description, imageUrl }) {
 
   return (
     <div style={classes.cardContainer}>
-      <img src={imageUrl} style={classes.image} alt="Food Item" />
+      {imageUrl && <img src={imageUrl} style={classes.image} alt="Food Item" />}
       <div>
         <div>{name}</div>
         <div style={classes.foodDescription}>{description}</div>
