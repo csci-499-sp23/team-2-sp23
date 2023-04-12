@@ -177,6 +177,20 @@ async function findByYelpId(yelpId: string): Promise<{
   };
 }
 
+async function findFoodCategories(): Promise<string[]> {
+  const allFoodCategories: string[][] = await RestaurantModel.find({})
+    .select({
+      food_categories: 1,
+      _id: 0,
+    })
+    .then((result: any[]) => result.map((row: any) => row.food_categories));
+
+  // Construct set to remove duplicates
+  const foodCategories = [...new Set(allFoodCategories.flat())];
+
+  return foodCategories.sort();
+}
+
 export default {
   create,
   upsert,
@@ -185,4 +199,5 @@ export default {
   findNear,
   findNearWithinBudget,
   findByYelpId,
+  findFoodCategories,
 };
