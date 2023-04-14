@@ -1,6 +1,7 @@
 import React from "react";
 import ReviewStars from "../../../../components/ReviewStars";
 import { Link } from "react-router-dom";
+import LaunchIcon from "@mui/icons-material/Launch";
 
 const classes = {
   detailContainer: {

@@ -1,6 +1,6 @@
 /*global google*/
 import React from "react";
-import { GoogleMap, MarkerF } from "@react-google-maps/api";
+import { DirectionsRenderer, GoogleMap, MarkerF } from "@react-google-maps/api";
 import { useSelector } from "react-redux";
 
 const containerStyle = {
@@ -8,7 +8,14 @@ const containerStyle = {
   height: "80vh",
 };
 
-function Map({ longitude, latitude, rows, updateFields, showRestaurant }) {
+function Map({
+  longitude,
+  latitude,
+  rows,
+  updateFields,
+  showRestaurant,
+  path,
+}) {
   const progress = useSelector((state) => state.progress);
   const center = {
     lat: latitude,
@@ -55,6 +62,14 @@ function Map({ longitude, latitude, rows, updateFields, showRestaurant }) {
           });
         }}
       />
+      {path && (
+        <DirectionsRenderer
+          options={{
+            directions: path,
+            preserveViewport: true,
+          }}
+        />
+      )}
       {rows.map((row) => {
         const { restaurant } = row;
         const coordinates = restaurant.location.coordinates;
