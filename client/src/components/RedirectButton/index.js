@@ -10,6 +10,7 @@ export default function RedirectButton({ image, url }) {
     },
     buttonContainer: {
       height: "30px",
+      width: "fit-content",
       display: "flex",
       justifyContent: "center",
       backgroundColor: "white",

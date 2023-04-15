@@ -1,0 +1,24 @@
+.info-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.contact-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+@media screen and (max-width: 560px) {
+  .info-container {
+    flex-direction: column;
+    align-items: center;
+  }
+  .contact-container {
+    align-items: center;
+  }
+}
