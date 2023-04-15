@@ -69,7 +69,7 @@ export default function RestaurantInfo({ restaurant }) {
       </div>
       <div style={classes.transactionItemContainer}>
         {transactions.sort().map((transaction) => (
-          <span style={classes.transactionItem}>
+          <span style={classes.transactionItem} key={transaction}>
             <TransactionItem
               transaction={transaction}
               style={{ color: "hsl(25, 85%, 57.5%)" }}
