@@ -2,22 +2,43 @@ import RedirectButton from "../../../components/RedirectButton";
 import YelpLogo from "../../../assets/images/yelp-logo.png";
 import GoogleMapsLogo from "../../../assets/images/google-maps-logo.png";
 import { formatPhoneNumber } from "../../../utils/formatPhoneNumber";
+import TransactionItem from "../../../components/TransactionItem";
+import "./restaurant-info.css";
 
 const classes = {
   container: {
     display: "flex",
-    justifyContent: "space-between",
+    justifyContent: "center",
+    alignItems: "center",
+    columnGap: "1rem",
+    rowGap: "0.5rem",
+    flexWrap: "wrap",
   },
   addressContainer: {
     color: "hsl(30, 80%, 40%)",
   },
   phoneNumberContainer: {
+    width: "fit-content",
     color: "black",
+  },
+  buttonContainer: {
+    display: "flex",
+    gap: "1rem",
+  },
+  transactionItemContainer: {
+    display: "flex",
+    width: "100%",
+    justifyContent: "center",
+    columnGap: "0.5rem",
+  },
+  transactionItem: {
+    display: "flex",
+    alignItems: "center",
   },
 };
 
 export default function RestaurantInfo({ restaurant }) {
-  const { address, location, phone } = restaurant;
+  const { address, location, phone, transactions } = restaurant;
   const { address1, city, state, zip_code } = address;
   const [longitude, latitude] = location.coordinates;
 
@@ -25,22 +46,37 @@ export default function RestaurantInfo({ restaurant }) {
 
   return (
     <div style={classes.container}>
-      <div>
-        <div style={classes.addressContainer}>
-          {address1} {city}, {state} {zip_code}
+      <div className="info-container">
+        <div className="contact-container">
+          <div style={classes.addressContainer}>
+            {address1} {city}, {state} {zip_code}
+          </div>
+          <div>
+            <a
+              style={classes.phoneNumberContainer}
+              href={`tel: ${phoneNumber}`}
+            >
+              {phoneNumber}
+            </a>
+          </div>
         </div>
-        <div>
-          <a style={classes.phoneNumberContainer} href={`tel: ${phoneNumber}`}>
-            {phoneNumber}
-          </a>
+        <div style={classes.buttonContainer}>
+          <RedirectButton image={YelpLogo} url={restaurant.yelp_url} />
+          <RedirectButton
+            image={GoogleMapsLogo}
+            url={`https://www.google.com/maps/search/${latitude},${longitude}`}
+          />
         </div>
       </div>
-      <div style={{ display: "flex", gap: "1rem" }}>
-        <RedirectButton image={YelpLogo} url={restaurant.yelp_url} />
-        <RedirectButton
-          image={GoogleMapsLogo}
-          url={`https://www.google.com/maps/search/${latitude},${longitude}`}
-        />
+      <div style={classes.transactionItemContainer}>
+        {transactions.sort().map((transaction) => (
+          <span style={classes.transactionItem}>
+            <TransactionItem
+              transaction={transaction}
+              style={{ color: "hsl(25, 85%, 57.5%)" }}
+            />
+          </span>
+        ))}
       </div>
     </div>
   );
