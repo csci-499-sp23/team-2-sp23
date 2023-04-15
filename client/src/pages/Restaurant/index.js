@@ -4,8 +4,12 @@ import { parseQueryParams } from "../../utils/parseQueryParams";
 import RestaurantAPI from "../../api/restaurant-api";
 import RestaurantView from "./RestaurantView";
 import FallbackView from "./FallBackView";
+import { useDispatch, useSelector } from "react-redux";
+import { setLoading, setFinished } from "../../store/reducers/progress";
 
 function Restaurant() {
+  const dispatch = useDispatch();
+  const progress = useSelector((state) => state.progress);
   const { search } = useLocation();
   const [restaurant, setRestaurant] = useState(null);
   const [foods, setFoods] = useState(null);
@@ -24,14 +28,24 @@ function Restaurant() {
     const queryString = search.split("?")[1];
     const queryParams = parseQueryParams(queryString);
     const yelpId = queryParams.yelp_id;
+    dispatch(setLoading(true));
+    dispatch(setFinished(false));
 
-    retrieveRestaurant(yelpId);
-  }, [search]);
+    retrieveRestaurant(yelpId).finally(() => {
+      dispatch(setFinished(true));
+      setTimeout(() => {
+        dispatch(setLoading(false));
+      }, 400);
+    });
+  }, [search, dispatch]);
 
-  return !!restaurant ? (
-    <RestaurantView restaurant={restaurant} foods={foods} />
-  ) : (
-    <FallbackView />
+  return (
+    progress.finishedLoading &&
+    (restaurant ? (
+      <RestaurantView restaurant={restaurant} foods={foods} />
+    ) : (
+      <FallbackView />
+    ))
   );
 }
 
