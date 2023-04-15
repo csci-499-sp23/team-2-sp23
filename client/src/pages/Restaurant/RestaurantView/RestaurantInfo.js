@@ -1,8 +1,9 @@
 import RedirectButton from "../../../components/RedirectButton";
 import YelpLogo from "../../../assets/images/yelp-logo.png";
 import GoogleMapsLogo from "../../../assets/images/google-maps-logo.png";
-import { formatPhoneNumber } from "../../../utils/formatPhoneNumber";
 import TransactionItem from "../../../components/TransactionItem";
+import PhoneIcon from "@mui/icons-material/Phone";
+import { formatPhoneNumber } from "../../../utils/formatPhoneNumber";
 import "./restaurant-info.css";
 
 const classes = {
@@ -17,9 +18,9 @@ const classes = {
   addressContainer: {
     color: "hsl(30, 80%, 40%)",
   },
-  phoneNumberContainer: {
-    width: "fit-content",
-    color: "black",
+  phoneContainer: {
+    display: "flex",
+    alignItems: "center",
   },
   buttonContainer: {
     display: "flex",
@@ -51,11 +52,9 @@ export default function RestaurantInfo({ restaurant }) {
           <div style={classes.addressContainer}>
             {address1} {city}, {state} {zip_code}
           </div>
-          <div>
-            <a
-              style={classes.phoneNumberContainer}
-              href={`tel: ${phoneNumber}`}
-            >
+          <div style={classes.phoneContainer}>
+            <PhoneIcon style={{ color: "#13a10b" }} />
+            <a style={{ color: "#13a10b" }} href={`tel: ${phoneNumber}`}>
               {phoneNumber}
             </a>
           </div>
