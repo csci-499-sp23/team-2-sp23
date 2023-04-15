@@ -1,6 +1,7 @@
 import React from "react";
 import SearchField from "./SearchField";
 import ViewToggler from "./ViewToggler";
+import PriceFilter from "../../../components/Filters/PriceFilter";
 import { Box } from "@mui/material";
 import PageNavigation from "./PageNavigation";
 import SortQuery from "./SortQuery";
@@ -32,6 +33,7 @@ export default function SearchHeader({
     <div style={classes.headerContainer}>
       <SearchField searchFields={searchFields} updateFields={updateFields} />
       <SortQuery searchFields={searchFields} updateFields={updateFields} />
+      <PriceFilter />
       <Box sx={classes.separator} />
       <ViewToggler viewMode={viewMode} setViewMode={setViewMode} />
       <PageNavigation {...pageNavigationProps} />
