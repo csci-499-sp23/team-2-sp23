@@ -3,20 +3,19 @@ import ExampleRouter from "./example";
 import RestaurantRouter from "./restaurant";
 import listEndpoints from "express-list-endpoints";
 import Models from "../models";
-
-import * as dotenv from "dotenv";
-dotenv.config();
+import config from "config";
 
 async function generateRoutes(app: Express): Promise<void> {
   app.use("/example", ExampleRouter);
   app.use("/restaurant", RestaurantRouter);
 
   Models.mongoose
-    .connect(process.env.CONNECTION_URL!)
+    .connect(config.get("database.production_url"))
     .then(() => {
       console.log("Successfully Connected To MongoDB");
     })
     .catch(console.error);
+
   console.table(listEndpoints(app));
 }
 

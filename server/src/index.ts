@@ -3,9 +3,7 @@ import cors from "cors";
 import bodyParser from "body-parser";
 import generateRoutes from "./routes";
 import scheduleJobs from "./jobs";
-
-import * as dotenv from "dotenv";
-dotenv.config();
+import config from "config";
 
 // Singleton app for handling server requests
 const app = express();
@@ -16,11 +14,10 @@ app.use(cors({ origin: "*" }));
 // Ability to read request body
 app.use(bodyParser.json());
 
-// default port to 3001. (http://localhost:3001/)
-const port = process.env.PORT || 3001;
+const port = config.get("server.url") || 3001;
 
 // Start server
-app.listen(port, async () => {
+app.listen(port, () => {
   console.log("Server listening at port", port);
   console.log(`Test apis with http://localhost:${port}/`);
 });

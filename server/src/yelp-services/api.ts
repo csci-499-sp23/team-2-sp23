@@ -1,14 +1,13 @@
 import axios from "axios";
-import * as dotenv from "dotenv";
 import { RestaurantAttributes } from "../models/Restaurant";
 import { YelpRestaurant, yelpRestaurantParser } from "./yelp-utils";
 import { OPTIMAL_SEARCH_RADIUS } from "./constants";
-dotenv.config();
+import config from "config";
 
 const yelpAPI = axios.create({
   baseURL: "https://api.yelp.com/v3/businesses",
   headers: {
-    common: { Authorization: `Bearer ${process.env.YELP_API_KEY}` },
+    common: { Authorization: `Bearer ${config.get("api_keys.yelp")}` },
   },
 });
 
