@@ -21,6 +21,7 @@ export default function ViewToggler({ viewMode, setViewMode }) {
       <Button
         onClick={() => {
           setViewMode("map");
+          localStorage.setItem("view-mode", "map");
         }}
         variant="outlined"
         startIcon={<LocationOnIcon />}
@@ -31,6 +32,7 @@ export default function ViewToggler({ viewMode, setViewMode }) {
       <Button
         onClick={() => {
           setViewMode("grid");
+          localStorage.setItem("view-mode", "grid");
         }}
         variant="outlined"
         startIcon={<ViewModuleIcon />}

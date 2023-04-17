@@ -18,7 +18,9 @@ export default function Search() {
     ...DEFAULT_SEARCH_QUERY,
     ...JSON.parse(localStorage.getItem("budget-eats-cache")),
   });
-  const [viewMode, setViewMode] = useState("map");
+  const [viewMode, setViewMode] = useState(
+    localStorage.getItem("view-mode") ?? "map"
+  );
   const { openModal, setFoods, MenuModal } = useMenuModal();
 
   const { isLoaded } = useJsApiLoader({
@@ -73,7 +75,6 @@ export default function Search() {
   useEffect(() => {
     const searchQuery = { ...searchFields };
     retrieveRestaurants(searchQuery);
-
     localStorage.setItem("budget-eats-cache", JSON.stringify(searchQuery));
     // eslint-disable-next-line
   }, [longitude, latitude, meters, budget]);
