@@ -2,14 +2,16 @@ import { useEffect, useState } from "react";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useDispatch } from "react-redux";
 import { setFinished, setLoading } from "../../store/reducers/progress";
+import { DEFAULT_SEARCH_QUERY, SEARCH_LOCATION_TYPES } from "./constants";
+import { useJsApiLoader } from "@react-google-maps/api";
+import { applyFilters } from "../../components/Filters/applyFilters";
 import RestaurantAPI from "../../api/restaurant-api";
 import GridView from "./GridView";
 import MapView from "./MapView";
 import SearchHeader from "./SearchHeader";
-import { useJsApiLoader } from "@react-google-maps/api";
 import AddressSearch from "./AddressSearch";
-import { DEFAULT_SEARCH_QUERY, SEARCH_LOCATION_TYPES } from "./constants";
 import useMenuModal from "../../hooks/useMenuModal";
+import useFilters from "../../hooks/filters";
 
 export default function Search() {
   const dispatch = useDispatch();
@@ -90,6 +92,9 @@ export default function Search() {
     // eslint-disable-next-line
   }, [longitude, latitude, meters, budget]);
 
+  const { totalFilters, FilterComponent } = useFilters();
+  const filteredRestaurants = applyFilters(restaurants, totalFilters);
+
   return (
     <ThemeProvider theme={theme}>
       <MenuModal />
@@ -101,10 +106,11 @@ export default function Search() {
             viewMode={viewMode}
             setViewMode={setViewMode}
           />
+          <FilterComponent />
           <AddressSearch updateFields={updateFields} />
           {viewMode === "grid" && (
             <GridView
-              rows={restaurants}
+              rows={filteredRestaurants}
               setModalFoods={setFoods}
               openModal={openModal}
             />
@@ -113,7 +119,7 @@ export default function Search() {
             <MapView
               latitude={searchFields.latitude}
               longitude={searchFields.longitude}
-              rows={restaurants}
+              rows={filteredRestaurants}
               updateFields={updateFields}
               setModalFoods={setFoods}
               openModal={openModal}
