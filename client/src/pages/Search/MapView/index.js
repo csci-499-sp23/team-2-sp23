@@ -25,7 +25,7 @@ export default function MapView({
   }
 
   return (
-    <>
+    <div style={{ position: "relative" }}>
       <Map
         longitude={longitude}
         latitude={latitude}
@@ -33,15 +33,17 @@ export default function MapView({
         updateFields={updateFields}
         showRestaurant={handleShowRestaurant}
       />
-      {!!showing && (
-        <RestaurantPreview
-          restaurant={selectedRestaurant}
-          foods={restaurantFoods}
-          hideRestaurant={handleHideRestaurant}
-          setModalFoods={setModalFoods}
-          openModal={openModal}
-        />
+      {showing && (
+        <div style={{ position: "absolute", bottom: 0, width: "100%" }}>
+          <RestaurantPreview
+            restaurant={selectedRestaurant}
+            foods={restaurantFoods}
+            hideRestaurant={handleHideRestaurant}
+            setModalFoods={setModalFoods}
+            openModal={openModal}
+          />
+        </div>
       )}
-    </>
+    </div>
   );
 }
