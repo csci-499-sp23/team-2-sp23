@@ -2,7 +2,7 @@ import React from "react";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 
-export default function PriceFilterToggler() {
+export default function usePriceFilter() {
   const DEFAULT_FILTER = {
     $: false,
     $$: false,
@@ -16,23 +16,28 @@ export default function PriceFilterToggler() {
     (price) => priceFilter[price]
   );
 
-  return (
-    <ToggleButtonGroup value={selectedPrices} aria-label="price" size="small">
-      {prices.map((price) => (
-        <ToggleButton
-          key={price}
-          value={price}
-          onClick={() => {
-            const updatedFilter = {
-              ...priceFilter,
-              [price]: !priceFilter[price],
-            };
-            setPriceFilter(updatedFilter);
-          }}
-        >
-          {price}
-        </ToggleButton>
-      ))}
-    </ToggleButtonGroup>
-  );
+  function PriceFilterComponent() {
+    return (
+      <ToggleButtonGroup value={selectedPrices} aria-label="price" size="small">
+        {prices.map((price) => (
+          <ToggleButton
+            key={price}
+            value={price}
+            color="primary"
+            onClick={() => {
+              const updatedFilter = {
+                ...priceFilter,
+                [price]: !priceFilter[price],
+              };
+              setPriceFilter(updatedFilter);
+            }}
+          >
+            <span style={{ width: "30px" }}>{price}</span>
+          </ToggleButton>
+        ))}
+      </ToggleButtonGroup>
+    );
+  }
+
+  return { PriceFilterComponent, selectedPrices };
 }

@@ -10,6 +10,8 @@ import { useJsApiLoader } from "@react-google-maps/api";
 import AddressSearch from "./AddressSearch";
 import { DEFAULT_SEARCH_QUERY, SEARCH_LOCATION_TYPES } from "./constants";
 import useMenuModal from "../../hooks/useMenuModal";
+import Filters from "../../components/Filters";
+import { applyFilters } from "../../components/Filters/applyFilters";
 
 export default function Search() {
   const dispatch = useDispatch();
@@ -90,6 +92,9 @@ export default function Search() {
     // eslint-disable-next-line
   }, [longitude, latitude, meters, budget]);
 
+  const { FilterComponent, restaurantFilters } = Filters();
+  const filteredRestaurants = applyFilters(restaurants, restaurantFilters);
+
   return (
     <ThemeProvider theme={theme}>
       <MenuModal />
@@ -102,9 +107,10 @@ export default function Search() {
             setViewMode={setViewMode}
           />
           <AddressSearch updateFields={updateFields} />
+          <FilterComponent />
           {viewMode === "grid" && (
             <GridView
-              rows={restaurants}
+              rows={filteredRestaurants}
               setModalFoods={setFoods}
               openModal={openModal}
             />
@@ -113,7 +119,7 @@ export default function Search() {
             <MapView
               latitude={searchFields.latitude}
               longitude={searchFields.longitude}
-              rows={restaurants}
+              rows={filteredRestaurants}
               updateFields={updateFields}
               setModalFoods={setFoods}
               openModal={openModal}
