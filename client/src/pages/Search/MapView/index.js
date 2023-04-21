@@ -11,10 +11,12 @@ export default function MapView({
   openModal,
 }) {
   const [selectedRestaurant, setSelectedRestaurant] = useState({});
+  const [restaurantFoods, setRestaurantFoods] = useState([]);
   const [showing, setShowing] = useState(false);
 
-  function handleShowRestaurant(restaurant) {
-    setSelectedRestaurant(restaurant);
+  function handleShowRestaurant(row) {
+    setSelectedRestaurant(row.restaurant);
+    setRestaurantFoods(row.foods);
     setShowing(true);
   }
 
@@ -34,6 +36,7 @@ export default function MapView({
       {!!showing && (
         <RestaurantPreview
           restaurant={selectedRestaurant}
+          foods={restaurantFoods}
           hideRestaurant={handleHideRestaurant}
           setModalFoods={setModalFoods}
           openModal={openModal}

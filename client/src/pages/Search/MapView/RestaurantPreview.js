@@ -1,8 +1,9 @@
 import React from "react";
 import ReviewStars from "../../../components/ReviewStars";
-import { IconButton } from "@mui/material";
+import { IconButton, Button } from "@mui/material";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { Link } from "react-router-dom";
+import FastfoodIcon from "@mui/icons-material/Fastfood";
 
 const classes = {
   previewContainer: {
@@ -11,7 +12,7 @@ const classes = {
     position: "relative",
     padding: "0.25rem",
     boxSizing: "border-box",
-    backgroundColor: "rgb(224,224,224)",
+    backgroundColor: "rgb(240,240,240)",
     display: "flex",
     justifyContent: "space-between",
     border: "1px solid gray",
@@ -45,6 +46,20 @@ const classes = {
     display: "flex",
     color: "rgb(80,80,80)",
   },
+  foodCount: {
+    display: "flex",
+    alignItems: "center",
+    gap: "0.25rem",
+    minHeight: 0,
+    minWidth: 0,
+    padding: 0,
+    paddingInline: "0.5rem",
+    marginRight: "0.5rem",
+    position: "absolute",
+    right: 0,
+    top: "50%",
+    transform: "translate(0,-50%)",
+  },
   exitContainer: {
     position: "absolute",
     top: 0,
@@ -64,7 +79,13 @@ function formatPhoneNumber(phoneNumberString) {
   return null;
 }
 
-function RestaurantPreview({ restaurant, hideRestaurant }) {
+function RestaurantPreview({
+  restaurant,
+  hideRestaurant,
+  setModalFoods,
+  openModal,
+  foods,
+}) {
   const restaurantPage = "/restaurant?yelp_id=" + restaurant.yelp_id;
   const phoneNumber = formatPhoneNumber(restaurant.phone);
   const { address1, state, zip_code } = restaurant.address;
@@ -104,6 +125,21 @@ function RestaurantPreview({ restaurant, hideRestaurant }) {
         >
           <CancelIcon />
         </IconButton>
+        <Button
+          style={classes.foodCount}
+          variant="outlined"
+          onClick={() => {
+            setModalFoods(foods);
+            openModal();
+          }}
+        >
+          <span style={{ fontWeight: 400 }}>
+            {foods.length}
+          </span>
+          <FastfoodIcon
+            style={{ color: "hsl(30,90%,50%)", fontSize: "1rem"}}
+          />
+        </Button>
       </div>
     </div>
   );
