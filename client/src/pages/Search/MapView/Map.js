@@ -26,12 +26,23 @@ function Map({ longitude, latitude, rows, updateFields, showRestaurant }) {
 
   const AMONGUS = require("../../../assets/images/among-us.webp");
 
+  const options = {
+    zoomControlOptions: {
+      position: google.maps.ControlPosition.RIGHT_TOP,
+    },
+    streetViewControlOptions: {
+      position: google.maps.ControlPosition.RIGHT_TOP,
+    },
+    mapTypeControl: false,
+  };
+
   return (
     <GoogleMap
       state={map}
       mapContainerStyle={containerStyle}
       center={center}
       onLoad={onLoad}
+      options={options}
       onUnmount={onUnmount}
     >
       <MarkerF
