@@ -30,10 +30,16 @@ export default function Search() {
   });
 
   function updateFields(updatedFields) {
-    setSearchFields({ ...searchFields, ...updatedFields });
+    setSearchFields((previousFields) => ({
+      ...previousFields,
+      ...updatedFields,
+    }));
   }
 
-  async function retrieveRestaurants({ longitude, latitude, meters, budget }) {
+  async function retrieveRestaurants(
+    { longitude, latitude, meters, budget },
+    controller
+  ) {
     const query = {
       longitude,
       latitude,
@@ -45,7 +51,7 @@ export default function Search() {
     dispatch(setFinished(false));
 
     const retrievedRestaurants =
-      await RestaurantAPI.getNearbyRestaurantsInBudget(query);
+      await RestaurantAPI.getNearbyRestaurantsInBudget(query, controller);
 
     dispatch(setFinished(true));
 
@@ -73,9 +79,14 @@ export default function Search() {
   const { longitude, latitude, meters, budget } = searchFields;
 
   useEffect(() => {
-    const searchQuery = { ...searchFields };
-    retrieveRestaurants(searchQuery);
-    localStorage.setItem("budget-eats-cache", JSON.stringify(searchQuery));
+    const abortController = new AbortController();
+    retrieveRestaurants(searchFields, abortController);
+
+    localStorage.setItem("budget-eats-cache", JSON.stringify(searchFields));
+
+    return () => {
+      abortController.abort();
+    };
     // eslint-disable-next-line
   }, [longitude, latitude, meters, budget]);
 
