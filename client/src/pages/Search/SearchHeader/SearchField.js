@@ -25,7 +25,6 @@ function FormikField({ formik, type, field, label, unit, style }) {
     <TextField
       error={Boolean(formik.touched[field] && formik.errors[field])}
       helperText={formik.touched[field] && formik.errors[field]}
-      type={type}
       label={label}
       name={field}
       variant="standard"
@@ -33,6 +32,7 @@ function FormikField({ formik, type, field, label, unit, style }) {
       onChange={formik.handleChange}
       sx={{ color: "primary.main", margin: 0, ...style }}
       InputProps={{
+        type: type,
         endAdornment: <InputAdornment position="start">{unit}</InputAdornment>,
       }}
     />
