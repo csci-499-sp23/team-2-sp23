@@ -5,6 +5,7 @@
   "scripts": {
     "build": "tsc",
     "watch-ts": "tsc -w",
+    "start": "node dist/index.js",
     "watch-node": "nodemon dist/index.js",
     "watch": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"yellow.bold,cyan.bold,green.bold\" \"npm run watch-ts\" \"npm run watch-node\"",
     "test": "set NODE_ENV=test&& jest ./tests --runInBand --detectOpenHandles --forceExit"

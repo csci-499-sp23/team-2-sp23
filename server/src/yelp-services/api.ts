@@ -37,9 +37,12 @@ export async function fetchRestaurants(
       })
       .then((res) => res.data);
 
-    const parsedRestaurants = response.businesses.map((restaurant) =>
-      yelpRestaurantParser(restaurant)
-    );
+    const parsedRestaurants = response.businesses
+      .filter((restaurant) => {
+        const { longitude, latitude } = restaurant.coordinates;
+        return !!longitude && !!latitude;
+      })
+      .map((restaurant) => yelpRestaurantParser(restaurant));
 
     return parsedRestaurants;
   } catch (err) {
