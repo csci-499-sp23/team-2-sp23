@@ -1,33 +1,32 @@
 /*global google*/
 import React from "react";
-import { GoogleMap, MarkerF } from "@react-google-maps/api";
+import { GoogleMap, MarkerF, CircleF } from "@react-google-maps/api";
 import FocusedMarker from "./FocusedMarker";
+const AMONGUS = require("../../../assets/images/among-us.webp");
 
 const containerStyle = {
   width: "100%",
   height: "80vh",
 };
 
-function Map({ longitude, latitude, rows, updateFields, showRestaurant }) {
+function Map({
+  longitude,
+  latitude,
+  rows,
+  updateFields,
+  showRestaurant,
+  searchRadius,
+}) {
+  const startingCenter = {
+    lat: latitude,
+    lng: longitude,
+  };
+
   const [map, setMap] = React.useState(null);
+  const [circle, setCircle] = React.useState(null);
   const [selectedRestaurantId, setSelectedRestaurantId] = React.useState(null);
 
-  const onLoad = React.useCallback(
-    function callback(map) {
-      map.setZoom(16);
-      map.setCenter({ lat: latitude, lng: longitude });
-      setMap(map);
-    },
-    [latitude, longitude]
-  );
-
-  const onUnmount = React.useCallback(function callback(map) {
-    setMap(null);
-  }, []);
-
-  const AMONGUS = require("../../../assets/images/among-us.webp");
-
-  const options = {
+  const mapOptions = {
     zoomControlOptions: {
       position: google.maps.ControlPosition.RIGHT_TOP,
     },
@@ -35,6 +34,12 @@ function Map({ longitude, latitude, rows, updateFields, showRestaurant }) {
       position: google.maps.ControlPosition.RIGHT_TOP,
     },
     mapTypeControl: false,
+  };
+  const circleOptions = {
+    radius: searchRadius,
+    fillColor: "hsla(25,80%,60%,60%)",
+    strokeColor: "hsla(25,80%,60%,90%)",
+    center: startingCenter,
   };
 
   const nonSelectedMarkers = rows.filter(
@@ -48,10 +53,30 @@ function Map({ longitude, latitude, rows, updateFields, showRestaurant }) {
     <GoogleMap
       state={map}
       mapContainerStyle={containerStyle}
-      onLoad={onLoad}
-      options={options}
-      onUnmount={onUnmount}
+      onLoad={(map) => {
+        map.setZoom(16);
+        map.setCenter({ lat: latitude, lng: longitude });
+        setMap(map);
+      }}
+      onUnmount={() => setMap(null)}
+      options={mapOptions}
     >
+      <CircleF
+        onLoad={(circle) => setCircle(circle)}
+        onUnmount={() => setCircle(null)}
+        options={circleOptions}
+        draggable
+        onDragEnd={() => {
+          const updatedLatitude = circle.center.lat();
+          const updatedLongitude = circle.center.lng();
+
+          updateFields({
+            longitude: updatedLongitude,
+            latitude: updatedLatitude,
+          });
+          map.setCenter({ lat: updatedLatitude, lng: updatedLongitude });
+        }}
+      />
       <MarkerF
         position={{
           lng: longitude,

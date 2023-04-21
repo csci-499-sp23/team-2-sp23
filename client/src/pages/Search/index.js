@@ -113,6 +113,7 @@ export default function Search() {
             <MapView
               latitude={searchFields.latitude}
               longitude={searchFields.longitude}
+              searchRadius={searchFields.meters}
               rows={restaurants}
               updateFields={updateFields}
               setModalFoods={setFoods}
