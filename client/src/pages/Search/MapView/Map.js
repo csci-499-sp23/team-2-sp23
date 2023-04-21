@@ -66,7 +66,9 @@ function Map({ longitude, latitude, rows, updateFields, showRestaurant }) {
               lng: longitude,
               lat: latitude,
             }}
-            onClick={() => showRestaurant(restaurant)}
+            onClick={() => {
+              showRestaurant(row);
+            }}
           />
         );
       })}
