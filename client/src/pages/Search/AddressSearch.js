@@ -25,7 +25,8 @@ export default function AddressSearch({ updateFields }) {
     <TextField
       inputRef={googlePlacesRef}
       variant="standard"
-      sx={{ width: "100%", marginBottom: "0.25rem" }}
+      sx={{ width: "60%", minWidth: "230px" }}
+      label="Address"
       defaultValue={HUNTER_COLLEGE_ADDRESS}
       InputProps={{
         endAdornment: (

@@ -1,6 +1,7 @@
 import { TextField, InputAdornment, IconButton } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { useFormik } from "formik";
+import AddressSearch from "../AddressSearch";
 import * as yup from "yup";
 
 const classes = {
@@ -15,7 +16,7 @@ const classes = {
   searchButton: {
     color: "primary.main",
     margin: 0,
-    height: "fit-content",
+    height: "120%",
     alignSelf: "flex-end",
   },
 };
@@ -62,41 +63,28 @@ function SearchField(props) {
 
   return (
     <form onSubmit={formik.handleSubmit} style={classes.formContainer}>
-      <FormikField
-        formik={formik}
-        type="number"
-        field="latitude"
-        label="Latitude"
-        unit="°"
-        style={{ width: "8rem" }}
-      />
-      <FormikField
-        formik={formik}
-        type="number"
-        field="longitude"
-        label="Longitude"
-        unit="°"
-        style={{ width: "8rem" }}
-      />
-      <FormikField
-        formik={formik}
-        type="number"
-        field="meters"
-        label="Search Radius"
-        unit="meters"
-        style={{ width: "7rem" }}
-      />
-      <FormikField
-        formik={formik}
-        type="number"
-        field="budget"
-        label="Budget"
-        unit="$"
-        style={{ width: "4.5rem" }}
-      />
-      <IconButton type="submit" sx={classes.searchButton}>
-        <SearchIcon />
-      </IconButton>
+        <AddressSearch updateFields={props.updateFields}  />
+      <div>
+        <FormikField
+          formik={formik}
+          type="number"
+          field="meters"
+          label="Search Radius"
+          unit="meters"
+          style={{ width: "7rem", marginRight: "0.5rem" }}
+        />
+        <FormikField
+          formik={formik}
+          type="number"
+          field="budget"
+          label="Budget"
+          unit="$"
+          style={{ width: "4.5rem" }}
+        />
+        <IconButton type="submit" sx={classes.searchButton}>
+          <SearchIcon />
+        </IconButton>
+      </div>
     </form>
   );
 }
