@@ -69,6 +69,8 @@ export default function Search() {
     palette: {
       primary: {
         main: "hsl(25,80%,50%)",
+        chip: "hsl(25,85%, 57.5%)",
+        bland: "hsl(25,85%, 95%)",
       },
     },
     typography: {
