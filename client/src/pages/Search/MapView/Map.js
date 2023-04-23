@@ -9,18 +9,17 @@ const containerStyle = {
 };
 
 function Map({ longitude, latitude, rows, updateFields, showRestaurant }) {
-  const center = {
-    lat: latitude,
-    lng: longitude,
-  };
-
   const [map, setMap] = React.useState(null);
   const [selectedRestaurantId, setSelectedRestaurantId] = React.useState(null);
 
-  const onLoad = React.useCallback(function callback(map) {
-    map.setZoom(16);
-    setMap(map);
-  }, []);
+  const onLoad = React.useCallback(
+    function callback(map) {
+      map.setZoom(16);
+      map.setCenter({ lat: latitude, lng: longitude });
+      setMap(map);
+    },
+    [latitude, longitude]
+  );
 
   const onUnmount = React.useCallback(function callback(map) {
     setMap(null);
@@ -49,7 +48,6 @@ function Map({ longitude, latitude, rows, updateFields, showRestaurant }) {
     <GoogleMap
       state={map}
       mapContainerStyle={containerStyle}
-      center={center}
       onLoad={onLoad}
       options={options}
       onUnmount={onUnmount}
@@ -71,6 +69,8 @@ function Map({ longitude, latitude, rows, updateFields, showRestaurant }) {
             longitude: updatedLongitude,
             latitude: updatedLatitude,
           });
+
+          map.setCenter({ lat: updatedLatitude, lng: updatedLongitude });
         }}
       />
       <FocusedMarker
@@ -91,6 +91,7 @@ function Map({ longitude, latitude, rows, updateFields, showRestaurant }) {
             onClick={() => {
               showRestaurant(row);
               setSelectedRestaurantId(restaurant.yelp_id);
+              map.setCenter({ lat: latitude, lng: longitude });
             }}
           />
         );
