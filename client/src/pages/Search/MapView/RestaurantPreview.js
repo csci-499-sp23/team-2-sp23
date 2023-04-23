@@ -4,6 +4,7 @@ import { IconButton, Button } from "@mui/material";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { Link } from "react-router-dom";
 import FastfoodIcon from "@mui/icons-material/Fastfood";
+import defaultRestaurantImg from "../../../assets/images/default-restaurant-img.png";
 
 const classes = {
   previewContainer: {
@@ -96,8 +97,8 @@ function RestaurantPreview({
       <div style={{ display: "flex" }}>
         <img
           style={classes.imageContainer}
-          src={restaurant.image_url}
-          alt={restaurant.image_url}
+          src={restaurant.image_url || defaultRestaurantImg}
+          alt={"restaurant"}
         />
         <div style={classes.detailsContainer}>
           <Link style={classes.nameContainer} to={restaurantPage}>
