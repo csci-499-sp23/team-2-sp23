@@ -2,6 +2,7 @@ import React from "react";
 import SearchField from "./SearchField";
 import ViewToggler from "./ViewToggler";
 import { Box } from "@mui/material";
+import FoodFilter from "../../../components/FoodCategory";
 
 const classes = {
   headerContainer: {
@@ -29,6 +30,7 @@ export default function SearchHeader({
       <SearchField updateFields={updateFields} searchFields={searchFields} />
       <Box sx={classes.separator} />
       <ViewToggler viewMode={viewMode} setViewMode={setViewMode} />
+      <FoodFilter />
     </div>
   );
 }
