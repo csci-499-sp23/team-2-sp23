@@ -1,6 +1,7 @@
 /*global google*/
 import React from "react";
 import { GoogleMap, MarkerF } from "@react-google-maps/api";
+import FocusedMarker from "./FocusedMarker";
 
 const containerStyle = {
   width: "100%",
@@ -8,17 +9,17 @@ const containerStyle = {
 };
 
 function Map({ longitude, latitude, rows, updateFields, showRestaurant }) {
-  const center = {
-    lat: latitude,
-    lng: longitude,
-  };
-
   const [map, setMap] = React.useState(null);
+  const [selectedRestaurantId, setSelectedRestaurantId] = React.useState(null);
 
-  const onLoad = React.useCallback(function callback(map) {
-    map.setZoom(16);
-    setMap(map);
-  }, []);
+  const onLoad = React.useCallback(
+    function callback(map) {
+      map.setZoom(16);
+      map.setCenter({ lat: latitude, lng: longitude });
+      setMap(map);
+    },
+    [latitude, longitude]
+  );
 
   const onUnmount = React.useCallback(function callback(map) {
     setMap(null);
@@ -36,11 +37,17 @@ function Map({ longitude, latitude, rows, updateFields, showRestaurant }) {
     mapTypeControl: false,
   };
 
+  const nonSelectedMarkers = rows.filter(
+    (row) => row.restaurant.yelp_id !== selectedRestaurantId
+  );
+  const selectedRestaurant = rows.find(
+    (row) => row.restaurant.yelp_id === selectedRestaurantId
+  );
+
   return (
     <GoogleMap
       state={map}
       mapContainerStyle={containerStyle}
-      center={center}
       onLoad={onLoad}
       options={options}
       onUnmount={onUnmount}
@@ -62,9 +69,15 @@ function Map({ longitude, latitude, rows, updateFields, showRestaurant }) {
             longitude: updatedLongitude,
             latitude: updatedLatitude,
           });
+
+          map.setCenter({ lat: updatedLatitude, lng: updatedLongitude });
         }}
       />
-      {rows.map((row) => {
+      <FocusedMarker
+        selectedRestaurant={selectedRestaurant}
+        updateFields={updateFields}
+      />
+      {nonSelectedMarkers.map((row) => {
         const { restaurant } = row;
         const coordinates = restaurant.location.coordinates;
         const [longitude, latitude] = coordinates;
@@ -77,6 +90,8 @@ function Map({ longitude, latitude, rows, updateFields, showRestaurant }) {
             }}
             onClick={() => {
               showRestaurant(row);
+              setSelectedRestaurantId(restaurant.yelp_id);
+              map.setCenter({ lat: latitude, lng: longitude });
             }}
           />
         );
