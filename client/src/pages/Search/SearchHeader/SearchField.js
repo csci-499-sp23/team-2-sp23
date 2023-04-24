@@ -1,6 +1,7 @@
 import { TextField, InputAdornment, IconButton } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { useFormik } from "formik";
+import AddressSearch from "../AddressSearch";
 import * as yup from "yup";
 
 const classes = {
@@ -14,9 +15,8 @@ const classes = {
   },
   searchButton: {
     color: "primary.main",
-    margin: 0,
-    height: "fit-content",
     alignSelf: "flex-end",
+    height: "fit-content",
   },
 };
 
@@ -62,22 +62,7 @@ function SearchField(props) {
 
   return (
     <form onSubmit={formik.handleSubmit} style={classes.formContainer}>
-      <FormikField
-        formik={formik}
-        type="number"
-        field="latitude"
-        label="Latitude"
-        unit="°"
-        style={{ width: "8rem" }}
-      />
-      <FormikField
-        formik={formik}
-        type="number"
-        field="longitude"
-        label="Longitude"
-        unit="°"
-        style={{ width: "8rem" }}
-      />
+      <AddressSearch updateFields={props.updateFields} />
       <FormikField
         formik={formik}
         type="number"

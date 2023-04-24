@@ -7,7 +7,6 @@ import GridView from "./GridView";
 import MapView from "./MapView";
 import SearchHeader from "./SearchHeader";
 import { useJsApiLoader } from "@react-google-maps/api";
-import AddressSearch from "./AddressSearch";
 import { DEFAULT_SEARCH_QUERY, SEARCH_LOCATION_TYPES } from "./constants";
 import useMenuModal from "../../hooks/useMenuModal";
 
@@ -101,7 +100,6 @@ export default function Search() {
             viewMode={viewMode}
             setViewMode={setViewMode}
           />
-          <AddressSearch updateFields={updateFields} />
           {viewMode === "grid" && (
             <GridView
               rows={restaurants}
