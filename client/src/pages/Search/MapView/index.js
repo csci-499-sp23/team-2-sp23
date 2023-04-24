@@ -9,6 +9,7 @@ export default function MapView({
   updateFields,
   setModalFoods,
   openModal,
+  searchRadius
 }) {
   const [selectedRestaurant, setSelectedRestaurant] = useState({});
   const [restaurantFoods, setRestaurantFoods] = useState([]);
@@ -32,6 +33,7 @@ export default function MapView({
         rows={rows}
         updateFields={updateFields}
         showRestaurant={handleShowRestaurant}
+        searchRadius={searchRadius}
       />
       {showing && (
         <div style={{ position: "absolute", bottom: 0, width: "100%" }}>
