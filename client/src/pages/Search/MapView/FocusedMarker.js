@@ -20,14 +20,6 @@ export default function FocusedMarker({ selectedRestaurant, updateFields }) {
         url: AmongusVent,
         scaledSize: new google.maps.Size(50, 36),
       }}
-      onDragEnd={(event) => {
-        const updatedLatitude = event.latLng.lat();
-        const updatedLongitude = event.latLng.lng();
-        updateFields({
-          longitude: updatedLongitude,
-          latitude: updatedLatitude,
-        });
-      }}
     />
   );
 }
