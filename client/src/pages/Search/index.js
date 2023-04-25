@@ -9,7 +9,6 @@ import RestaurantAPI from "../../api/restaurant-api";
 import GridView from "./GridView";
 import MapView from "./MapView";
 import SearchHeader from "./SearchHeader";
-import AddressSearch from "./AddressSearch";
 import useMenuModal from "../../hooks/useMenuModal";
 import useFilters from "../../hooks/filters";
 
@@ -109,7 +108,6 @@ export default function Search() {
             setViewMode={setViewMode}
           />
           <FilterComponent />
-          <AddressSearch updateFields={updateFields} />
           {viewMode === "grid" && (
             <GridView
               rows={filteredRestaurants}
