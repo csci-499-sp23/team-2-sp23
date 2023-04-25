@@ -3,7 +3,7 @@ import SearchField from "./SearchField";
 import ViewToggler from "./ViewToggler";
 import PriceFilter from "../../../components/Filters/PriceFilter"
 import { Box } from "@mui/material";
-import FoodFilter from "../../../components/FoodCategory";
+import FoodFilter from "../../../components/Filters/FoodCategoryFilter";
 
 const classes = {
   headerContainer: {
