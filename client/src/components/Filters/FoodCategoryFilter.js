@@ -9,8 +9,6 @@ export default function FoodCategoryFilter({ foodCategory, setFoodCategory }) {
   const [checked, setChecked] = useState(true);
   if (!foodCategory) return;
 
-  const foods = Object.keys(foodCategory);
-
   const handleChange = () => {
     setChecked((prev) => !prev);
   };
@@ -23,6 +21,36 @@ export default function FoodCategoryFilter({ foodCategory, setFoodCategory }) {
     setFoodCategory(updatedFood);
   }
 
+  const selectedCategories = Object.keys(foodCategory).filter(
+    (category) => foodCategory[category]
+  );
+  const unSelectedCategories = Object.keys(foodCategory).filter(
+    (category) => !foodCategory[category]
+  );
+
+  const FoodChip = ({ food }) => (
+    <Chip
+      key={food}
+      sx={{
+        m: 0.25,
+        border: 1,
+        borderColor: "primary.chip",
+        bgcolor: foodCategory[food] ? "primary.chip" : "white",
+        "&:hover": {
+          backgroundColor: foodCategory[food]
+            ? "primary.chip"
+            : "primary.bland",
+        },
+      }}
+      label={
+        <Box sx={{ color: foodCategory[food] ? "white" : "primary.chip" }}>
+          {food}
+        </Box>
+      }
+      onClick={() => toggleFoodSelected(food)}
+    />
+  );
+
   return (
     <div>
       <FormControlLabel
@@ -33,29 +61,11 @@ export default function FoodCategoryFilter({ foodCategory, setFoodCategory }) {
       />
       <Collapse in={checked}>
         <Box sx={{ maxHeight: "250px", overflowY: "auto" }}>
-          {foods.map((food) => (
-            <Chip
-              key={food}
-              sx={{
-                m: 0.25,
-                border: 1,
-                borderColor: "primary.chip",
-                bgcolor: foodCategory[food] ? "primary.chip" : "white",
-                "&:hover": {
-                  backgroundColor: foodCategory[food]
-                    ? "primary.chip"
-                    : "primary.bland",
-                },
-              }}
-              label={
-                <Box
-                  sx={{ color: foodCategory[food] ? "white" : "primary.chip" }}
-                >
-                  {food}
-                </Box>
-              }
-              onClick={() => toggleFoodSelected(food)}
-            />
+          {selectedCategories.map((food) => (
+            <FoodChip food={food} key={food} />
+          ))}
+          {unSelectedCategories.map((food) => (
+            <FoodChip food={food} key={food} />
           ))}
         </Box>
       </Collapse>
