@@ -52,6 +52,7 @@ function Map({
   return (
     <GoogleMap
       state={map}
+      center={startingCenter}
       mapContainerStyle={containerStyle}
       onLoad={(map) => {
         map.setZoom(16);
