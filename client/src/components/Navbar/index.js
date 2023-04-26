@@ -17,7 +17,12 @@ export default function Navbar() {
     <nav>
       <div className="navbar-wrapper">
         <div className="navbar-content">
-          <img src={logo} className="logo" alt="logo" />
+          <img
+            src={logo}
+            className="logo"
+            alt="logo"
+            style={{ paddingLeft: "0.75rem" }}
+          />
           <Link style={linkStyle} to="/search">
             Search
           </Link>
@@ -30,7 +35,12 @@ export default function Navbar() {
               target="_blank"
               rel="noreferrer"
             >
-              <img src={githubLogo} className="logo" alt="github-logo" />
+              <img
+                src={githubLogo}
+                className="logo"
+                alt="github-logo"
+                style={{ paddingRight: "0.75rem" }}
+              />
             </a>
           </div>
         </div>
