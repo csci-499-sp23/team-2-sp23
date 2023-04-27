@@ -59,6 +59,11 @@ export type RestaurantResult = {
   foods: FoodDocument[];
 };
 
+export type NearbyRestaurantsResult = {
+  count: number;
+  restaurants: RestaurantResult[];
+};
+
 // generates an aggregrate pipeline from coordinates and search radius
 // to be used in RestaurantModel.aggregate(queryPipeline)
 // aggregrate pipeline returns type RestaurantResult
@@ -116,19 +121,59 @@ function generateNearbyQuery(
   ];
 }
 
+// Core of pagination
+// Returns the total amount of restaurants that match the filter
+// Limits the amount of restaurants retrieved
+function generateRestaurantLimitQuery(
+  skippedDocuments: number,
+  documentLimit: number
+) {
+  const limitQuery = [
+    {
+      $facet: {
+        restaurants: [{ $skip: skippedDocuments }, { $limit: documentLimit }],
+        count: [{ $group: { _id: null, count: { $sum: 1 } } }],
+      },
+    },
+    {
+      $unwind: "$count",
+    },
+    {
+      $project: {
+        restaurants: true,
+        count: "$count.count",
+      },
+    },
+  ];
+
+  return limitQuery;
+}
+
 async function findNear(
   coordinates: Coordinates,
-  searchRadius: Meters
-): Promise<RestaurantResult[]> {
+  searchRadius: Meters,
+  skip: number,
+  limit: number
+): Promise<NearbyRestaurantsResult> {
+  console.log({ skip, limit });
   const nearbyQuery = generateNearbyQuery(coordinates, searchRadius);
-  return RestaurantModel.aggregate(nearbyQuery);
+  const limitRestaurants = generateRestaurantLimitQuery(skip, limit);
+
+  const [foundRestaurants] = await RestaurantModel.aggregate([
+    ...nearbyQuery,
+    ...limitRestaurants,
+  ]);
+
+  return foundRestaurants;
 }
 
 async function findNearWithinBudget(
   coordinates: Coordinates,
   searchRadius: Meters,
-  budget: number
-): Promise<RestaurantResult[]> {
+  budget: number,
+  skip: number,
+  limit: number
+): Promise<NearbyRestaurantsResult> {
   const nearbyQuery = generateNearbyQuery(coordinates, searchRadius);
   const filterFoodsInBudget = {
     $addFields: {
@@ -151,15 +196,21 @@ async function findNearWithinBudget(
       food_count: { $ne: 0 },
     },
   };
+  const limitRestaurants = generateRestaurantLimitQuery(skip, limit);
 
   const nearbyBudgetQuery: any[] = [
     ...nearbyQuery,
     filterFoodsInBudget,
     addFoodCountField,
     pickRestaurantsInBudget,
+    ...limitRestaurants,
   ];
 
-  return RestaurantModel.aggregate(nearbyBudgetQuery);
+  const [foundRestaurants]: any = await RestaurantModel.aggregate(
+    nearbyBudgetQuery
+  );
+
+  return foundRestaurants;
 }
 
 async function findByYelpId(yelpId: string): Promise<{

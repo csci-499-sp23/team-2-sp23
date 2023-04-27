@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import RestaurantService, { RestaurantResult } from "../services/restaurant";
 import { FoodDocument, FoodItem } from "../models/Food";
 import { pick, omit } from "lodash";
+import { RESTAURANT_LIMIT } from "../constants/restaurants";
 
 // Presenter functions to remove unused fields
 function presentFoods(foods: FoodDocument[]): FoodItem[] {
@@ -27,14 +28,21 @@ async function findNearbyRestaurants(
     const latitude: number = parseFloat(request.query.latitude as string);
     const longitude: number = parseFloat(request.query.longitude as string);
     const meters: number = parseInt(request.query.meters as string);
-    const restaurants = await RestaurantService.findNear(
+    const page: number = parseFloat(request.query.page as string);
+    const skip = (!isNaN(page) ? page : 0) * RESTAURANT_LIMIT;
+
+    const foundRestaurants = await RestaurantService.findNear(
       [longitude, latitude],
-      meters
+      meters,
+      skip,
+      RESTAURANT_LIMIT
     );
 
     response.status(200).json({
-      count: restaurants.length,
-      rows: restaurants.map((restaurant) => presentRestaurant(restaurant)),
+      count: foundRestaurants.count,
+      rows: foundRestaurants.restaurants.map((restaurant) =>
+        presentRestaurant(restaurant)
+      ),
     });
   } catch (error) {
     response.status(500).json(error);
@@ -49,15 +57,22 @@ async function findNearWithinBudget(
     const longitude: number = parseFloat(request.query.longitude as string);
     const search_radius: number = parseInt(request.query.meters as string);
     const budget: number = parseFloat(request.query.budget as string);
-    const restaurants = await RestaurantService.findNearWithinBudget(
+    const page: number = parseFloat(request.query.page as string);
+    const skip = (!isNaN(page) ? page : 0) * RESTAURANT_LIMIT;
+
+    const foundRestaurants = await RestaurantService.findNearWithinBudget(
       [longitude, latitude],
       search_radius,
-      budget
+      budget,
+      skip,
+      RESTAURANT_LIMIT
     );
 
     response.status(200).json({
-      count: restaurants.length,
-      rows: restaurants.map((restaurant) => presentRestaurant(restaurant)),
+      count: foundRestaurants.count,
+      rows: foundRestaurants.restaurants.map((restaurant) =>
+        presentRestaurant(restaurant)
+      ),
     });
   } catch (error) {
     response.status(500).json(error);
