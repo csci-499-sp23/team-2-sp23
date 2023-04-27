@@ -1,10 +1,11 @@
 import { warCrimes } from "../../yelp-services/war-crimes";
-import { generateRandomManhattanCoordinates } from "../../yelp-services/manhattan-random";
+import { QUEENS_REGIONS } from "../../yelp-services/constants/nyc-boroughs";
+import { generateBoroughCoordinates } from "../../yelp-services/random-borough-coordinates";
 
 export async function scrapeCoordinates() {
-  const randomManhattanCoordinates = generateRandomManhattanCoordinates();
+  const randomBoroughCoordinates = generateBoroughCoordinates(QUEENS_REGIONS);
 
-  const { region, coordinates } = randomManhattanCoordinates;
+  const { region, coordinates } = randomBoroughCoordinates;
   const { longitude, latitude } = coordinates;
 
   console.log(`Scraping ${region} (${longitude},${latitude}) at`, new Date());
