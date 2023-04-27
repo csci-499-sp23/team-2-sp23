@@ -155,7 +155,6 @@ async function findNear(
   skip: number,
   limit: number
 ): Promise<NearbyRestaurantsResult> {
-  console.log({ skip, limit });
   const nearbyQuery = generateNearbyQuery(coordinates, searchRadius);
   const limitRestaurants = generateRestaurantLimitQuery(skip, limit);
 

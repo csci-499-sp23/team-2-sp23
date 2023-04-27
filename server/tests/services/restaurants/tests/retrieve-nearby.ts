@@ -22,14 +22,16 @@ export async function testRetrieveNearbyRestaurants() {
 
   const nearbyRestaurants = await RestaurantService.findNear(
     [-74.00565, 40.74207],
-    5000
+    5000,
+    0,
+    3
   );
 
-  const nearbyRestaurantNames = nearbyRestaurants?.map(
+  const nearbyRestaurantNames = nearbyRestaurants.restaurants?.map(
     (result) => result.restaurant.name
   );
 
-  expect(nearbyRestaurants.length).toBe(3);
+  expect(nearbyRestaurants.count).toBe(3);
   expect(nearbyRestaurantNames).toEqual([
     "Very Fresh Noodles",
     "Omusubi Gonbei",
