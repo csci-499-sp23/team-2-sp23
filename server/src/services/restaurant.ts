@@ -153,14 +153,24 @@ function generateRestaurantLimitQuery(
   return limitQuery;
 }
 
+const MATCH_ANYTHING = { $match: {} };
+
 // Generates query to match restaurants by price category
 // Example: ['$','$$'] retrieves restaurants with '$' OR '$$'
 function priceFilterQuery(prices?: PriceCategory[]): any {
-  const noFilter = { $match: {} };
-  if (!prices?.length) return noFilter;
+  if (!prices?.length) return MATCH_ANYTHING;
 
   return {
     $match: { price_category: { $in: prices } },
+  };
+}
+
+// Generates query to match restaurants by transactions
+// Example: ['delivery', 'pickup'] matches restaurants with any combination of the transactions
+function transactionFilterQuery(transactions?: TransactionCategory[]): any {
+  if (!transactions?.length) return MATCH_ANYTHING;
+  return {
+    $match: { transactions: { $in: transactions } },
   };
 }
 
@@ -174,11 +184,13 @@ async function findNear(
   const nearbyQuery = generateNearbyQuery(coordinates, searchRadius);
   const populateFoodsQuery = generatePopulateFoodsQuery();
   const priceFilter = priceFilterQuery(filter?.price_categories);
+  const transactionFilter = transactionFilterQuery(filter?.transactions);
   const limitRestaurants = generateRestaurantLimitQuery(skip, limit);
 
   const [foundRestaurants] = await RestaurantModel.aggregate([
     nearbyQuery,
     priceFilter,
+    transactionFilter,
     ...populateFoodsQuery,
     ...limitRestaurants,
   ]);
@@ -196,6 +208,7 @@ async function findNearWithinBudget(
 ): Promise<NearbyRestaurantsResult> {
   const nearbyQuery = generateNearbyQuery(coordinates, searchRadius);
   const priceFilter = priceFilterQuery(filter?.price_categories);
+  const transactionFilter = transactionFilterQuery(filter?.transactions);
   const populateFoodsQuery = generatePopulateFoodsQuery();
 
   const filterFoodsInBudget = {
@@ -224,6 +237,7 @@ async function findNearWithinBudget(
   const nearbyBudgetQuery: any[] = [
     nearbyQuery,
     priceFilter,
+    transactionFilter,
     ...populateFoodsQuery,
     filterFoodsInBudget,
     addFoodCountField,
