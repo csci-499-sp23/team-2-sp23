@@ -70,7 +70,7 @@ export type NearbyRestaurantsResult = {
 function generateNearbyQuery(
   coordinates: Coordinates,
   searchRadius: Meters
-): any[] {
+): any {
   const filterNearbyRestaurants = {
     $geoNear: {
       near: {
@@ -82,6 +82,11 @@ function generateNearbyQuery(
       spherical: true,
     },
   };
+
+  return filterNearbyRestaurants;
+}
+
+function generatePopulateFoodsQuery() {
   const setRestaurantInObject = {
     $project: {
       _id: false,
@@ -112,7 +117,6 @@ function generateNearbyQuery(
   };
 
   return [
-    filterNearbyRestaurants,
     setRestaurantInObject,
     leftJoinMenus,
     unwindMenus,
@@ -149,17 +153,33 @@ function generateRestaurantLimitQuery(
   return limitQuery;
 }
 
+// Generates query to match restaurants by price category
+// Example: ['$','$$'] retrieves restaurants with '$' OR '$$'
+function priceFilterQuery(prices?: PriceCategory[]): any {
+  const noFilter = { $match: {} };
+  if (!prices?.length) return noFilter;
+
+  return {
+    $match: { price_category: { $in: prices } },
+  };
+}
+
 async function findNear(
   coordinates: Coordinates,
   searchRadius: Meters,
   skip: number,
-  limit: number
+  limit: number,
+  filter?: RestaurantFilter
 ): Promise<NearbyRestaurantsResult> {
   const nearbyQuery = generateNearbyQuery(coordinates, searchRadius);
+  const populateFoodsQuery = generatePopulateFoodsQuery();
+  const priceFilter = priceFilterQuery(filter?.price_categories);
   const limitRestaurants = generateRestaurantLimitQuery(skip, limit);
 
   const [foundRestaurants] = await RestaurantModel.aggregate([
-    ...nearbyQuery,
+    nearbyQuery,
+    priceFilter,
+    ...populateFoodsQuery,
     ...limitRestaurants,
   ]);
 
@@ -171,9 +191,13 @@ async function findNearWithinBudget(
   searchRadius: Meters,
   budget: number,
   skip: number,
-  limit: number
+  limit: number,
+  filter?: RestaurantFilter
 ): Promise<NearbyRestaurantsResult> {
   const nearbyQuery = generateNearbyQuery(coordinates, searchRadius);
+  const priceFilter = priceFilterQuery(filter?.price_categories);
+  const populateFoodsQuery = generatePopulateFoodsQuery();
+
   const filterFoodsInBudget = {
     $addFields: {
       foods: {
@@ -198,7 +222,9 @@ async function findNearWithinBudget(
   const limitRestaurants = generateRestaurantLimitQuery(skip, limit);
 
   const nearbyBudgetQuery: any[] = [
-    ...nearbyQuery,
+    nearbyQuery,
+    priceFilter,
+    ...populateFoodsQuery,
     filterFoodsInBudget,
     addFoodCountField,
     pickRestaurantsInBudget,
