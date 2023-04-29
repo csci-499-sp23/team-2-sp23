@@ -156,22 +156,38 @@ function generateRestaurantLimitQuery(
 const MATCH_ANYTHING = { $match: {} };
 
 // Generates query to match restaurants by price category
-// Example: ['$','$$'] retrieves restaurants with '$' OR '$$'
+// Example: ['$','$$'] retrieves restaurants with price category '$' OR '$$'
 function priceFilterQuery(prices?: PriceCategory[]): any {
   if (!prices?.length) return MATCH_ANYTHING;
-
   return {
     $match: { price_category: { $in: prices } },
   };
 }
 
 // Generates query to match restaurants by transactions
-// Example: ['delivery', 'pickup'] matches restaurants with any combination of the transactions
+// Matches all restaurants with transactions containing at least one element in the array
 function transactionFilterQuery(transactions?: TransactionCategory[]): any {
   if (!transactions?.length) return MATCH_ANYTHING;
   return {
     $match: { transactions: { $in: transactions } },
   };
+}
+
+// Generates query to match restaurants by food categories
+// Matches all restaurants which food categories containing at least one element in the array
+function foodCategoryFilterQuery(foodCategories?: FoodCategory[]): any {
+  if (!foodCategories?.length) return MATCH_ANYTHING;
+  return {
+    $match: { food_categories: { $in: foodCategories } },
+  };
+}
+
+function restaurantFilterQuery(filter?: RestaurantFilter): any {
+  const priceFilter = priceFilterQuery(filter?.price_categories);
+  const transactionFilter = transactionFilterQuery(filter?.transactions);
+  const foodCategoryFilter = foodCategoryFilterQuery(filter?.food_categories);
+
+  return [priceFilter, transactionFilter, foodCategoryFilter];
 }
 
 async function findNear(
@@ -183,14 +199,12 @@ async function findNear(
 ): Promise<NearbyRestaurantsResult> {
   const nearbyQuery = generateNearbyQuery(coordinates, searchRadius);
   const populateFoodsQuery = generatePopulateFoodsQuery();
-  const priceFilter = priceFilterQuery(filter?.price_categories);
-  const transactionFilter = transactionFilterQuery(filter?.transactions);
+  const restaurantFilters = restaurantFilterQuery(filter);
   const limitRestaurants = generateRestaurantLimitQuery(skip, limit);
 
   const [foundRestaurants] = await RestaurantModel.aggregate([
     nearbyQuery,
-    priceFilter,
-    transactionFilter,
+    ...restaurantFilters,
     ...populateFoodsQuery,
     ...limitRestaurants,
   ]);
@@ -207,8 +221,7 @@ async function findNearWithinBudget(
   filter?: RestaurantFilter
 ): Promise<NearbyRestaurantsResult> {
   const nearbyQuery = generateNearbyQuery(coordinates, searchRadius);
-  const priceFilter = priceFilterQuery(filter?.price_categories);
-  const transactionFilter = transactionFilterQuery(filter?.transactions);
+  const restaurantFilters = restaurantFilterQuery(filter);
   const populateFoodsQuery = generatePopulateFoodsQuery();
 
   const filterFoodsInBudget = {
@@ -236,8 +249,7 @@ async function findNearWithinBudget(
 
   const nearbyBudgetQuery: any[] = [
     nearbyQuery,
-    priceFilter,
-    transactionFilter,
+    ...restaurantFilters,
     ...populateFoodsQuery,
     filterFoodsInBudget,
     addFoodCountField,
