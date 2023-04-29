@@ -136,16 +136,15 @@ function generateRestaurantLimitQuery(
     {
       $facet: {
         restaurants: [{ $skip: skippedDocuments }, { $limit: documentLimit }],
-        count: [{ $group: { _id: null, count: { $sum: 1 } } }],
+        count: [{ $count: "count" }],
       },
-    },
-    {
-      $unwind: "$count",
     },
     {
       $project: {
         restaurants: true,
-        count: "$count.count",
+        count: {
+          $ifNull: [{ $first: "$count.count" }, 0],
+        },
       },
     },
   ];
