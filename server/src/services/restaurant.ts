@@ -70,7 +70,7 @@ export type NearbyRestaurantsResult = {
 function generateNearbyQuery(
   coordinates: Coordinates,
   searchRadius: Meters
-): any[] {
+): any {
   const filterNearbyRestaurants = {
     $geoNear: {
       near: {
@@ -82,6 +82,11 @@ function generateNearbyQuery(
       spherical: true,
     },
   };
+
+  return filterNearbyRestaurants;
+}
+
+function generatePopulateFoodsQuery() {
   const setRestaurantInObject = {
     $project: {
       _id: false,
@@ -112,7 +117,6 @@ function generateNearbyQuery(
   };
 
   return [
-    filterNearbyRestaurants,
     setRestaurantInObject,
     leftJoinMenus,
     unwindMenus,
@@ -149,17 +153,59 @@ function generateRestaurantLimitQuery(
   return limitQuery;
 }
 
+const MATCH_ANYTHING = { $match: {} };
+
+// Generates query to match restaurants by price category
+// Example: ['$','$$'] retrieves restaurants with price category '$' OR '$$'
+function priceFilterQuery(prices?: PriceCategory[]): any {
+  if (!prices?.length) return MATCH_ANYTHING;
+  return {
+    $match: { price_category: { $in: prices } },
+  };
+}
+
+// Generates query to match restaurants by transactions
+// Matches all restaurants with transactions containing at least one element in the array
+function transactionFilterQuery(transactions?: TransactionCategory[]): any {
+  if (!transactions?.length) return MATCH_ANYTHING;
+  return {
+    $match: { transactions: { $in: transactions } },
+  };
+}
+
+// Generates query to match restaurants by food categories
+// Matches all restaurants which food categories containing at least one element in the array
+function foodCategoryFilterQuery(foodCategories?: FoodCategory[]): any {
+  if (!foodCategories?.length) return MATCH_ANYTHING;
+  return {
+    $match: { food_categories: { $in: foodCategories } },
+  };
+}
+
+function restaurantFilterQuery(filter?: RestaurantFilter): any {
+  const priceFilter = priceFilterQuery(filter?.price_categories);
+  const transactionFilter = transactionFilterQuery(filter?.transactions);
+  const foodCategoryFilter = foodCategoryFilterQuery(filter?.food_categories);
+
+  return [priceFilter, transactionFilter, foodCategoryFilter];
+}
+
 async function findNear(
   coordinates: Coordinates,
   searchRadius: Meters,
   skip: number,
-  limit: number
+  limit: number,
+  filter?: RestaurantFilter
 ): Promise<NearbyRestaurantsResult> {
   const nearbyQuery = generateNearbyQuery(coordinates, searchRadius);
+  const populateFoodsQuery = generatePopulateFoodsQuery();
+  const restaurantFilters = restaurantFilterQuery(filter);
   const limitRestaurants = generateRestaurantLimitQuery(skip, limit);
 
   const [foundRestaurants] = await RestaurantModel.aggregate([
-    ...nearbyQuery,
+    nearbyQuery,
+    ...restaurantFilters,
+    ...populateFoodsQuery,
     ...limitRestaurants,
   ]);
 
@@ -171,9 +217,13 @@ async function findNearWithinBudget(
   searchRadius: Meters,
   budget: number,
   skip: number,
-  limit: number
+  limit: number,
+  filter?: RestaurantFilter
 ): Promise<NearbyRestaurantsResult> {
   const nearbyQuery = generateNearbyQuery(coordinates, searchRadius);
+  const restaurantFilters = restaurantFilterQuery(filter);
+  const populateFoodsQuery = generatePopulateFoodsQuery();
+
   const filterFoodsInBudget = {
     $addFields: {
       foods: {
@@ -198,7 +248,9 @@ async function findNearWithinBudget(
   const limitRestaurants = generateRestaurantLimitQuery(skip, limit);
 
   const nearbyBudgetQuery: any[] = [
-    ...nearbyQuery,
+    nearbyQuery,
+    ...restaurantFilters,
+    ...populateFoodsQuery,
     filterFoodsInBudget,
     addFoodCountField,
     pickRestaurantsInBudget,
