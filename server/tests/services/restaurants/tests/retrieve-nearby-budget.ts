@@ -41,24 +41,26 @@ export async function testRetrieveNearbyRestaurantsInBudget() {
   const nearbyInBudget = await RestaurantService.findNearWithinBudget(
     [-74.00565, 40.74207],
     5000,
-    budget
+    budget,
+    0,
+    10
   );
 
-  const nearbyRestaurantNames = nearbyInBudget.map(
+  const nearbyRestaurantNames = nearbyInBudget.restaurants.map(
     (result) => result.restaurant.name
   );
 
-  const retrievedPrices = nearbyInBudget
+  const retrievedPrices = nearbyInBudget.restaurants
     .map((match) => match.foods.map((food) => food.price))
     .flat();
 
-  const createdFoods = Array(nearbyInBudget.length).fill(manyTestFoods).flat();
+  const createdFoods = Array(nearbyInBudget.count).fill(manyTestFoods).flat();
 
   const expectedPrices = createdFoods
     .flatMap((food) => food.price)
     .filter((price) => price <= budget);
 
-  expect(nearbyInBudget.length).toBe(3);
+  expect(nearbyInBudget.count).toBe(3);
   expect(nearbyRestaurantNames).toEqual([
     "Very Fresh Noodles",
     "Omusubi Gonbei",
