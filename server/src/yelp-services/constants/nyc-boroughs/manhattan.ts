@@ -1,24 +1,5 @@
-type Feature = {
-  type: string;
-  properties: {
-    cartodb_id: number;
-    name: string;
-    created_at: string;
-    updated_at: string;
-  };
-  geometry: {
-    type: string;
-    coordinates: number[][][][];
-  };
-};
-
-type GeoJson = {
-  type: string;
-  features: Feature[];
-};
-
 // Source: https://github.com/codeforgermany/click_that_hood/blob/main/public/data/manhattan.geojson
-export const CLICK_THAT_HOOD_MANHATTAN: GeoJson = {
+const MANHATTAN_GEO_JSON: GeoJson = {
   type: "FeatureCollection",
   features: [
     {
@@ -4388,3 +4369,5 @@ export const CLICK_THAT_HOOD_MANHATTAN: GeoJson = {
     },
   ],
 };
+
+export default MANHATTAN_GEO_JSON
