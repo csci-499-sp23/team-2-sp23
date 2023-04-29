@@ -1,37 +1,22 @@
 import api from "./api";
 
-async function getNearbyRestaurants(
-  { longitude, latitude, meters },
-  controller
-) {
+async function getNearbyRestaurants(query, controller) {
   return api(
     {
       method: "get",
       endpoint: "/restaurant/nearby",
-      query: {
-        longitude: longitude,
-        latitude: latitude,
-        meters: meters,
-      },
+      query: query,
     },
     controller
   );
 }
 
-async function getNearbyRestaurantsInBudget(
-  { longitude, latitude, meters, budget },
-  controller
-) {
+async function getNearbyRestaurantsInBudget(query, controller) {
   return api(
     {
       method: "get",
       endpoint: "/restaurant/nearby-in-budget",
-      query: {
-        longitude: longitude,
-        latitude: latitude,
-        meters: meters,
-        budget: budget,
-      },
+      query: query,
     },
     controller
   );

@@ -2,6 +2,7 @@ import React from "react";
 import SearchField from "./SearchField";
 import ViewToggler from "./ViewToggler";
 import { Box } from "@mui/material";
+import PageNavigation from "./PageNavigation";
 
 const classes = {
   headerContainer: {
@@ -9,6 +10,7 @@ const classes = {
     flexDirection: "column",
     alignItems: "center",
     gap: "1rem",
+    marginBottom: "0.25rem",
   },
   separator: {
     backgroundColor: "primary.main",
@@ -23,12 +25,14 @@ export default function SearchHeader({
   searchFields,
   viewMode,
   setViewMode,
+  pageNavigationProps,
 }) {
   return (
     <div style={classes.headerContainer}>
       <SearchField updateFields={updateFields} searchFields={searchFields} />
       <Box sx={classes.separator} />
       <ViewToggler viewMode={viewMode} setViewMode={setViewMode} />
+      <PageNavigation {...pageNavigationProps} />
     </div>
   );
 }
