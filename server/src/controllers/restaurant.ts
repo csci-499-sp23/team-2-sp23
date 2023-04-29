@@ -19,6 +19,20 @@ function presentRestaurant(result: RestaurantResult) {
   };
 }
 
+function generateFiltersFromQuery(query: any): RestaurantFilter {
+  const priceCategories = query.price_categories as PriceCategory[];
+  const foodCategories = query.food_categories as FoodCategory[];
+  const transactions = query.transactions as TransactionCategory[];
+
+  const restaurantFilter: RestaurantFilter = {
+    price_categories: priceCategories,
+    food_categories: foodCategories,
+    transactions: transactions,
+  };
+
+  return restaurantFilter;
+}
+
 // Controllers
 async function findNearbyRestaurants(
   request: Request,
@@ -31,11 +45,14 @@ async function findNearbyRestaurants(
     const page: number = parseFloat(request.query.page as string);
     const skip = (!isNaN(page) ? page : 0) * RESTAURANT_LIMIT;
 
+    const restaurantFilter = generateFiltersFromQuery(request.query);
+
     const foundRestaurants = await RestaurantService.findNear(
       [longitude, latitude],
       meters,
       skip,
-      RESTAURANT_LIMIT
+      RESTAURANT_LIMIT,
+      restaurantFilter
     );
 
     response.status(200).json({
@@ -60,12 +77,15 @@ async function findNearWithinBudget(
     const page: number = parseFloat(request.query.page as string);
     const skip = (!isNaN(page) ? page : 0) * RESTAURANT_LIMIT;
 
+    const restaurantFilter = generateFiltersFromQuery(request.query);
+
     const foundRestaurants = await RestaurantService.findNearWithinBudget(
       [longitude, latitude],
       search_radius,
       budget,
       skip,
-      RESTAURANT_LIMIT
+      RESTAURANT_LIMIT,
+      restaurantFilter
     );
 
     response.status(200).json({
@@ -97,7 +117,8 @@ async function findFoodCategories(
   response: Response
 ): Promise<void> {
   try {
-    const foodCategories: string[] = await RestaurantService.findFoodCategories();
+    const foodCategories: string[] =
+      await RestaurantService.findFoodCategories();
     response.status(200).json(foodCategories);
   } catch (error) {
     response.status(500).json(error);
