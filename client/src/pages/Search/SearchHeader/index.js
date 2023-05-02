@@ -3,6 +3,7 @@ import SearchField from "./SearchField";
 import ViewToggler from "./ViewToggler";
 import { Box } from "@mui/material";
 import PageNavigation from "./PageNavigation";
+import SortQuery from "./SortQuery";
 
 const classes = {
   headerContainer: {
@@ -29,7 +30,8 @@ export default function SearchHeader({
 }) {
   return (
     <div style={classes.headerContainer}>
-      <SearchField updateFields={updateFields} searchFields={searchFields} />
+      <SearchField searchFields={searchFields} updateFields={updateFields} />
+      <SortQuery searchFields={searchFields} updateFields={updateFields} />
       <Box sx={classes.separator} />
       <ViewToggler viewMode={viewMode} setViewMode={setViewMode} />
       <PageNavigation {...pageNavigationProps} />

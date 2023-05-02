@@ -237,7 +237,11 @@ function generateSortQuery(
   // Sort by distance
   if (sortBy === SORT_KEY.DISTANCE) {
     // query defaulted to sort by distance
-    return [];
+    const sortByDistance = {
+      $sort: { "restaurant.distance": sortDirectionValue },
+    };
+    
+    return [sortByDistance];
   }
   // Sort by average price
   if (sortBy === SORT_KEY.AVERAGE_PRICE) {

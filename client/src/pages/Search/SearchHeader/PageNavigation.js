@@ -35,7 +35,7 @@ export default function PageNavigation({
         <ChevronLeftIcon />
       </IconButton>
       <div>
-        Found {lowerBound}-{upperBound} of {total_count}
+        Showing {lowerBound}-{upperBound} of {total_count}
       </div>
       <IconButton
         sx={classes.pageArrow}
