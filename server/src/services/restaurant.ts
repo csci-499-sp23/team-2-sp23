@@ -239,6 +239,17 @@ function generateSortQuery(
     // query defaulted to sort by distance
     return [];
   }
+  // Sort by average price
+  if (sortBy === SORT_KEY.AVERAGE_PRICE) {
+    const addAveragePriceField = {
+      $addFields: { average_price: { $avg: "$foods.price" } },
+    };
+    const sortByAveragePrice = {
+      $sort: { average_price: sortDirectionValue },
+    };
+
+    return [addAveragePriceField, sortByAveragePrice];
+  }
 
   return NO_SORT;
 }
