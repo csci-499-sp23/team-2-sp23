@@ -1,4 +1,5 @@
 export enum SORT_KEY {
+  DISTANCE = "distance",
   FOODS = "foods",
   REVIEWS = "reviews",
   RATING = "rating",
@@ -6,6 +7,7 @@ export enum SORT_KEY {
 }
 
 export type SortKey =
+  | SORT_KEY.DISTANCE
   | SORT_KEY.FOODS
   | SORT_KEY.REVIEWS
   | SORT_KEY.RATING

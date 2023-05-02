@@ -234,6 +234,11 @@ function generateSortQuery(
 
     return [sortByReviews];
   }
+  // Sort by distance
+  if (sortBy === SORT_KEY.DISTANCE) {
+    // query defaulted to sort by distance
+    return [];
+  }
 
   return NO_SORT;
 }
