@@ -8,7 +8,6 @@ export default function ViewToggler({ viewMode, setViewMode }) {
     toggleContainer: {
       display: "flex",
       justifyContent: "center",
-      marginBottom: "1rem",
       gap: "0.69rem",
     },
     notSelected: {
