@@ -77,7 +77,8 @@ export default function Search() {
     },
   });
 
-  const { longitude, latitude, meters, budget } = searchFields;
+  const { longitude, latitude, meters, budget, sort_by, sort_dir } =
+    searchFields;
   const pageNavigationProps = {
     total_count: count,
     page_number: page,
@@ -98,7 +99,7 @@ export default function Search() {
       abortController.abort();
     };
     // eslint-disable-next-line
-  }, [longitude, latitude, meters, budget]);
+  }, [longitude, latitude, meters, budget, sort_by, sort_dir]);
 
   // Search on page change
   useEffect(() => {

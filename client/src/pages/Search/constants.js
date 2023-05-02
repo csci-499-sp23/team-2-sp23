@@ -10,6 +10,8 @@ export const DEFAULT_SEARCH_QUERY = {
   ...HUNTER_COLLEGE_COORDINATES,
   meters: 300,
   budget: 10,
+  sort_by: "direction",
+  sort_dir: "asc",
 };
 
 export const SEARCH_LOCATION_TYPES = ["places"];
