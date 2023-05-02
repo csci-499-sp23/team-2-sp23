@@ -8,6 +8,12 @@ import {
 import { MenuModel } from "../models/Menu";
 import { FoodDocument } from "../models/Food";
 import MenuService from "../services/menu";
+import {
+  SortKey,
+  SortDirection,
+  SORT_KEY,
+  SORT_DIRECTION_MAPPING,
+} from "../constants/sortables";
 
 async function create(
   restaurant: RestaurantAttributes
@@ -189,22 +195,54 @@ function restaurantFilterQuery(filter?: RestaurantFilter): any {
   return [priceFilter, transactionFilter, foodCategoryFilter];
 }
 
+function generateSortQuery(
+  sortBy?: SortKey,
+  sortDirection?: SortDirection
+): any[] {
+  const NO_SORT: any[] = [];
+  if (!sortBy || !sortDirection) return NO_SORT;
+  if (!SORT_DIRECTION_MAPPING[sortDirection]) return NO_SORT;
+
+  const sortDirectionValue = SORT_DIRECTION_MAPPING[sortDirection];
+
+  // Sort by food count
+  if (sortBy === SORT_KEY.FOODS) {
+    const addFoodCountField = {
+      $addFields: {
+        food_count: { $size: "$foods" },
+      },
+    };
+    const sortByFoodCount = {
+      $sort: { food_count: sortDirectionValue },
+    };
+
+    return [addFoodCountField, sortByFoodCount];
+  }
+
+  return NO_SORT;
+}
+
 async function findNear(
   coordinates: Coordinates,
   searchRadius: Meters,
   skip: number,
   limit: number,
-  filter?: RestaurantFilter
+  filter?: RestaurantFilter,
+  sortBy?: SortKey,
+  sortDirection?: SortDirection
 ): Promise<NearbyRestaurantsResult> {
   const nearbyQuery = generateNearbyQuery(coordinates, searchRadius);
   const populateFoodsQuery = generatePopulateFoodsQuery();
   const restaurantFilters = restaurantFilterQuery(filter);
+  const sortQuery = generateSortQuery(sortBy, sortDirection);
+
   const limitRestaurants = generateRestaurantLimitQuery(skip, limit);
 
   const [foundRestaurants] = await RestaurantModel.aggregate([
     nearbyQuery,
     ...restaurantFilters,
     ...populateFoodsQuery,
+    ...sortQuery,
     ...limitRestaurants,
   ]);
 
@@ -217,11 +255,14 @@ async function findNearWithinBudget(
   budget: number,
   skip: number,
   limit: number,
-  filter?: RestaurantFilter
+  filter?: RestaurantFilter,
+  sortBy?: SortKey,
+  sortDirection?: SortDirection
 ): Promise<NearbyRestaurantsResult> {
   const nearbyQuery = generateNearbyQuery(coordinates, searchRadius);
   const restaurantFilters = restaurantFilterQuery(filter);
   const populateFoodsQuery = generatePopulateFoodsQuery();
+  const sortQuery = generateSortQuery(sortBy, sortDirection);
 
   const filterFoodsInBudget = {
     $addFields: {
@@ -253,6 +294,7 @@ async function findNearWithinBudget(
     filterFoodsInBudget,
     addFoodCountField,
     pickRestaurantsInBudget,
+    ...sortQuery,
     ...limitRestaurants,
   ];
 
