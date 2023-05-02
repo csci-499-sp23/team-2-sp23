@@ -1,5 +1,6 @@
 import { Express } from "express";
 import RestaurantRouter from "./restaurant";
+import TestRouter from "./test";
 import listEndpoints from "express-list-endpoints";
 import Models from "../models";
 
@@ -8,6 +9,7 @@ dotenv.config();
 
 async function generateRoutes(app: Express): Promise<void> {
   app.use("/restaurant", RestaurantRouter);
+  app.use("/test", TestRouter);
 
   Models.mongoose
     .connect(process.env.CONNECTION_URL!)
