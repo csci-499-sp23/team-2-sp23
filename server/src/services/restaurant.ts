@@ -218,6 +218,14 @@ function generateSortQuery(
 
     return [addFoodCountField, sortByFoodCount];
   }
+  // Sort by review count
+  if (sortBy === SORT_KEY.REVIEWS) {
+    const sortByReviews = {
+      $sort: { "restaurant.review_count": sortDirectionValue },
+    };
+
+    return [sortByReviews];
+  }
 
   return NO_SORT;
 }
