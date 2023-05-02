@@ -3,6 +3,7 @@ import RestaurantService, { RestaurantResult } from "../services/restaurant";
 import { FoodDocument, FoodItem } from "../models/Food";
 import { pick, omit } from "lodash";
 import { RESTAURANT_LIMIT } from "../constants/restaurants";
+import { SortKey, SortDirection } from "../constants/sortables";
 
 // Presenter functions to remove unused fields
 function presentFoods(foods: FoodDocument[]): FoodItem[] {
@@ -44,6 +45,8 @@ async function findNearbyRestaurants(
     const meters: number = parseInt(request.query.meters as string);
     const page: number = parseFloat(request.query.page as string);
     const skip = (!isNaN(page) ? page : 0) * RESTAURANT_LIMIT;
+    const sortBy = request.query.sort_by as SortKey;
+    const sortDirection = request.query.sort_dir as SortDirection;
 
     const restaurantFilter = generateFiltersFromQuery(request.query);
 
@@ -52,7 +55,9 @@ async function findNearbyRestaurants(
       meters,
       skip,
       RESTAURANT_LIMIT,
-      restaurantFilter
+      restaurantFilter,
+      sortBy,
+      sortDirection
     );
 
     response.status(200).json({
@@ -76,6 +81,8 @@ async function findNearWithinBudget(
     const budget: number = parseFloat(request.query.budget as string);
     const page: number = parseFloat(request.query.page as string);
     const skip = (!isNaN(page) ? page : 0) * RESTAURANT_LIMIT;
+    const sortBy = request.query.sort_by as SortKey;
+    const sortDirection = request.query.sort_dir as SortDirection;
 
     const restaurantFilter = generateFiltersFromQuery(request.query);
 
@@ -85,7 +92,9 @@ async function findNearWithinBudget(
       budget,
       skip,
       RESTAURANT_LIMIT,
-      restaurantFilter
+      restaurantFilter,
+      sortBy,
+      sortDirection
     );
 
     response.status(200).json({
