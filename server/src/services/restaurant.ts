@@ -226,6 +226,14 @@ function generateSortQuery(
 
     return [sortByReviews];
   }
+  // Sort by rating
+  if (sortBy === SORT_KEY.RATING) {
+    const sortByReviews = {
+      $sort: { "restaurant.rating": sortDirectionValue },
+    };
+
+    return [sortByReviews];
+  }
 
   return NO_SORT;
 }
