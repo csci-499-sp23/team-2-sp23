@@ -23,7 +23,6 @@ function Map({
   };
 
   const [map, setMap] = React.useState(null);
-  const [circle, setCircle] = React.useState(null);
   const [selectedRestaurantId, setSelectedRestaurantId] = React.useState(null);
 
   const mapOptions = {
@@ -62,22 +61,7 @@ function Map({
       onUnmount={() => setMap(null)}
       options={mapOptions}
     >
-      <CircleF
-        onLoad={(circle) => setCircle(circle)}
-        onUnmount={() => setCircle(null)}
-        options={circleOptions}
-        draggable
-        onDragEnd={() => {
-          const updatedLatitude = circle.center.lat();
-          const updatedLongitude = circle.center.lng();
-
-          updateFields({
-            longitude: updatedLongitude,
-            latitude: updatedLatitude,
-          });
-          map.setCenter({ lat: updatedLatitude, lng: updatedLongitude });
-        }}
-      />
+      <CircleF options={circleOptions} />
       <MarkerF
         position={{
           lng: longitude,
