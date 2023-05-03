@@ -1,10 +1,10 @@
 import React from "react";
-import ProgressBar from "./ProgressBar";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import githubLogo from "../../assets/images/github-logo.png";
 import logo from "../../assets/images/logo-white.png";
 import "./navbar.css";
+import { LinearProgress } from "@mui/material";
 
 const linkStyle = {
   color: "white",
@@ -45,10 +45,7 @@ export default function Navbar() {
           </div>
         </div>
       </div>
-      <ProgressBar
-        loading={progress.isLoading}
-        finished={progress.finishedLoading}
-      />
+      {!progress.finishedLoading && <LinearProgress />}
     </nav>
   );
 }
