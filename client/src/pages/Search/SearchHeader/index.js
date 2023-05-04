@@ -1,10 +1,10 @@
 import React from "react";
 import SearchField from "./SearchField";
-import ViewToggler from "./ViewToggler";
-import PriceFilter from "../../../components/Filters/PriceFilter";
-import { Box } from "@mui/material";
-import PageNavigation from "./PageNavigation";
 import SortQuery from "./SortQuery";
+import { Box } from "@mui/material";
+import RestaurantFilters from "./RestaurantFilter";
+import PageNavigation from "./PageNavigation";
+import ViewToggler from "./ViewToggler";
 
 const classes = {
   headerContainer: {
@@ -27,6 +27,8 @@ export default function SearchHeader({
   searchFields,
   priceFilter,
   setPriceFilter,
+  foodCategories,
+  setFoodCategories,
   viewMode,
   setViewMode,
   pageNavigationProps,
@@ -34,8 +36,13 @@ export default function SearchHeader({
   return (
     <div style={classes.headerContainer}>
       <SearchField searchFields={searchFields} updateFields={updateFields} />
-      <PriceFilter priceFilter={priceFilter} setPriceFilter={setPriceFilter} />
       <SortQuery searchFields={searchFields} updateFields={updateFields} />
+      <RestaurantFilters
+        priceFilter={priceFilter}
+        setPriceFilter={setPriceFilter}
+        foodCategories={foodCategories}
+        setFoodCategories={setFoodCategories}
+      />
       <Box sx={classes.separator} />
       <ViewToggler viewMode={viewMode} setViewMode={setViewMode} />
       <PageNavigation {...pageNavigationProps} />
