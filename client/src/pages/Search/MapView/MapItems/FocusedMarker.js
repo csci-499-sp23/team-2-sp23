@@ -1,9 +1,8 @@
 /*global google*/
-import React from "react";
 import { MarkerF } from "@react-google-maps/api";
-const AmongusVent = require("../../../assets/images/among-us-vent.png");
+const AmongusVent = require("../../../../assets/images/among-us-vent.png");
 
-export default function FocusedMarker({ selectedRestaurant, updateFields }) {
+export default function FocusedMarker({ selectedRestaurant }) {
   if (!selectedRestaurant) return <></>;
 
   const { restaurant } = selectedRestaurant;

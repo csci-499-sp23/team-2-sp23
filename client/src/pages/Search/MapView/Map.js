@@ -1,8 +1,9 @@
 /*global google*/
 import React from "react";
-import { GoogleMap, MarkerF, CircleF } from "@react-google-maps/api";
-import FocusedMarker from "./FocusedMarker";
-const AMONGUS = require("../../../assets/images/among-us.webp");
+import { GoogleMap } from "@react-google-maps/api";
+import MapCircle from "./MapItems/MapCircle";
+import MapAvatar from "./MapItems/MapAvatar";
+import RestaurantMarkers from "./MapItems/RestaurantMarkers";
 
 const containerStyle = {
   width: "100%",
@@ -17,13 +18,7 @@ function Map({
   showRestaurant,
   searchRadius,
 }) {
-  const startingCenter = {
-    lat: latitude,
-    lng: longitude,
-  };
-
   const [map, setMap] = React.useState(null);
-  const [selectedRestaurantId, setSelectedRestaurantId] = React.useState(null);
 
   const mapOptions = {
     zoomControlOptions: {
@@ -34,24 +29,15 @@ function Map({
     },
     mapTypeControl: false,
   };
-  const circleOptions = {
-    radius: searchRadius,
-    fillColor: "hsla(25,80%,60%,60%)",
-    strokeColor: "hsla(25,80%,60%,90%)",
-    center: startingCenter,
-  };
 
-  const nonSelectedMarkers = rows.filter(
-    (row) => row.restaurant.yelp_id !== selectedRestaurantId
-  );
-  const selectedRestaurant = rows.find(
-    (row) => row.restaurant.yelp_id === selectedRestaurantId
-  );
+  React.useEffect(() => {
+    if (!map) return;
+    map.setCenter({ lat: latitude, lng: longitude });
+  }, [map, latitude, longitude]);
 
   return (
     <GoogleMap
       state={map}
-      center={startingCenter}
       mapContainerStyle={containerStyle}
       onLoad={(map) => {
         map.setZoom(16);
@@ -61,17 +47,16 @@ function Map({
       onUnmount={() => setMap(null)}
       options={mapOptions}
     >
-      <CircleF options={circleOptions} />
-      <MarkerF
-        position={{
-          lng: longitude,
-          lat: latitude,
-        }}
-        icon={{
-          url: AMONGUS,
-          scaledSize: new google.maps.Size(40, 48),
-        }}
-        draggable
+      <MapCircle
+        longitude={longitude}
+        latitude={latitude}
+        searchRadius={searchRadius}
+      />
+      <MapAvatar
+        longitude={longitude}
+        latitude={latitude}
+        updateFields={updateFields}
+        setMapCenter={(position) => map.setCenter(position)}
         onDragEnd={(event) => {
           const updatedLatitude = event.latLng.lat();
           const updatedLongitude = event.latLng.lng();
@@ -79,33 +64,14 @@ function Map({
             longitude: updatedLongitude,
             latitude: updatedLatitude,
           });
-
           map.setCenter({ lat: updatedLatitude, lng: updatedLongitude });
         }}
       />
-      <FocusedMarker
-        selectedRestaurant={selectedRestaurant}
-        updateFields={updateFields}
+      <RestaurantMarkers
+        rows={rows}
+        showRestaurant={showRestaurant}
+        setMapCenter={(position) => map.setCenter(position)}
       />
-      {nonSelectedMarkers.map((row) => {
-        const { restaurant } = row;
-        const coordinates = restaurant.location.coordinates;
-        const [longitude, latitude] = coordinates;
-        return (
-          <MarkerF
-            key={restaurant.yelp_id}
-            position={{
-              lng: longitude,
-              lat: latitude,
-            }}
-            onClick={() => {
-              showRestaurant(row);
-              setSelectedRestaurantId(restaurant.yelp_id);
-              map.setCenter({ lat: latitude, lng: longitude });
-            }}
-          />
-        );
-      })}
     </GoogleMap>
   );
 }
