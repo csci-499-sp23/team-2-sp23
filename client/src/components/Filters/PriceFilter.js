@@ -12,16 +12,20 @@ export default function PriceFilterToggler() {
 
   const [priceFilter, setPriceFilter] = React.useState(DEFAULT_FILTER);
   const prices = Object.keys(priceFilter);
-  const selectedPrices = Object.keys(priceFilter).filter(
-    (price) => priceFilter[price]
-  );
+  const selectedPrices = prices.filter((price) => priceFilter[price]);
 
   return (
-    <ToggleButtonGroup value={selectedPrices} aria-label="price" size="small">
+    <ToggleButtonGroup
+      value={selectedPrices}
+      style={{ backgroundColor: "hsl(35, 10%, 98%)" }}
+      aria-label="price"
+      size="small"
+    >
       {prices.map((price) => (
         <ToggleButton
           key={price}
           value={price}
+          color="primary"
           onClick={() => {
             const updatedFilter = {
               ...priceFilter,
@@ -30,7 +34,7 @@ export default function PriceFilterToggler() {
             setPriceFilter(updatedFilter);
           }}
         >
-          {price}
+          <span style={{ width: "32px" }}>{price}</span>
         </ToggleButton>
       ))}
     </ToggleButtonGroup>
