@@ -12,6 +12,14 @@ export const DEFAULT_SEARCH_QUERY = {
   budget: 10,
   sort_by: "direction",
   sort_dir: "asc",
+  price_categories: [],
+};
+
+export const DEFAULT_PRICE_FILTER = {
+  $: false,
+  $$: false,
+  $$$: false,
+  $$$$: false,
 };
 
 export const SEARCH_LOCATION_TYPES = ["places"];

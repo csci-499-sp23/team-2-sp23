@@ -2,15 +2,7 @@ import React from "react";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 
-export default function PriceFilterToggler() {
-  const DEFAULT_FILTER = {
-    $: false,
-    $$: false,
-    $$$: false,
-    $$$$: false,
-  };
-
-  const [priceFilter, setPriceFilter] = React.useState(DEFAULT_FILTER);
+export default function PriceFilterToggler({ priceFilter, setPriceFilter }) {
   const prices = Object.keys(priceFilter);
   const selectedPrices = prices.filter((price) => priceFilter[price]);
 
@@ -34,7 +26,7 @@ export default function PriceFilterToggler() {
             setPriceFilter(updatedFilter);
           }}
         >
-          <span style={{ width: "32px" }}>{price}</span>
+          <span style={{ width: "30px" }}>{price}</span>
         </ToggleButton>
       ))}
     </ToggleButtonGroup>

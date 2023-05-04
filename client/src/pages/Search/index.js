@@ -7,7 +7,11 @@ import GridView from "./GridView";
 import MapView from "./MapView";
 import SearchHeader from "./SearchHeader";
 import { useJsApiLoader } from "@react-google-maps/api";
-import { DEFAULT_SEARCH_QUERY, SEARCH_LOCATION_TYPES } from "./constants";
+import {
+  DEFAULT_PRICE_FILTER,
+  DEFAULT_SEARCH_QUERY,
+  SEARCH_LOCATION_TYPES,
+} from "./constants";
 import useMenuModal from "../../hooks/useMenuModal";
 
 export default function Search() {
@@ -16,8 +20,15 @@ export default function Search() {
   const [count, setCount] = useState(0);
   const [searchFields, setSearchFields] = useState({
     ...DEFAULT_SEARCH_QUERY,
-    ...JSON.parse(localStorage.getItem("budget-eats-cache")),
+    ...JSON.parse(localStorage.getItem("query")),
   });
+  const [priceFilter, setPriceFilter] = useState({
+    ...DEFAULT_PRICE_FILTER,
+    ...JSON.parse(localStorage.getItem("price_categories")),
+  });
+  const selectedPrices = Object.keys(priceFilter).filter(
+    (price) => priceFilter[price]
+  );
   const [page, setPage] = useState(0);
   const [viewMode, setViewMode] = useState(
     localStorage.getItem("view-mode") ?? "map"
@@ -79,6 +90,11 @@ export default function Search() {
     },
   });
 
+  function saveStateToLocalStorage() {
+    localStorage.setItem("query", JSON.stringify(query));
+    localStorage.setItem("price_categories", JSON.stringify(priceFilter));
+  }
+
   const { longitude, latitude, meters, budget, sort_by, sort_dir } =
     searchFields;
   const pageNavigationProps = {
@@ -88,28 +104,25 @@ export default function Search() {
     updatePage: updatePage,
   };
 
-  // Search on coordinate change
+  const query = { ...searchFields, page, price_categories: selectedPrices };
+  // Search on query change
   useEffect(() => {
     const abortController = new AbortController();
     setPage(0);
-    const query = { ...searchFields, page };
     retrieveRestaurants(query, abortController);
-
-    localStorage.setItem("budget-eats-cache", JSON.stringify(query));
+    saveStateToLocalStorage();
 
     return () => {
       abortController.abort();
     };
     // eslint-disable-next-line
-  }, [longitude, latitude, meters, budget, sort_by, sort_dir]);
+  }, [longitude, latitude, meters, budget, sort_by, sort_dir, priceFilter]);
 
   // Search on page change
   useEffect(() => {
     const abortController = new AbortController();
-    const query = { ...searchFields, page };
     retrieveRestaurants(query, abortController);
-
-    localStorage.setItem("budget-eats-cache", JSON.stringify(query));
+    saveStateToLocalStorage();
 
     return () => {
       abortController.abort();
@@ -125,6 +138,8 @@ export default function Search() {
           <SearchHeader
             updateFields={updateFields}
             searchFields={searchFields}
+            priceFilter={priceFilter}
+            setPriceFilter={setPriceFilter}
             viewMode={viewMode}
             setViewMode={setViewMode}
             pageNavigationProps={pageNavigationProps}

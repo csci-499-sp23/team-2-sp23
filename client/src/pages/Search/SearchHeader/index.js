@@ -25,6 +25,8 @@ const classes = {
 export default function SearchHeader({
   updateFields,
   searchFields,
+  priceFilter,
+  setPriceFilter,
   viewMode,
   setViewMode,
   pageNavigationProps,
@@ -32,12 +34,11 @@ export default function SearchHeader({
   return (
     <div style={classes.headerContainer}>
       <SearchField searchFields={searchFields} updateFields={updateFields} />
+      <PriceFilter priceFilter={priceFilter} setPriceFilter={setPriceFilter} />
       <SortQuery searchFields={searchFields} updateFields={updateFields} />
-      <PriceFilter />
       <Box sx={classes.separator} />
       <ViewToggler viewMode={viewMode} setViewMode={setViewMode} />
       <PageNavigation {...pageNavigationProps} />
     </div>
   );
 }
- 
