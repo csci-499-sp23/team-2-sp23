@@ -9,7 +9,7 @@ export default function PriceFilterToggler({ priceFilter, setPriceFilter }) {
   return (
     <ToggleButtonGroup
       value={selectedPrices}
-      style={{ backgroundColor: "hsl(35, 10%, 98%)" }}
+      style={{ backgroundColor: "hsl(35, 10%, 98%)", height: "fit-content" }}
       aria-label="price"
       size="small"
     >

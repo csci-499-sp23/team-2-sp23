@@ -26,6 +26,10 @@ export default function Search() {
     ...DEFAULT_PRICE_FILTER,
     ...JSON.parse(localStorage.getItem("price_categories")),
   });
+  const [foodCategories, setFoodCategories] = useState(
+    JSON.parse(localStorage.getItem("food_categories")) ?? []
+  );
+
   const selectedPrices = Object.keys(priceFilter).filter(
     (price) => priceFilter[price]
   );
@@ -93,6 +97,7 @@ export default function Search() {
   function saveStateToLocalStorage() {
     localStorage.setItem("query", JSON.stringify(query));
     localStorage.setItem("price_categories", JSON.stringify(priceFilter));
+    localStorage.setItem("food_categories", JSON.stringify(foodCategories));
   }
 
   const { longitude, latitude, meters, budget, sort_by, sort_dir } =
@@ -104,7 +109,13 @@ export default function Search() {
     updatePage: updatePage,
   };
 
-  const query = { ...searchFields, page, price_categories: selectedPrices };
+  const query = {
+    ...searchFields,
+    page,
+    price_categories: selectedPrices,
+    food_categories: foodCategories,
+  };
+
   // Search on query change
   useEffect(() => {
     const abortController = new AbortController();
@@ -116,7 +127,16 @@ export default function Search() {
       abortController.abort();
     };
     // eslint-disable-next-line
-  }, [longitude, latitude, meters, budget, sort_by, sort_dir, priceFilter]);
+  }, [
+    longitude,
+    latitude,
+    meters,
+    budget,
+    sort_by,
+    sort_dir,
+    priceFilter,
+    foodCategories,
+  ]);
 
   // Search on page change
   useEffect(() => {
@@ -140,6 +160,8 @@ export default function Search() {
             searchFields={searchFields}
             priceFilter={priceFilter}
             setPriceFilter={setPriceFilter}
+            foodCategories={foodCategories}
+            setFoodCategories={setFoodCategories}
             viewMode={viewMode}
             setViewMode={setViewMode}
             pageNavigationProps={pageNavigationProps}
