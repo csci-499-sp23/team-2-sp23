@@ -67,6 +67,7 @@ export type RestaurantResult = {
 
 export type NearbyRestaurantsResult = {
   count: number;
+  food_categories: any[];
   restaurants: RestaurantResult[];
 };
 
@@ -341,6 +342,76 @@ async function findNearWithinBudget(
   return foundRestaurants;
 }
 
+async function findNearbyCategoriesInBudget(
+  coordinates: Coordinates,
+  searchRadius: Meters,
+  budget: number
+): Promise<FoodCategoryFrequency> {
+  const nearbyQuery = generateNearbyQuery(coordinates, searchRadius);
+  const populateFoodsQuery = generatePopulateFoodsQuery();
+
+  const filterFoodsInBudget = {
+    $addFields: {
+      foods: {
+        $filter: {
+          input: "$foods",
+          cond: { $lte: ["$$food.price", budget] },
+          as: "food",
+        },
+      },
+    },
+  };
+  const addFoodCountField = {
+    $addFields: {
+      food_count: { $size: "$foods" },
+    },
+  };
+  const pickRestaurantsInBudget = {
+    $match: {
+      food_count: { $ne: 0 },
+    },
+  };
+
+  const groupCategoriesQuery = [
+    {
+      $facet: {
+        food_categories: [
+          { $unwind: "$restaurant.food_categories" },
+          { $sortByCount: "$restaurant.food_categories" },
+        ],
+      },
+    },
+    {
+      $project: {
+        food_categories: true,
+      },
+    },
+  ];
+
+  const nearbyBudgetCategoriesQuery: any[] = [
+    nearbyQuery,
+    ...populateFoodsQuery,
+    filterFoodsInBudget,
+    addFoodCountField,
+    pickRestaurantsInBudget,
+    ...groupCategoriesQuery,
+  ];
+
+  const [foundCategories]: any = await RestaurantModel.aggregate(
+    nearbyBudgetCategoriesQuery
+  );
+
+  type GroupedCategories = {
+    _id: string;
+    count: number;
+  };
+
+  return foundCategories.food_categories.map((category: GroupedCategories) => ({
+    category: category._id,
+    frequency: category.count,
+  }));
+}
+
 async function findByYelpId(yelpId: string): Promise<{
   restaurant: RestaurantDocument;
   foods: FoodDocument[];
@@ -399,6 +470,7 @@ export default {
   updateMenu,
   findNear,
   findNearWithinBudget,
+  findNearbyCategoriesInBudget,
   findByYelpId,
   findFoodCategories,
 };

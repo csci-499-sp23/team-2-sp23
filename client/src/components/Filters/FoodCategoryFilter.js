@@ -22,6 +22,7 @@ export default function FoodCategoryFilter({
   return (
     <Autocomplete
       multiple
+      limitTags={4}
       filterOptions={filterOptions}
       options={options}
       getOptionDisabled={(option) => option}
@@ -41,7 +42,7 @@ export default function FoodCategoryFilter({
         <TextField
           {...params}
           variant="standard"
-          label="Search for Food Categories"
+          label="Food Categories"
         />
       )}
     />

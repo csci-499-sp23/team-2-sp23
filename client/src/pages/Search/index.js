@@ -13,6 +13,10 @@ import {
   SEARCH_LOCATION_TYPES,
 } from "./constants";
 import useMenuModal from "../../hooks/useMenuModal";
+import {
+  setFoodCategory,
+  setFoodCategoryFrequency,
+} from "../../store/reducers/foodCategories";
 
 export default function Search() {
   const dispatch = useDispatch();
@@ -59,6 +63,27 @@ export default function Search() {
     nextPage = Math.min(MAXIMUM_PAGE, nextPage);
     nextPage = Math.max(MINIMUM_PAGE, nextPage);
     setPage(nextPage ?? 0);
+  }
+
+  async function retrieveFoodCategories(query, controller) {
+    dispatch(setLoading(true));
+    dispatch(setFinished(false));
+
+    const retrievedFoodCategories =
+      await RestaurantAPI.getNearbyCategoriesInBudget(query, controller).catch(
+        () => []
+      );
+
+    const foodCategoryFrequency = retrievedFoodCategories.reduce(
+      (total, option) => {
+        total[option.category] = option.frequency;
+        return total;
+      },
+      {}
+    );
+
+    dispatch(setFoodCategory(retrievedFoodCategories));
+    dispatch(setFoodCategoryFrequency(foodCategoryFrequency));
   }
 
   async function retrieveRestaurants(query, controller) {
@@ -116,7 +141,23 @@ export default function Search() {
     food_categories: foodCategories,
   };
 
-  // Search on query change
+  const mainQueryDependencies = [longitude, latitude, meters, budget];
+  const sortingDependencies = [sort_by, sort_dir];
+  const filterDependencies = [priceFilter, foodCategories];
+
+  // Retrieve food categories on query change
+  useEffect(() => {
+    const abortController = new AbortController();
+    retrieveFoodCategories(query, abortController);
+    saveStateToLocalStorage();
+
+    return () => {
+      abortController.abort();
+    };
+    // eslint-disable-next-line
+  }, [...mainQueryDependencies]);
+
+  // Retrieve restaurants on query or filter change
   useEffect(() => {
     const abortController = new AbortController();
     setPage(0);
@@ -127,18 +168,9 @@ export default function Search() {
       abortController.abort();
     };
     // eslint-disable-next-line
-  }, [
-    longitude,
-    latitude,
-    meters,
-    budget,
-    sort_by,
-    sort_dir,
-    priceFilter,
-    foodCategories,
-  ]);
+  }, [...mainQueryDependencies, ...sortingDependencies, ...filterDependencies]);
 
-  // Search on page change
+  // Retrieve restaurants on page change
   useEffect(() => {
     const abortController = new AbortController();
     retrieveRestaurants(query, abortController);
