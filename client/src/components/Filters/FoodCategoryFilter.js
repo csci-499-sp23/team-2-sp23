@@ -1,16 +1,18 @@
 import { Autocomplete, TextField } from "@mui/material";
+import { useSelector } from "react-redux";
 
 export default function FoodCategoryFilter({
   foodCategories,
   setFoodCategories,
 }) {
-  // TODO: replace with loaded categories from server
-  const foods = ["Halal", "Chinese", "Mexican", "Amongus", "Pizza"];
+  const { foodCategories: foodCategoryOptions } = useSelector(
+    (state) => state.foodCategories
+  );
 
   return (
     <Autocomplete
       multiple
-      options={foods}
+      options={foodCategoryOptions}
       getOptionLabel={(option) => option}
       value={foodCategories}
       size="small"

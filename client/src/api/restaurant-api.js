@@ -34,7 +34,7 @@ async function getRestaurantByYelpId(yelpId, controller) {
     controller
   );
 }
-async function getRestaurantFoodCategory() {
+async function getRestaurantFoodCategories() {
   return api({
     method: "get",
     endpoint: "/restaurant/find-food-categories",
@@ -45,7 +45,7 @@ const RestaurantAPI = {
   getNearbyRestaurants,
   getNearbyRestaurantsInBudget,
   getRestaurantByYelpId,
-  getRestaurantFoodCategory,
+  getRestaurantFoodCategories,
 };
 
 export default RestaurantAPI;
