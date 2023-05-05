@@ -1,17 +1,37 @@
-import { Autocomplete, TextField } from "@mui/material";
+import {
+  Autocomplete,
+  Box,
+  TextField,
+  createFilterOptions,
+} from "@mui/material";
+import { useSelector } from "react-redux";
 
 export default function FoodCategoryFilter({
   foodCategories,
   setFoodCategories,
 }) {
-  // TODO: replace with loaded categories from server
-  const foods = ["Halal", "Chinese", "Mexican", "Amongus", "Pizza"];
+  const foodCategoryRedux = useSelector((state) => state.foodCategories);
+  const { foodCategoryOptions, foodCategoryFrequency } = foodCategoryRedux;
+
+  const options = foodCategoryOptions.map((option) => option.category);
+
+  const filterOptions = createFilterOptions({
+    limit: 20,
+  });
 
   return (
     <Autocomplete
       multiple
-      options={foods}
+      limitTags={4}
+      filterOptions={filterOptions}
+      options={options}
+      getOptionDisabled={(option) => option}
       getOptionLabel={(option) => option}
+      renderOption={(props, option) => (
+        <Box component="li" {...props}>
+          {option} ({foodCategoryFrequency[option]})
+        </Box>
+      )}
       value={foodCategories}
       size="small"
       sx={{ minWidth: "250px" }}
@@ -19,7 +39,11 @@ export default function FoodCategoryFilter({
         setFoodCategories(selectedCategories ?? []);
       }}
       renderInput={(params) => (
-        <TextField {...params} variant="standard" label="Food Categories" />
+        <TextField
+          {...params}
+          variant="standard"
+          label="Food Categories"
+        />
       )}
     />
   );

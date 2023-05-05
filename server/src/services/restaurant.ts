@@ -67,6 +67,7 @@ export type RestaurantResult = {
 
 export type NearbyRestaurantsResult = {
   count: number;
+  food_categories: any[];
   restaurants: RestaurantResult[];
 };
 
@@ -240,7 +241,7 @@ function generateSortQuery(
     const sortByDistance = {
       $sort: { "restaurant.distance": sortDirectionValue },
     };
-    
+
     return [sortByDistance];
   }
   // Sort by average price
@@ -341,6 +342,76 @@ async function findNearWithinBudget(
   return foundRestaurants;
 }
 
+async function findNearbyCategoriesInBudget(
+  coordinates: Coordinates,
+  searchRadius: Meters,
+  budget: number
+): Promise<FoodCategoryFrequency> {
+  const nearbyQuery = generateNearbyQuery(coordinates, searchRadius);
+  const populateFoodsQuery = generatePopulateFoodsQuery();
+
+  const filterFoodsInBudget = {
+    $addFields: {
+      foods: {
+        $filter: {
+          input: "$foods",
+          cond: { $lte: ["$$food.price", budget] },
+          as: "food",
+        },
+      },
+    },
+  };
+  const addFoodCountField = {
+    $addFields: {
+      food_count: { $size: "$foods" },
+    },
+  };
+  const pickRestaurantsInBudget = {
+    $match: {
+      food_count: { $ne: 0 },
+    },
+  };
+
+  const groupCategoriesQuery = [
+    {
+      $facet: {
+        food_categories: [
+          { $unwind: "$restaurant.food_categories" },
+          { $sortByCount: "$restaurant.food_categories" },
+        ],
+      },
+    },
+    {
+      $project: {
+        food_categories: true,
+      },
+    },
+  ];
+
+  const nearbyBudgetCategoriesQuery: any[] = [
+    nearbyQuery,
+    ...populateFoodsQuery,
+    filterFoodsInBudget,
+    addFoodCountField,
+    pickRestaurantsInBudget,
+    ...groupCategoriesQuery,
+  ];
+
+  const [foundCategories]: any = await RestaurantModel.aggregate(
+    nearbyBudgetCategoriesQuery
+  );
+
+  type GroupedCategories = {
+    _id: string;
+    count: number;
+  };
+
+  return foundCategories.food_categories.map((category: GroupedCategories) => ({
+    category: category._id,
+    frequency: category.count,
+  }));
+}
+
 async function findByYelpId(yelpId: string): Promise<{
   restaurant: RestaurantDocument;
   foods: FoodDocument[];
@@ -356,18 +427,40 @@ async function findByYelpId(yelpId: string): Promise<{
   };
 }
 
-async function findFoodCategories(): Promise<string[]> {
-  const allFoodCategories: string[][] = await RestaurantModel.find({})
+type FoodCategoryFrequency = {
+  category: string;
+  frequency: number;
+};
+
+async function findFoodCategories(): Promise<any> {
+  const allFoodCategories: string[] = await RestaurantModel.find({})
     .select({
       food_categories: 1,
       _id: 0,
     })
-    .then((result: any[]) => result.map((row: any) => row.food_categories));
+    .then((result: any[]) =>
+      result.map((row: any) => row.food_categories).flat()
+    );
 
-  // Construct set to remove duplicates
-  const foodCategories = [...new Set(allFoodCategories.flat())];
+  const foodCategoryFrequency: { [key: string]: number } = {};
+  // compute frequency for each food category
+  allFoodCategories.forEach((foodCategory) => {
+    foodCategoryFrequency[foodCategory] =
+      (foodCategoryFrequency[foodCategory] ?? 0) + 1;
+  });
 
-  return foodCategories.sort();
+  const uniqueFoodCategories = Object.keys(foodCategoryFrequency);
+
+  const frequencyPairs: FoodCategoryFrequency[] = uniqueFoodCategories.map(
+    (foodCategory) => ({
+      category: foodCategory,
+      frequency: foodCategoryFrequency[foodCategory],
+    })
+  );
+
+  return frequencyPairs.sort(
+    (categoryA, categoryB) => categoryB.frequency - categoryA.frequency
+  );
 }
 
 export default {
@@ -377,6 +470,7 @@ export default {
   updateMenu,
   findNear,
   findNearWithinBudget,
+  findNearbyCategoriesInBudget,
   findByYelpId,
   findFoodCategories,
 };

@@ -108,6 +108,28 @@ async function findNearWithinBudget(
   }
 }
 
+async function findNearbyCategoriesInBudget(
+  request: Request,
+  response: Response
+): Promise<void> {
+  try {
+    const latitude: number = parseFloat(request.query.latitude as string);
+    const longitude: number = parseFloat(request.query.longitude as string);
+    const search_radius: number = parseInt(request.query.meters as string);
+    const budget: number = parseFloat(request.query.budget as string);
+    const foundCategories =
+      await RestaurantService.findNearbyCategoriesInBudget(
+        [longitude, latitude],
+        search_radius,
+        budget
+      );
+
+    response.status(200).json(foundCategories);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 async function findByYelpId(
   request: Request,
   response: Response
@@ -137,6 +159,7 @@ async function findFoodCategories(
 export default {
   findNearbyRestaurants,
   findNearWithinBudget,
+  findNearbyCategoriesInBudget,
   findByYelpId,
   findFoodCategories,
 };
