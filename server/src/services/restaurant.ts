@@ -240,7 +240,7 @@ function generateSortQuery(
     const sortByDistance = {
       $sort: { "restaurant.distance": sortDirectionValue },
     };
-    
+
     return [sortByDistance];
   }
   // Sort by average price
@@ -356,18 +356,40 @@ async function findByYelpId(yelpId: string): Promise<{
   };
 }
 
-async function findFoodCategories(): Promise<string[]> {
-  const allFoodCategories: string[][] = await RestaurantModel.find({})
+type FoodCategoryFrequency = {
+  category: string;
+  frequency: number;
+};
+
+async function findFoodCategories(): Promise<any> {
+  const allFoodCategories: string[] = await RestaurantModel.find({})
     .select({
       food_categories: 1,
       _id: 0,
     })
-    .then((result: any[]) => result.map((row: any) => row.food_categories));
+    .then((result: any[]) =>
+      result.map((row: any) => row.food_categories).flat()
+    );
 
-  // Construct set to remove duplicates
-  const foodCategories = [...new Set(allFoodCategories.flat())];
+  const foodCategoryFrequency: { [key: string]: number } = {};
+  // compute frequency for each food category
+  allFoodCategories.forEach((foodCategory) => {
+    foodCategoryFrequency[foodCategory] =
+      (foodCategoryFrequency[foodCategory] ?? 0) + 1;
+  });
 
-  return foodCategories.sort();
+  const uniqueFoodCategories = Object.keys(foodCategoryFrequency);
+
+  const frequencyPairs: FoodCategoryFrequency[] = uniqueFoodCategories.map(
+    (foodCategory) => ({
+      category: foodCategory,
+      frequency: foodCategoryFrequency[foodCategory],
+    })
+  );
+
+  return frequencyPairs.sort(
+    (categoryA, categoryB) => categoryB.frequency - categoryA.frequency
+  );
 }
 
 export default {

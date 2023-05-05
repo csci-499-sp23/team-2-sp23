@@ -1,7 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  foodCategories: [],
+  foodCategoryOptions: [], // array of categories with frequency pair
+  foodCategoryFrequency: {}, // object mapping category to frequency O(1) lookup
 };
 
 export const foodCategoriesSlice = createSlice({
@@ -9,10 +10,14 @@ export const foodCategoriesSlice = createSlice({
   initialState,
   reducers: {
     setFoodCategory: (state, action) => {
-      state.foodCategories = action.payload;
+      state.foodCategoryOptions = action.payload;
+    },
+    setFoodCategoryFrequency: (state, action) => {
+      state.foodCategoryFrequency = action.payload;
     },
   },
 });
 
-export const { setFoodCategory } = foodCategoriesSlice.actions;
+export const { setFoodCategory, setFoodCategoryFrequency } =
+  foodCategoriesSlice.actions;
 export default foodCategoriesSlice.reducer;

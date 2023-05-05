@@ -5,7 +5,10 @@ import Search from "./pages/Search";
 import Restaurant from "./pages/Restaurant";
 import RestaurantAPI from "./api/restaurant-api";
 import { useDispatch } from "react-redux";
-import { setFoodCategory } from "./store/reducers/foodCategories";
+import {
+  setFoodCategory,
+  setFoodCategoryFrequency,
+} from "./store/reducers/foodCategories";
 
 function App() {
   const dispatch = useDispatch();
@@ -17,7 +20,15 @@ function App() {
         return [];
       });
 
+    const foodCategoryFrequency = retrievedFoodCategories.reduce(
+      (total, option) => {
+        total[option.category] = option.frequency;
+        return total;
+      },
+      {}
+    );
     dispatch(setFoodCategory(retrievedFoodCategories));
+    dispatch(setFoodCategoryFrequency(foodCategoryFrequency));
   }
 
   useEffect(() => {
