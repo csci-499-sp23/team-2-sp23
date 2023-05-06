@@ -7,6 +7,7 @@ import App from "./App";
 import { BrowserRouter } from "react-router-dom";
 import reportWebVitals from "./reportWebVitals";
 import { Auth0Provider } from "@auth0/auth0-react";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 import history from "./utils/history";
 
 const onRedirectCallback = (appState) => {
@@ -24,15 +25,32 @@ const providerConfig = {
   },
 };
 
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: "hsl(25,80%,50%)",
+      chip: "hsl(25,85%, 57.5%)",
+      bland: "hsl(25,85%, 95%)",
+    },
+  },
+  typography: {
+    button: {
+      textTransform: "none",
+    },
+  },
+});
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <Auth0Provider {...providerConfig}>
-      <BrowserRouter>
-        <Provider store={store}>
-          <App />
-        </Provider>
-      </BrowserRouter>
+      <ThemeProvider theme={theme}>
+        <BrowserRouter>
+          <Provider store={store}>
+            <App />
+          </Provider>
+        </BrowserRouter>
+      </ThemeProvider>
     </Auth0Provider>
   </React.StrictMode>
 );
