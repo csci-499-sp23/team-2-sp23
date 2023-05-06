@@ -6,7 +6,7 @@ export default async function Api(
 ) {
   const api = axios.create({
     baseURL:
-      process.env.REACT_APP_SERVER_URL ?? "https://budget-eats.onrender.com",
+      process.env.REACT_APP_SERVER_URL ?? "https://budget-eats.herokuapp.com/",
   });
 
   const request = {
