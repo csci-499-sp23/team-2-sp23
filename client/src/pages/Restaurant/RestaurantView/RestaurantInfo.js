@@ -53,7 +53,7 @@ export default function RestaurantInfo({ restaurant }) {
             {address1} {city}, {state} {zip_code}
           </div>
           <div style={classes.phoneContainer}>
-            <PhoneIcon style={{ color: "#13a10b" }} />
+            {phoneNumber ? <PhoneIcon style={{ color: "#13a10b" }} /> : <></>}
             <a style={{ color: "#13a10b" }} href={`tel: ${phoneNumber}`}>
               {phoneNumber}
             </a>
