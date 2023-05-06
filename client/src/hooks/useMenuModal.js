@@ -13,12 +13,14 @@ const classes = {
     width: "calc(min(100%,var(--content-width)) - 2rem)",
     overflowY: "auto",
     boxSizing: "border-box",
-    paddingInline: "1rem",
+    padding: "0.75rem",
   },
   foodList: {
     display: "flex",
     flexDirection: "column",
     gap: "0.5rem",
+    height: "100%",
+    overflowY: "auto",
   },
 };
 
