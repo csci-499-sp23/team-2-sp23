@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useDispatch } from "react-redux";
 import { setFinished, setLoading } from "../../store/reducers/progress";
 import RestaurantAPI from "../../api/restaurant-api";
@@ -104,21 +103,6 @@ export default function Search() {
     }, 600);
   }
 
-  const theme = createTheme({
-    palette: {
-      primary: {
-        main: "hsl(25,80%,50%)",
-        chip: "hsl(25,85%, 57.5%)",
-        bland: "hsl(25,85%, 95%)",
-      },
-    },
-    typography: {
-      button: {
-        textTransform: "none",
-      },
-    },
-  });
-
   function saveStateToLocalStorage() {
     localStorage.setItem("query", JSON.stringify(query));
     localStorage.setItem("price_categories", JSON.stringify(priceFilter));
@@ -183,7 +167,7 @@ export default function Search() {
   }, [page]);
 
   return (
-    <ThemeProvider theme={theme}>
+    <>
       <MenuModal />
       {isLoaded && (
         <>
@@ -218,6 +202,6 @@ export default function Search() {
           )}
         </>
       )}
-    </ThemeProvider>
+    </>
   );
 }
