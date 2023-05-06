@@ -41,6 +41,7 @@ export interface RestaurantDocument extends RestaurantAttributes {
   _id: ObjectId;
   created_at: Date;
   updated_at?: Date;
+  saved_by: ObjectId[] | null;
 }
 
 export const RestaurantSchema: Schema<RestaurantDocument> =
@@ -118,6 +119,11 @@ export const RestaurantSchema: Schema<RestaurantDocument> =
     updated_at: {
       type: Date,
       required: false,
+    },
+    saved_by: {
+      type: [Schema.Types.ObjectId],
+      required: false,
+      ref: "User",
     },
   });
 
