@@ -36,6 +36,16 @@ const theme = createTheme({
   typography: {
     button: {
       textTransform: "none",
+      fontWeight: 400,
+    },
+  },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          textTransform: "none",
+        },
+      },
     },
   },
 });

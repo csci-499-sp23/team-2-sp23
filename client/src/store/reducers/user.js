@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
+  logged_in: false,
   _id: null,
   auth0_id: null,
   username: null,
@@ -14,6 +15,7 @@ export const userSlice = createSlice({
   reducers: {
     login: (state, action) => {
       const user = action.payload;
+      state.logged_in = true;
       state._id = user._id;
       state.auth0_id = user.auth0_id;
       state.username = user.username;
@@ -21,6 +23,7 @@ export const userSlice = createSlice({
       state.saved_restaurants = user.saved_restaurants;
     },
     logout: (state, action) => {
+      state.logged_in = false;
       state.auth0_id = null;
       state.username = null;
       state.profile_picture_url = null;

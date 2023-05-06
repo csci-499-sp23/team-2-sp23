@@ -1,10 +1,10 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import githubLogo from "../../assets/images/github-logo.png";
 import logo from "../../assets/images/logo-white.png";
 import "./navbar.css";
 import { LinearProgress } from "@mui/material";
+import NavbarProfile from "./NavbarProfile";
 
 const linkStyle = {
   color: "white",
@@ -26,22 +26,8 @@ export default function Navbar() {
           <Link style={linkStyle} to="/search">
             Search
           </Link>
-          <Link style={linkStyle} to="/restaurant">
-            Restaurant
-          </Link>
           <div className="right-logo">
-            <a
-              href="https://github.com/csci-499-sp23/team-2-sp23"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <img
-                src={githubLogo}
-                className="logo"
-                alt="github-logo"
-                style={{ paddingRight: "0.75rem" }}
-              />
-            </a>
+            <NavbarProfile />
           </div>
         </div>
       </div>
