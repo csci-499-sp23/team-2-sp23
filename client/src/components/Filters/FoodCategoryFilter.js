@@ -25,7 +25,6 @@ export default function FoodCategoryFilter({
       limitTags={4}
       filterOptions={filterOptions}
       options={options}
-      getOptionDisabled={(option) => option}
       getOptionLabel={(option) => option}
       renderOption={(props, option) => (
         <Box component="li" {...props}>
@@ -39,11 +38,7 @@ export default function FoodCategoryFilter({
         setFoodCategories(selectedCategories ?? []);
       }}
       renderInput={(params) => (
-        <TextField
-          {...params}
-          variant="standard"
-          label="Food Categories"
-        />
+        <TextField {...params} variant="standard" label="Food Categories" />
       )}
     />
   );
