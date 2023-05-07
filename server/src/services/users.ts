@@ -6,16 +6,22 @@ async function getUserByAuth0Id(
   return await UserModel.findOne({ auth0_id: auth0Id });
 }
 
-async function create(user: UserAttributes): Promise<UserAttributes> {
+async function create(auth0Id: string): Promise<UserAttributes> {
   return UserModel.create({
-    ...user,
+    auth0_id: auth0Id,
     created_at: new Date(),
   });
+}
+
+async function exists(auth0Id: string): Promise<boolean> {
+  const userExists = !!(await UserModel.count({ auth0_id: auth0Id }));
+  return userExists;
 }
 
 const UserService = {
   getUserByAuth0Id,
   create,
+  exists,
 };
 
 export default UserService;
