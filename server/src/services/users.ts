@@ -6,8 +6,16 @@ async function getUserByAuth0Id(
   return await UserModel.findOne({ auth0_id: auth0Id });
 }
 
+async function create(user: UserAttributes): Promise<UserAttributes> {
+  return UserModel.create({
+    ...user,
+    created_at: new Date(),
+  });
+}
+
 const UserService = {
   getUserByAuth0Id,
+  create,
 };
 
 export default UserService;
