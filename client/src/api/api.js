@@ -13,7 +13,7 @@ export default async function Api(
     method: method,
     url: endpoint,
     params: query,
-    body: body,
+    data: body,
   };
 
   return api({ ...request, signal: controller?.signal }).then((res) => res.data);
