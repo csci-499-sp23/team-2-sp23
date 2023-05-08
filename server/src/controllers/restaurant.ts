@@ -13,7 +13,7 @@ function presentFoods(foods: FoodDocument[]): FoodItem[] {
 }
 
 function presentRestaurant(result: RestaurantResult) {
-  const mongoFields = ["_id", "__v"];
+  const mongoFields = ["__v"];
   return {
     restaurant: omit(result.restaurant, mongoFields),
     foods: presentFoods(result.foods),
