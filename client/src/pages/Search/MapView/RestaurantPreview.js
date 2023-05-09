@@ -2,12 +2,10 @@ import React from "react";
 import ReviewStars from "../../../components/ReviewStars";
 import { IconButton, Button } from "@mui/material";
 import CancelIcon from "@mui/icons-material/Cancel";
-import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import FastfoodIcon from "@mui/icons-material/Fastfood";
-import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
-import BookmarkIcon from "@mui/icons-material/Bookmark";
 import defaultRestaurantImg from "../../../assets/images/default-restaurant-img.png";
+import Bookmark from "../../../components/Bookmark";
 
 const classes = {
   previewContainer: {
@@ -69,13 +67,6 @@ const classes = {
     top: 0,
     right: 0,
   },
-  bookmark: {
-    position: "absolute",
-    top: 0,
-    right: "-2px",
-    color: "#91D4FA",
-    padding: 0,
-  },
 };
 
 // Resource: https://stackoverflow.com/questions/8358084/regular-expression-to-reformat-a-us-phone-number-in-javascript
@@ -102,7 +93,6 @@ function RestaurantPreview({
   const phoneNumber = formatPhoneNumber(restaurant.phone);
   const { address1, state, zip_code } = restaurant.address;
   const restaurantAddress = `${address1 ?? ""} ${state}, ${zip_code}`;
-  const user = useSelector((state) => state.user);
 
   return (
     <div style={classes.previewContainer}>
@@ -116,16 +106,7 @@ function RestaurantPreview({
               e.currentTarget.src = defaultRestaurantImg;
             }}
           />
-
-          {user.saved_restaurants.includes(restaurantId) ? (
-            <IconButton style={classes.bookmark}>
-              <BookmarkIcon style={{ fontSize: "2rem" }} />
-            </IconButton>
-          ) : (
-            <IconButton style={{ ...classes.bookmark}}>
-              <BookmarkBorderIcon style={{ fontSize: "2rem" }} />
-            </IconButton>
-          )}
+          <Bookmark restaurantId={restaurantId} style={{ fontSize: "2rem" }} />
         </div>
         <div style={classes.detailsContainer}>
           <Link style={classes.nameContainer} to={restaurantPage}>
