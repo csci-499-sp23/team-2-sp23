@@ -41,10 +41,21 @@ async function unsaveRestaurant(userId, restaurantId, controller) {
   );
 }
 
+async function userProfile(userId, controller) {
+  return api(
+    {
+      method: "get",
+      endpoint: `/user/profile/${userId}`,
+    },
+    controller
+  );
+}
+
 const UserAPI = {
   createUser,
   saveRestaurant,
   unsaveRestaurant,
+  userProfile,
 };
 
 export default UserAPI;
