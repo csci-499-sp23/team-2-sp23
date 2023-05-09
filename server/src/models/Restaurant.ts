@@ -34,6 +34,7 @@ export interface RestaurantAttributes {
   address: RestaurantAddress;
   phone: string;
   display_phone: string;
+  saved_by?: ObjectId[];
   menu_id?: ObjectId;
 }
 
@@ -41,7 +42,6 @@ export interface RestaurantDocument extends RestaurantAttributes {
   _id: ObjectId;
   created_at: Date;
   updated_at?: Date;
-  saved_by: ObjectId[] | null;
 }
 
 export const RestaurantSchema: Schema<RestaurantDocument> =

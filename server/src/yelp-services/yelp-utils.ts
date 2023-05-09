@@ -58,6 +58,7 @@ export function yelpRestaurantParser(
     address: restaurant.location,
     phone: restaurant.phone ?? "",
     display_phone: restaurant.display_phone ?? "",
+    saved_by: [],
   };
 
   return result;

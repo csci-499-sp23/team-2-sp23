@@ -31,6 +31,12 @@ async function saveRestaurant(
     { new: true }
   );
 
+  await RestaurantModel.findOneAndUpdate(
+    { _id: restaurantId },
+    { $addToSet: { saved_by: userId } },
+    { new: true }
+  );
+
   return updatedUser;
 }
 
@@ -44,6 +50,12 @@ async function unsaveRestaurant(
   const updatedUser = await UserModel.findOneAndUpdate(
     { _id: userId },
     { $pull: { saved_restaurants: restaurantId } },
+    { new: true }
+  );
+
+  await RestaurantModel.findOneAndUpdate(
+    { _id: restaurantId },
+    { $pull: { saved_by: userId } },
     { new: true }
   );
 
