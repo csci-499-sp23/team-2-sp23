@@ -29,9 +29,26 @@ async function findUser(request: Request, response: Response): Promise<void> {
   }
 }
 
+async function saveRestaurant(
+  request: Request,
+  response: Response
+): Promise<void> {
+  try {
+    const userId = request.body.user_id;
+    const restaurantId = request.body.restaurant_id;
+
+    const updatedUser = await UserService.saveRestaurant(userId, restaurantId);
+
+    response.status(200).json(updatedUser);
+  } catch (error: any) {
+    response.status(404).json(error.toString());
+  }
+}
+
 const UserController = {
   findUser,
   createUser,
+  saveRestaurant,
 };
 
 export default UserController;
