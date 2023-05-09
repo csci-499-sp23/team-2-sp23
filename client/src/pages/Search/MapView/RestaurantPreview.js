@@ -5,6 +5,7 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import { Link } from "react-router-dom";
 import FastfoodIcon from "@mui/icons-material/Fastfood";
 import defaultRestaurantImg from "../../../assets/images/default-restaurant-img.png";
+import Bookmark from "../../../components/Bookmark";
 
 const classes = {
   previewContainer: {
@@ -86,6 +87,7 @@ function RestaurantPreview({
   setModalFoods,
   openModal,
   foods,
+  restaurantId,
 }) {
   const restaurantPage = "/restaurant?yelp_id=" + restaurant.yelp_id;
   const phoneNumber = formatPhoneNumber(restaurant.phone);
@@ -95,11 +97,17 @@ function RestaurantPreview({
   return (
     <div style={classes.previewContainer}>
       <div style={{ display: "flex" }}>
-        <img
-          style={classes.imageContainer}
-          src={restaurant.image_url || defaultRestaurantImg}
-          alt={"restaurant"}
-        />
+        <div style={{ position: "relative" }}>
+          <img
+            style={classes.imageContainer}
+            src={restaurant.image_url || defaultRestaurantImg}
+            alt={"restaurant"}
+            onError={(e) => {
+              e.currentTarget.src = defaultRestaurantImg;
+            }}
+          />
+          <Bookmark restaurantId={restaurantId} style={{ fontSize: "2rem" }} />
+        </div>
         <div style={classes.detailsContainer}>
           <Link style={classes.nameContainer} to={restaurantPage}>
             {restaurant.name}
@@ -134,11 +142,9 @@ function RestaurantPreview({
             openModal();
           }}
         >
-          <span style={{ fontWeight: 400 }}>
-            {foods.length}
-          </span>
+          <span style={{ fontWeight: 400 }}>{foods.length}</span>
           <FastfoodIcon
-            style={{ color: "hsl(30,90%,50%)", fontSize: "1rem"}}
+            style={{ color: "hsl(30,90%,50%)", fontSize: "1rem" }}
           />
         </Button>
       </div>
