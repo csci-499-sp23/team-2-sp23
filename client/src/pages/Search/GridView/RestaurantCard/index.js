@@ -46,7 +46,7 @@ function RestaurantCard({ restaurant, foods, setModalFoods, openModal }) {
   return (
     <div style={classes.cardContainer}>
       <div style={classes.retaurantInfo}>
-        <ImageCard src={restaurant.image_url} restaurantId = {restaurant._id} />
+        <ImageCard src={restaurant.image_url} restaurantId={restaurant._id} />
         <Details
           name={restaurant.name}
           rating={restaurant.rating}
@@ -58,23 +58,25 @@ function RestaurantCard({ restaurant, foods, setModalFoods, openModal }) {
           foodCategories={restaurant.food_categories}
         />
       </div>
-      <div style={classes.foodInfo}>
-        <Button
-          style={classes.foodCount}
-          variant="outlined"
-          onClick={() => {
-            setModalFoods(foods);
-            openModal();
-          }}
-        >
-          <span style={{ fontSize: "0.75rem", fontWeight: 400 }}>
-            {foods.length}
-          </span>
-          <FastfoodIcon
-            style={{ color: "hsl(30,90%,50%)", fontSize: "0.75rem" }}
-          />
-        </Button>
-      </div>
+      {!!foods && foods.length !== 0 && (
+        <div style={classes.foodInfo}>
+          <Button
+            style={classes.foodCount}
+            variant="outlined"
+            onClick={() => {
+              setModalFoods(foods);
+              openModal();
+            }}
+          >
+            <span style={{ fontSize: "0.75rem", fontWeight: 400 }}>
+              {foods.length}
+            </span>
+            <FastfoodIcon
+              style={{ color: "hsl(30,90%,50%)", fontSize: "0.75rem" }}
+            />
+          </Button>
+        </div>
+      )}
     </div>
   );
 }

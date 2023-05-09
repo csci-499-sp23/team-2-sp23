@@ -33,10 +33,9 @@ export default function Profile() {
       }, 400);
     });
   }, [search, dispatch]);
-  return progress.finishedLoading &&
-  (user ? (
-    <ProfilePage user = {user} />
-  ) : (
-    <FallbackView />
-  ));
+
+  return (
+    progress.finishedLoading &&
+    (user ? <ProfilePage user={user} /> : <FallbackView />)
+  );
 }
