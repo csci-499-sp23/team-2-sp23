@@ -46,7 +46,7 @@ function RestaurantCard({ restaurant, foods, setModalFoods, openModal }) {
   return (
     <div style={classes.cardContainer}>
       <div style={classes.retaurantInfo}>
-        <ImageCard src={restaurant.image_url} />
+        <ImageCard src={restaurant.image_url} restaurantId = {restaurant._id} />
         <Details
           name={restaurant.name}
           rating={restaurant.rating}

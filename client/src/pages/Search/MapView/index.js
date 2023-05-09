@@ -9,7 +9,7 @@ export default function MapView({
   updateFields,
   setModalFoods,
   openModal,
-  searchRadius
+  searchRadius,
 }) {
   const [selectedRestaurant, setSelectedRestaurant] = useState({});
   const [restaurantFoods, setRestaurantFoods] = useState([]);
@@ -43,6 +43,7 @@ export default function MapView({
             hideRestaurant={handleHideRestaurant}
             setModalFoods={setModalFoods}
             openModal={openModal}
+            restaurantId={selectedRestaurant._id}
           />
         </div>
       )}
