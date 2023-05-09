@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { getAverageColor } from "../../../utils/getAverageColor";
 import { formatDate } from "../../../utils/formatDate";
 import ReviewStars from "../../../components/ReviewStars";
+import Bookmark from "../../../components/Bookmark";
 
 const classes = {
   container: {
@@ -91,6 +92,11 @@ function Header({ restaurant }) {
 
   return (
     <div style={{ ...classes.container, backgroundColor: headerColor }}>
+      <Bookmark
+        restaurantId={restaurant._id}
+        style={{ fontSize: "2rem" }}
+        iconStyle={{ top: "0.5rem", right: "0.5rem" }}
+      />
       <div style={classes.bottomBlur} />
       <div style={classes.content}>
         <div style={classes.wrapper}>
