@@ -7,6 +7,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { useEffect } from "react";
 import { login, logout } from "../../store/reducers/user";
 import { useDispatch } from "react-redux";
+import UserAPI from "../../api/user-api";
 
 const classes = {
   profileContainer: {
@@ -16,6 +17,11 @@ const classes = {
     gap: "0.5rem",
     color: "white",
     fontSize: "1rem",
+  },
+  alignHorizontal: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
   },
 };
 
@@ -31,12 +37,14 @@ function LoggedOutProfile({ Auth0Login }) {
 function LoggedInProfile({ Auth0Logout }) {
   const user = useSelector((state) => state.user);
   return (
-    <div style={classes.profileContainer}>
-      <Avatar
-        src={user.profile_picture_url}
-        sx={{ height: "32px", width: "32px", border: "1px solid white" }}
-      />
-      {user.username}
+    <div style={classes.alignHorizontal}>
+      <Button style={classes.profileContainer}>
+        <Avatar
+          src={user.profile_picture_url}
+          sx={{ height: "32px", width: "32px", border: "1px solid white" }}
+        />
+        {user.username}
+      </Button>
       <IconButton
         sx={{ color: "white" }}
         onClick={() =>
@@ -59,19 +67,33 @@ export default function NavbarProfile() {
     isAuthenticated,
   } = useAuth0();
 
-  useEffect(() => {
+  // Run on auth0User change
+  // On login, upserts a document for the user and stores the user as global state
+  async function updateUserState() {
     if (!isAuthenticated) dispatch(logout());
     else {
+      const auth0Id = Auth0User.sub;
+      const loggedInUser = await UserAPI.createUser(auth0Id).catch(() => null);
+
+      if (loggedInUser === null) {
+        console.error("Could not log in");
+        return;
+      }
+
       const formattedUser = {
-        _id: null,
-        auth0_id: Auth0User.sub,
+        _id: loggedInUser._id,
+        auth0_id: loggedInUser.auth0_id,
         username: Auth0User.nickname,
         profile_picture_url: Auth0User.picture,
-        saved_restaurants: [],
+        saved_restaurants: loggedInUser.saved_restaurants,
       };
 
       dispatch(login(formattedUser));
     }
+  }
+
+  useEffect(() => {
+    updateUserState();
     // eslint-disable-next-line
   }, [Auth0User]);
 
