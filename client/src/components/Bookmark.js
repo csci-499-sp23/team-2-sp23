@@ -15,9 +15,9 @@ const classes = {
   },
 };
 
-function SavedBookmark({ style }) {
+function SavedBookmark({ style, unsaveRestaurant }) {
   return (
-    <IconButton style={classes.bookmark}>
+    <IconButton style={classes.bookmark} onClick={() => unsaveRestaurant()}>
       <BookmarkIcon style={style} />
     </IconButton>
   );
@@ -49,8 +49,22 @@ export default function Bookmark({ style, restaurantId }) {
     }
   }
 
+  async function unsaveRestaurant() {
+    const updatedUser = await UserAPI.unsaveRestaurant(
+      user._id,
+      restaurantId
+    ).catch(() => {
+      console.error("Could not unsave restaurant");
+      return null;
+    });
+
+    if (updatedUser !== null) {
+      dispatch(login(updatedUser));
+    }
+  }
+
   return user.saved_restaurants.includes(restaurantId) ? (
-    <SavedBookmark style={style} />
+    <SavedBookmark style={style} unsaveRestaurant={unsaveRestaurant} />
   ) : (
     <UnsavedBookmark style={style} saveRestaurant={saveRestaurant} />
   );
