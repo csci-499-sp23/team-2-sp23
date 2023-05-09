@@ -8,6 +8,7 @@ import { useEffect } from "react";
 import { login, logout } from "../../store/reducers/user";
 import { useDispatch } from "react-redux";
 import UserAPI from "../../api/user-api";
+import { useNavigate } from "react-router-dom";
 
 const classes = {
   profileContainer: {
@@ -35,10 +36,16 @@ function LoggedOutProfile({ Auth0Login }) {
 }
 
 function LoggedInProfile({ Auth0Logout }) {
+  const navigate = useNavigate();
   const user = useSelector((state) => state.user);
   return (
     <div style={classes.alignHorizontal}>
-      <Button style={classes.profileContainer}>
+      <Button
+        style={classes.profileContainer}
+        onClick={() => {
+          navigate(`/profile?user_id=${user._id}`);
+        }}
+      >
         <Avatar
           src={user.profile_picture_url}
           sx={{ height: "32px", width: "32px", border: "1px solid white" }}
