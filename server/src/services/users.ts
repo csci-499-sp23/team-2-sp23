@@ -50,12 +50,17 @@ async function unsaveRestaurant(
   return updatedUser;
 }
 
+async function userProfile(userId: ObjectId) {
+  return await UserModel.findById(userId).populate("saved_restaurants");
+}
+
 const UserService = {
   findOne,
   create,
   exists,
   saveRestaurant,
   unsaveRestaurant,
+  userProfile,
 };
 
 export default UserService;
