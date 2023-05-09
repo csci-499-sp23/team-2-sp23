@@ -1,4 +1,6 @@
+import { ObjectId } from "mongoose";
 import { UserAttributes, UserModel } from "../models/User";
+import { RestaurantModel } from "../models/Restaurant";
 
 async function findOne(query: any): Promise<UserAttributes | null> {
   return await UserModel.findOne(query);
@@ -16,10 +18,27 @@ async function exists(query: any): Promise<boolean> {
   return userExists;
 }
 
+async function saveRestaurant(
+  userId: ObjectId,
+  restaurantId: ObjectId
+): Promise<UserAttributes | null> {
+  const foundRestaurant = RestaurantModel.findById(restaurantId);
+  if (foundRestaurant === null) return null;
+
+  const updatedUser = await UserModel.findOneAndUpdate(
+    { _id: userId },
+    { $addToSet: { saved_restaurants: restaurantId } },
+    { new: true }
+  );
+
+  return updatedUser;
+}
+
 const UserService = {
   findOne,
   create,
   exists,
+  saveRestaurant,
 };
 
 export default UserService;
