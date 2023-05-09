@@ -2,7 +2,7 @@ import { IconButton } from "@mui/material";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import { useDispatch, useSelector } from "react-redux";
-import { login } from "../store/reducers/user";
+import { updateSaved } from "../store/reducers/user";
 import UserAPI from "../api/user-api";
 
 const classes = {
@@ -45,7 +45,7 @@ export default function Bookmark({ style, restaurantId }) {
     });
 
     if (updatedUser !== null) {
-      dispatch(login(updatedUser));
+      dispatch(updateSaved(updatedUser));
     }
   }
 
@@ -59,7 +59,7 @@ export default function Bookmark({ style, restaurantId }) {
     });
 
     if (updatedUser !== null) {
-      dispatch(login(updatedUser));
+      dispatch(updateSaved(updatedUser));
     }
   }
 

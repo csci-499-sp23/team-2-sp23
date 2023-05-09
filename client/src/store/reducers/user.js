@@ -22,6 +22,10 @@ export const userSlice = createSlice({
       state.profile_picture_url = user.profile_picture_url;
       state.saved_restaurants = user.saved_restaurants;
     },
+    updateSaved: (state, action) => {
+      const user = action.payload;
+      state.saved_restaurants = user.saved_restaurants;
+    },
     logout: (state, action) => {
       state.logged_in = false;
       state.auth0_id = null;
@@ -32,5 +36,5 @@ export const userSlice = createSlice({
   },
 });
 
-export const { login, logout } = userSlice.actions;
+export const { login, logout, updateSaved } = userSlice.actions;
 export default userSlice.reducer;
