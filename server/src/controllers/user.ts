@@ -45,10 +45,30 @@ async function saveRestaurant(
   }
 }
 
+async function unsaveRestaurant(
+  request: Request,
+  response: Response
+): Promise<void> {
+  try {
+    const userId = request.body.user_id;
+    const restaurantId = request.body.restaurant_id;
+
+    const updatedUser = await UserService.unsaveRestaurant(
+      userId,
+      restaurantId
+    );
+
+    response.status(200).json(updatedUser);
+  } catch (error: any) {
+    response.status(404).json(error.toString());
+  }
+}
+
 const UserController = {
   findUser,
   createUser,
   saveRestaurant,
+  unsaveRestaurant,
 };
 
 export default UserController;

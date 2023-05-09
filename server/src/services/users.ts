@@ -34,11 +34,28 @@ async function saveRestaurant(
   return updatedUser;
 }
 
+async function unsaveRestaurant(
+  userId: ObjectId,
+  restaurantId: ObjectId
+): Promise<UserAttributes | null> {
+  const foundRestaurant = RestaurantModel.findById(restaurantId);
+  if (foundRestaurant === null) return null;
+
+  const updatedUser = await UserModel.findOneAndUpdate(
+    { _id: userId },
+    { $pull: { saved_restaurants: restaurantId } },
+    { new: true }
+  );
+
+  return updatedUser;
+}
+
 const UserService = {
   findOne,
   create,
   exists,
   saveRestaurant,
+  unsaveRestaurant,
 };
 
 export default UserService;
