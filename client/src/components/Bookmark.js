@@ -15,23 +15,29 @@ const classes = {
   },
 };
 
-function SavedBookmark({ style, unsaveRestaurant }) {
+function SavedBookmark({ style, iconStyle, unsaveRestaurant }) {
   return (
-    <IconButton style={classes.bookmark} onClick={() => unsaveRestaurant()}>
+    <IconButton
+      style={{ ...classes.bookmark, ...iconStyle }}
+      onClick={() => unsaveRestaurant()}
+    >
       <BookmarkIcon style={style} />
     </IconButton>
   );
 }
 
-function UnsavedBookmark({ style, saveRestaurant }) {
+function UnsavedBookmark({ style, iconStyle, saveRestaurant }) {
   return (
-    <IconButton style={classes.bookmark} onClick={() => saveRestaurant()}>
+    <IconButton
+      style={{ ...classes.bookmark, ...iconStyle }}
+      onClick={() => saveRestaurant()}
+    >
       <BookmarkBorderIcon style={style} />
     </IconButton>
   );
 }
 
-export default function Bookmark({ style, restaurantId }) {
+export default function Bookmark({ style, iconStyle, restaurantId }) {
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
@@ -64,8 +70,16 @@ export default function Bookmark({ style, restaurantId }) {
   }
 
   return user.saved_restaurants.includes(restaurantId) ? (
-    <SavedBookmark style={style} unsaveRestaurant={unsaveRestaurant} />
+    <SavedBookmark
+      style={style}
+      iconStyle={iconStyle}
+      unsaveRestaurant={unsaveRestaurant}
+    />
   ) : (
-    <UnsavedBookmark style={style} saveRestaurant={saveRestaurant} />
+    <UnsavedBookmark
+      style={style}
+      iconStyle={iconStyle}
+      saveRestaurant={saveRestaurant}
+    />
   );
 }
