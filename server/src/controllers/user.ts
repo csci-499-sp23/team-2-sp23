@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import UserService from "../services/users";
+import { ObjectId } from "mongoose";
 
 async function createUser(request: Request, response: Response): Promise<void> {
   try {
@@ -64,11 +65,27 @@ async function unsaveRestaurant(
   }
 }
 
+async function userProfile(
+  request: Request,
+  response: Response
+): Promise<void> {
+  try {
+    const userId: unknown = request.params.id;
+    const foundUser = await UserService.userProfile(userId as ObjectId);
+
+    if (foundUser === null) response.status(404).json(null);
+    else response.status(200).json(foundUser);
+  } catch (error: any) {
+    response.status(404).json(error.toString());
+  }
+}
+
 const UserController = {
   findUser,
   createUser,
   saveRestaurant,
   unsaveRestaurant,
+  userProfile,
 };
 
 export default UserController;
