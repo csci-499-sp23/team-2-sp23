@@ -4,7 +4,7 @@ function FoodCard({ name, price, description, imageUrl }) {
       boxSizing: "border-box",
       width: "100%",
       border: "2px solid #5a5a5a",
-      padding: "0.125rem",
+      padding: "0.25rem",
       display: "flex",
       gap: "0.25rem",
       backgroundColor: "hsl(35,0%,97%)",
