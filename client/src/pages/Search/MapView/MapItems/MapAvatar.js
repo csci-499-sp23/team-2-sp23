@@ -17,6 +17,7 @@ export default function Avatar({
         scaledSize: new google.maps.Size(40, 48),
       }}
       draggable
+      zIndex={999}
       onDragEnd={(event) => {
         const updatedLatitude = event.latLng.lat();
         const updatedLongitude = event.latLng.lng();
