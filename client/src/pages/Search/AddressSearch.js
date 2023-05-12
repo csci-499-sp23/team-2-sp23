@@ -6,6 +6,7 @@ import getUserCoordinates from "../../utils/getUserCoordinates";
 import MyLocationIcon from "@mui/icons-material/MyLocation";
 import { alertSnackbar } from "../../store/reducers/snackbar";
 import { useDispatch } from "react-redux";
+import getAddress from "../../api/address-api";
 
 export default function AddressSearch({ updateFields }) {
   const dispatch = useDispatch();
@@ -42,6 +43,9 @@ export default function AddressSearch({ updateFields }) {
       const latitude = coordinates.coordinates.latitude;
       const longitude = coordinates.coordinates.longitude;
       updateFields({ longitude, latitude });
+      
+      const userAddress = await getAddress(latitude, longitude);
+      googlePlacesRef.current.value = userAddress;
     } catch {
       handleUserAddressError();
     }
