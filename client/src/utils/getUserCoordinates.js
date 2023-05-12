@@ -7,18 +7,12 @@ async function getUserCoordinates() {
       let latitude = position.coords.latitude;
       let longitude = position.coords.longitude;
 
-      resolve({
-        success: true,
-        coordinates: { latitude, longitude },
-      });
+      resolve({ latitude, longitude });
     }
 
     // Handle user denies location request
     function handleReject() {
-      reject({
-        success: false,
-        message: "Failed to retrieve coordinates...",
-      });
+      reject(null);
     }
 
     navigator.geolocation.getCurrentPosition(handleResolve, handleReject);

@@ -172,6 +172,7 @@ export default function Search() {
       {isLoaded && (
         <>
           <SearchHeader
+            coordinates={{ longitude, latitude }}
             updateFields={updateFields}
             searchFields={searchFields}
             priceFilter={priceFilter}
