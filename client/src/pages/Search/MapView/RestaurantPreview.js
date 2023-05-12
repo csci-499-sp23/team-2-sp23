@@ -106,7 +106,11 @@ function RestaurantPreview({
               e.currentTarget.src = defaultRestaurantImg;
             }}
           />
-          <Bookmark restaurantId={restaurantId} style={{ fontSize: "2rem" }} />
+          <Bookmark
+            restaurantId={restaurantId}
+            style={{ fontSize: "2rem" }}
+            restaurantName={restaurant.name}
+          />
         </div>
         <div style={classes.detailsContainer}>
           <Link style={classes.nameContainer} to={restaurantPage}>

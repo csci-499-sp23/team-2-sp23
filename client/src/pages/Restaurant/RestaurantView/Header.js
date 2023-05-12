@@ -93,6 +93,7 @@ function Header({ restaurant }) {
   return (
     <div style={{ ...classes.container, backgroundColor: headerColor }}>
       <Bookmark
+        restaurantName={name}
         restaurantId={restaurant._id}
         style={{ fontSize: "2rem" }}
         iconStyle={{ top: "0.5rem", right: "0.5rem" }}

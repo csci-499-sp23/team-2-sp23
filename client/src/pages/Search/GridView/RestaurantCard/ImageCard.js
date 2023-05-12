@@ -9,7 +9,7 @@ const classes = {
   },
 };
 
-function ImageCard({ src, restaurantId }) {
+function ImageCard({ src, restaurantId, restaurantName }) {
   return (
     <div style={{ position: "relative" }}>
       <img
@@ -20,7 +20,7 @@ function ImageCard({ src, restaurantId }) {
           e.currentTarget.src = defaultRestaurantImg;
         }}
       />
-      <Bookmark restaurantId={restaurantId} />
+      <Bookmark restaurantId={restaurantId} restaurantName={restaurantName} />
     </div>
   );
 }
