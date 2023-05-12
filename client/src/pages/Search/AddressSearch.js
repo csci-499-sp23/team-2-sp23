@@ -4,8 +4,12 @@ import { HUNTER_COLLEGE_ADDRESS } from "./constants";
 import ClearIcon from "@mui/icons-material/Clear";
 import getUserCoordinates from "../../utils/getUserCoordinates";
 import MyLocationIcon from "@mui/icons-material/MyLocation";
+import { alertSnackbar } from "../../store/reducers/snackbar";
+import { useDispatch } from "react-redux";
 
 export default function AddressSearch({ updateFields }) {
+  const dispatch = useDispatch();
+
   const { ref: googlePlacesRef } = usePlacesWidget({
     apiKey: process.env.REACT_APP_GOOGLE_API_KEY,
     onPlaceSelected: (place) => {
@@ -22,7 +26,16 @@ export default function AddressSearch({ updateFields }) {
       componentRestrictions: { country: "usa" },
     },
   });
-  
+
+  function handleUserAddressError() {
+    dispatch(
+      alertSnackbar({
+        message: "Please enable location services",
+        severity: "error",
+      })
+    );
+  }
+
   async function updateToUserAddress({ updateFields }) {
     try {
       const coordinates = await getUserCoordinates();
@@ -30,7 +43,7 @@ export default function AddressSearch({ updateFields }) {
       const longitude = coordinates.coordinates.longitude;
       updateFields({ longitude, latitude });
     } catch {
-      alert("Please Enable Location Services");
+      handleUserAddressError();
     }
   }
 
