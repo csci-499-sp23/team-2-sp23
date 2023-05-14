@@ -2,7 +2,7 @@ import React from "react";
 import DeliveryDiningIcon from "@mui/icons-material/DeliveryDining";
 import TakeoutDiningIcon from "@mui/icons-material/TakeoutDining";
 import EventNoteIcon from "@mui/icons-material/EventNote";
-import { snakeCaseToTitle } from "../utils/caseConverter";
+import { snakeCaseToTitle } from "../../utils/caseConverter";
 
 const classes = {
   transactionItem: {

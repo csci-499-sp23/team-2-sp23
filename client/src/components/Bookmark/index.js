@@ -2,9 +2,9 @@ import { IconButton } from "@mui/material";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import { useDispatch, useSelector } from "react-redux";
-import { updateSaved } from "../store/reducers/user";
-import UserAPI from "../api/user-api";
-import { alertSnackbar } from "../store/reducers/snackbar";
+import { updateSaved } from "../../store/reducers/user";
+import UserAPI from "../../api/user-api";
+import { alertSnackbar } from "../../store/reducers/snackbar";
 
 const classes = {
   bookmark: {
