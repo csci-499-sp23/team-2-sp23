@@ -1,6 +1,5 @@
 /*global google*/
 import { MarkerF } from "@react-google-maps/api";
-
 const AMONGUS = require("../../../assets/images/among-us.webp");
 
 export default function UserMarker({ latitude, longitude }) {

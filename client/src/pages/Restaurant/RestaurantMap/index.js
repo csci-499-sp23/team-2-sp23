@@ -1,17 +1,10 @@
 /*global google*/
-import React from "react";
+import React, { useState } from "react";
 import { GoogleMap } from "@react-google-maps/api";
 import RestaurantMarker from "./RestaurantMarker";
 import UserMarker from "./UserMarker";
-import { useState } from "react";
 import getUserCoordinates from "../../../utils/getUserCoordinates";
-
-async function getCoordinates() {
-  const coordinates = await getUserCoordinates();
-  const latitude = coordinates.coordinates.latitude;
-  const longitude = coordinates.coordinates.longitude;
-  return [latitude, longitude];
-}
+import computeMidpoint from "../../../utils/computeMidpoint";
 
 const containerStyle = {
   width: "100%",
@@ -20,6 +13,7 @@ const containerStyle = {
 
 function Map({ restaurantLatitude, restaurantLongitude }) {
   const [map, setMap] = React.useState(null);
+  const [userCoordinates, setUserCoordinates] = useState([]);
 
   const mapOptions = {
     zoomControlOptions: {
@@ -29,13 +23,32 @@ function Map({ restaurantLatitude, restaurantLongitude }) {
     streetViewControl: false,
   };
 
-  const [userCoordinates, setUserCoordinates] = useState([]);
-
   React.useEffect(() => {
     if (!map) return;
-    map.setCenter({ lat: restaurantLatitude, lng: restaurantLongitude });
-    getCoordinates().then((res) => setUserCoordinates(res));
-  }, [map, restaurantLatitude, restaurantLongitude]);
+    getUserCoordinates()
+      .then((result) => {
+        setUserCoordinates(result.coordinates);
+        const restaurantCoordinates = {
+          longitude: restaurantLongitude,
+          latitude: restaurantLatitude,
+        };
+        const midpoint = computeMidpoint(
+          restaurantCoordinates,
+          userCoordinates
+        );
+
+        map.setCenter({
+          lat: midpoint.latitude,
+          lng: midpoint.longitude,
+        });
+      })
+      .catch(() => {
+        map.setCenter({
+          lat: restaurantLatitude,
+          lng: restaurantLongitude,
+        });
+      });
+  }, [map, restaurantLatitude, restaurantLongitude, userCoordinates]);
 
   return (
     <GoogleMap
@@ -54,8 +67,8 @@ function Map({ restaurantLatitude, restaurantLongitude }) {
         longitude={restaurantLongitude}
       />
       <UserMarker
-        latitude={userCoordinates[0]}
-        longitude={userCoordinates[1]}
+        latitude={userCoordinates.latitude}
+        longitude={userCoordinates.longitude}
       />
     </GoogleMap>
   );
