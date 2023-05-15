@@ -22,6 +22,17 @@ async function getNearbyRestaurantsInBudget(query, controller) {
   );
 }
 
+async function getNearbyRecommendedRestaurantsInBudget(query, controller) {
+  return api(
+    {
+      method: "get",
+      endpoint: "/restaurant/nearby-in-budget-recommended",
+      query: query,
+    },
+    controller
+  );
+}
+
 async function getRestaurantByYelpId(yelpId, controller) {
   return api(
     {
@@ -48,6 +59,7 @@ async function getNearbyCategoriesInBudget(query, controller) {
 const RestaurantAPI = {
   getNearbyRestaurants,
   getNearbyRestaurantsInBudget,
+  getNearbyRecommendedRestaurantsInBudget,
   getRestaurantByYelpId,
   getNearbyCategoriesInBudget,
 };

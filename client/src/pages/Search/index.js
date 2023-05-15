@@ -11,10 +11,14 @@ import {
   setFoodCategory,
   setFoodCategoryFrequency,
 } from "../../store/reducers/foodCategories";
+import Recommendations from "./Recommendations";
+import PageNavigation from "./SearchHeader/PageNavigation";
+import ViewToggler from "./SearchHeader/ViewToggler";
 
 export default function Search() {
   const dispatch = useDispatch();
   const [restaurants, setRestaurants] = useState([]);
+  const [recommendedRestaurants, setRecommendedRestaurants] = useState([]);
   const [count, setCount] = useState(0);
   const [searchFields, setSearchFields] = useState({
     ...DEFAULT_SEARCH_QUERY,
@@ -54,9 +58,6 @@ export default function Search() {
   }
 
   async function retrieveFoodCategories(query, controller) {
-    dispatch(setLoading(true));
-    dispatch(setFinished(false));
-
     const retrievedFoodCategories =
       await RestaurantAPI.getNearbyCategoriesInBudget(query, controller).catch(
         () => []
@@ -74,6 +75,15 @@ export default function Search() {
     dispatch(setFoodCategoryFrequency(foodCategoryFrequency));
   }
 
+  async function retrieveRecommendations(query, controller) {
+    const retrievedRecommendedRestaurants =
+      await RestaurantAPI.getNearbyRecommendedRestaurantsInBudget(
+        query,
+        controller
+      ).catch(() => []);
+
+    setRecommendedRestaurants(retrievedRecommendedRestaurants.rows);
+  }
   async function retrieveRestaurants(query, controller) {
     dispatch(setLoading(true));
     dispatch(setFinished(false));
@@ -122,7 +132,9 @@ export default function Search() {
   useEffect(() => {
     const abortController = new AbortController();
     retrieveFoodCategories(query, abortController);
-    saveStateToLocalStorage();
+    retrieveRecommendations(query, abortController);
+
+    saveStateToLocalStorage(query, abortController);
 
     return () => {
       abortController.abort();
@@ -169,6 +181,13 @@ export default function Search() {
         setViewMode={setViewMode}
         pageNavigationProps={pageNavigationProps}
       />
+      <Recommendations
+        rows={recommendedRestaurants}
+        setModalFoods={setFoods}
+        openModal={openModal}
+      />
+      <ViewToggler viewMode={viewMode} setViewMode={setViewMode} />
+      <PageNavigation {...pageNavigationProps} />
       {viewMode === "grid" && (
         <GridView
           rows={restaurants}
