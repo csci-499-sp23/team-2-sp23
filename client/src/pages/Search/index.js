@@ -5,12 +5,7 @@ import RestaurantAPI from "../../api/restaurant-api";
 import GridView from "./GridView";
 import MapView from "./MapView";
 import SearchHeader from "./SearchHeader";
-import { useJsApiLoader } from "@react-google-maps/api";
-import {
-  DEFAULT_PRICE_FILTER,
-  DEFAULT_SEARCH_QUERY,
-  SEARCH_LOCATION_TYPES,
-} from "./constants";
+import { DEFAULT_PRICE_FILTER, DEFAULT_SEARCH_QUERY } from "./constants";
 import useMenuModal from "../../hooks/useMenuModal";
 import {
   setFoodCategory,
@@ -41,12 +36,6 @@ export default function Search() {
     localStorage.getItem("view-mode") ?? "map"
   );
   const { openModal, setFoods, MenuModal } = useMenuModal();
-
-  const { isLoaded } = useJsApiLoader({
-    id: "google-map-script",
-    googleMapsApiKey: process.env.REACT_APP_GOOGLE_API_KEY,
-    libraries: SEARCH_LOCATION_TYPES,
-  });
 
   function updateFields(updatedFields) {
     setSearchFields((previousFields) => ({
@@ -169,38 +158,34 @@ export default function Search() {
   return (
     <>
       <MenuModal />
-      {isLoaded && (
-        <>
-          <SearchHeader
-            updateFields={updateFields}
-            searchFields={searchFields}
-            priceFilter={priceFilter}
-            setPriceFilter={setPriceFilter}
-            foodCategories={foodCategories}
-            setFoodCategories={setFoodCategories}
-            viewMode={viewMode}
-            setViewMode={setViewMode}
-            pageNavigationProps={pageNavigationProps}
-          />
-          {viewMode === "grid" && (
-            <GridView
-              rows={restaurants}
-              setModalFoods={setFoods}
-              openModal={openModal}
-            />
-          )}
-          {viewMode === "map" && (
-            <MapView
-              latitude={searchFields.latitude}
-              longitude={searchFields.longitude}
-              searchRadius={searchFields.meters}
-              rows={restaurants}
-              updateFields={updateFields}
-              setModalFoods={setFoods}
-              openModal={openModal}
-            />
-          )}
-        </>
+      <SearchHeader
+        updateFields={updateFields}
+        searchFields={searchFields}
+        priceFilter={priceFilter}
+        setPriceFilter={setPriceFilter}
+        foodCategories={foodCategories}
+        setFoodCategories={setFoodCategories}
+        viewMode={viewMode}
+        setViewMode={setViewMode}
+        pageNavigationProps={pageNavigationProps}
+      />
+      {viewMode === "grid" && (
+        <GridView
+          rows={restaurants}
+          setModalFoods={setFoods}
+          openModal={openModal}
+        />
+      )}
+      {viewMode === "map" && (
+        <MapView
+          latitude={searchFields.latitude}
+          longitude={searchFields.longitude}
+          searchRadius={searchFields.meters}
+          rows={restaurants}
+          updateFields={updateFields}
+          setModalFoods={setFoods}
+          openModal={openModal}
+        />
       )}
     </>
   );
