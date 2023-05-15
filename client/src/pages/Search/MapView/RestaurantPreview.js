@@ -22,7 +22,7 @@ const classes = {
   },
   imageContainer: {
     height: "100%",
-    width: "100px",
+    width: "120px",
     borderRadius: "2px",
     objectFit: "cover",
     objectPosition: "center center",
@@ -34,7 +34,7 @@ const classes = {
     fontSize: "0.8rem",
   },
   nameContainer: {
-    fontSize: "1rem",
+    fontSize: "1.25rem",
     color: "black",
     width: "fit-content",
   },
@@ -116,11 +116,6 @@ function RestaurantPreview({
           <Link style={classes.nameContainer} to={restaurantPage}>
             {restaurant.name}
           </Link>
-
-          <a href={`http://maps.google.com/?q=${restaurantAddress}`}>
-            <div style={{ color: "hsl(30,80%,40%)" }}>{restaurantAddress}</div>
-          </a>
-
           <div style={classes.reviewContainer}>
             <ReviewStars
               rating={restaurant.rating}
