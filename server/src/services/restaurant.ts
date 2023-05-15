@@ -93,7 +93,7 @@ function generateNearbyQuery(
   return filterNearbyRestaurants;
 }
 
-function generatePopulateFoodsQuery() {
+function generatePopulateFoodsQuery(): any[] {
   const setRestaurantInObject = {
     $project: {
       _id: false,
@@ -259,6 +259,34 @@ function generateSortQuery(
   return NO_SORT;
 }
 
+// To be after a restaurant pipeline with populated foods
+// Filters for restaurants containing foods in budget
+function generateBudgetFoodsQuery(budget: number) {
+  const filterFoodsInBudget = {
+    $addFields: {
+      foods: {
+        $filter: {
+          input: "$foods",
+          cond: { $lte: ["$$food.price", budget] },
+          as: "food",
+        },
+      },
+    },
+  };
+  const addFoodCountField = {
+    $addFields: {
+      food_count: { $size: "$foods" },
+    },
+  };
+  const pickRestaurantsInBudget = {
+    $match: {
+      food_count: { $ne: 0 },
+    },
+  };
+
+  return [filterFoodsInBudget, addFoodCountField, pickRestaurantsInBudget];
+}
+
 async function findNear(
   coordinates: Coordinates,
   searchRadius: Meters,
@@ -299,38 +327,16 @@ async function findNearWithinBudget(
   const nearbyQuery = generateNearbyQuery(coordinates, searchRadius);
   const restaurantFilters = restaurantFilterQuery(filter);
   const populateFoodsQuery = generatePopulateFoodsQuery();
+  const budgetFilter = generateBudgetFoodsQuery(budget);
   const sortQuery = generateSortQuery(sortBy, sortDirection);
 
-  const filterFoodsInBudget = {
-    $addFields: {
-      foods: {
-        $filter: {
-          input: "$foods",
-          cond: { $lte: ["$$food.price", budget] },
-          as: "food",
-        },
-      },
-    },
-  };
-  const addFoodCountField = {
-    $addFields: {
-      food_count: { $size: "$foods" },
-    },
-  };
-  const pickRestaurantsInBudget = {
-    $match: {
-      food_count: { $ne: 0 },
-    },
-  };
   const limitRestaurants = generateRestaurantLimitQuery(skip, limit);
 
   const nearbyBudgetQuery: any[] = [
     nearbyQuery,
     ...restaurantFilters,
     ...populateFoodsQuery,
-    filterFoodsInBudget,
-    addFoodCountField,
-    pickRestaurantsInBudget,
+    ...budgetFilter,
     ...sortQuery,
     ...limitRestaurants,
   ];
@@ -349,29 +355,7 @@ async function findNearbyCategoriesInBudget(
 ): Promise<FoodCategoryFrequency> {
   const nearbyQuery = generateNearbyQuery(coordinates, searchRadius);
   const populateFoodsQuery = generatePopulateFoodsQuery();
-
-  const filterFoodsInBudget = {
-    $addFields: {
-      foods: {
-        $filter: {
-          input: "$foods",
-          cond: { $lte: ["$$food.price", budget] },
-          as: "food",
-        },
-      },
-    },
-  };
-  const addFoodCountField = {
-    $addFields: {
-      food_count: { $size: "$foods" },
-    },
-  };
-  const pickRestaurantsInBudget = {
-    $match: {
-      food_count: { $ne: 0 },
-    },
-  };
-
+  const budgetFilterQuery = generateBudgetFoodsQuery(budget);
   const groupCategoriesQuery = [
     {
       $facet: {
@@ -391,9 +375,7 @@ async function findNearbyCategoriesInBudget(
   const nearbyBudgetCategoriesQuery: any[] = [
     nearbyQuery,
     ...populateFoodsQuery,
-    filterFoodsInBudget,
-    addFoodCountField,
-    pickRestaurantsInBudget,
+    ...budgetFilterQuery,
     ...groupCategoriesQuery,
   ];
 
