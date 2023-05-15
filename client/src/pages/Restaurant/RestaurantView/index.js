@@ -3,8 +3,7 @@ import FoodList from "../FoodList";
 import Header from "./Header";
 import RestaurantInfo from "./RestaurantInfo";
 import { useState } from "react";
-import RestaurantMap from "../RestaurantMap/Map";
-import { HUNTER_COLLEGE_COORDINATES } from "../../Search/constants";
+import RestaurantMap from "../RestaurantMap";
 
 export default function RestaurantView({ restaurant, foods }) {
   const [budget, setBudget] = useState("");
@@ -19,8 +18,8 @@ export default function RestaurantView({ restaurant, foods }) {
     <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
       <Header restaurant={restaurant} />
       <RestaurantMap
-        latitude={HUNTER_COLLEGE_COORDINATES.latitude}
-        longitude={HUNTER_COLLEGE_COORDINATES.longitude}
+        restaurantLatitude={restaurant.location.coordinates[1]}
+        restaurantLongitude={restaurant.location.coordinates[0]}
       />
       <RestaurantInfo restaurant={restaurant} />
       <BudgetFilter
