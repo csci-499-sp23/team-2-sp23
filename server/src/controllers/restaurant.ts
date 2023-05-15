@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import RestaurantService, { RestaurantResult } from "../services/restaurant";
 import { FoodDocument, FoodItem } from "../models/Food";
 import { pick, omit } from "lodash";
-import { RESTAURANT_LIMIT } from "../constants/restaurants";
+import { RECOMMENDED_LIMIT, RESTAURANT_LIMIT } from "../constants/restaurants";
 import { SortKey, SortDirection } from "../constants/sortables";
 
 // Presenter functions to remove unused fields
@@ -108,6 +108,33 @@ async function findNearWithinBudget(
   }
 }
 
+async function findNearInBudgetRecommended(
+  request: Request,
+  response: Response
+): Promise<void> {
+  try {
+    const latitude: number = parseFloat(request.query.latitude as string);
+    const longitude: number = parseFloat(request.query.longitude as string);
+    const search_radius: number = parseInt(request.query.meters as string);
+    const budget: number = parseFloat(request.query.budget as string);
+    const recommendedRestaurants =
+      await RestaurantService.findNearInBudgetRecommended(
+        [longitude, latitude],
+        search_radius,
+        budget,
+        RECOMMENDED_LIMIT
+      );
+    response.status(200).json({
+      count: recommendedRestaurants.count,
+      rows: recommendedRestaurants.restaurants.map((restaurant) =>
+        presentRestaurant(restaurant)
+      ),
+    });
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 async function findNearbyCategoriesInBudget(
   request: Request,
   response: Response
@@ -162,4 +189,5 @@ export default {
   findNearbyCategoriesInBudget,
   findByYelpId,
   findFoodCategories,
+  findNearInBudgetRecommended,
 };

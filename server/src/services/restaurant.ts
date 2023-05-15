@@ -93,7 +93,7 @@ function generateNearbyQuery(
   return filterNearbyRestaurants;
 }
 
-function generatePopulateFoodsQuery() {
+function generatePopulateFoodsQuery(): any[] {
   const setRestaurantInObject = {
     $project: {
       _id: false,
@@ -138,7 +138,7 @@ function generatePopulateFoodsQuery() {
 function generateRestaurantLimitQuery(
   skippedDocuments: number,
   documentLimit: number
-) {
+): any[] {
   const limitQuery = [
     {
       $facet: {
@@ -259,6 +259,34 @@ function generateSortQuery(
   return NO_SORT;
 }
 
+// To be after a restaurant pipeline with populated foods
+// Filters for restaurants containing foods in budget
+function generateBudgetFoodsQuery(budget: number): any[] {
+  const filterFoodsInBudget = {
+    $addFields: {
+      foods: {
+        $filter: {
+          input: "$foods",
+          cond: { $lte: ["$$food.price", budget] },
+          as: "food",
+        },
+      },
+    },
+  };
+  const addFoodCountField = {
+    $addFields: {
+      food_count: { $size: "$foods" },
+    },
+  };
+  const pickRestaurantsInBudget = {
+    $match: {
+      food_count: { $ne: 0 },
+    },
+  };
+
+  return [filterFoodsInBudget, addFoodCountField, pickRestaurantsInBudget];
+}
+
 async function findNear(
   coordinates: Coordinates,
   searchRadius: Meters,
@@ -299,38 +327,16 @@ async function findNearWithinBudget(
   const nearbyQuery = generateNearbyQuery(coordinates, searchRadius);
   const restaurantFilters = restaurantFilterQuery(filter);
   const populateFoodsQuery = generatePopulateFoodsQuery();
+  const budgetFilter = generateBudgetFoodsQuery(budget);
   const sortQuery = generateSortQuery(sortBy, sortDirection);
 
-  const filterFoodsInBudget = {
-    $addFields: {
-      foods: {
-        $filter: {
-          input: "$foods",
-          cond: { $lte: ["$$food.price", budget] },
-          as: "food",
-        },
-      },
-    },
-  };
-  const addFoodCountField = {
-    $addFields: {
-      food_count: { $size: "$foods" },
-    },
-  };
-  const pickRestaurantsInBudget = {
-    $match: {
-      food_count: { $ne: 0 },
-    },
-  };
   const limitRestaurants = generateRestaurantLimitQuery(skip, limit);
 
   const nearbyBudgetQuery: any[] = [
     nearbyQuery,
     ...restaurantFilters,
     ...populateFoodsQuery,
-    filterFoodsInBudget,
-    addFoodCountField,
-    pickRestaurantsInBudget,
+    ...budgetFilter,
     ...sortQuery,
     ...limitRestaurants,
   ];
@@ -349,29 +355,7 @@ async function findNearbyCategoriesInBudget(
 ): Promise<FoodCategoryFrequency> {
   const nearbyQuery = generateNearbyQuery(coordinates, searchRadius);
   const populateFoodsQuery = generatePopulateFoodsQuery();
-
-  const filterFoodsInBudget = {
-    $addFields: {
-      foods: {
-        $filter: {
-          input: "$foods",
-          cond: { $lte: ["$$food.price", budget] },
-          as: "food",
-        },
-      },
-    },
-  };
-  const addFoodCountField = {
-    $addFields: {
-      food_count: { $size: "$foods" },
-    },
-  };
-  const pickRestaurantsInBudget = {
-    $match: {
-      food_count: { $ne: 0 },
-    },
-  };
-
+  const budgetFilterQuery = generateBudgetFoodsQuery(budget);
   const groupCategoriesQuery = [
     {
       $facet: {
@@ -391,9 +375,7 @@ async function findNearbyCategoriesInBudget(
   const nearbyBudgetCategoriesQuery: any[] = [
     nearbyQuery,
     ...populateFoodsQuery,
-    filterFoodsInBudget,
-    addFoodCountField,
-    pickRestaurantsInBudget,
+    ...budgetFilterQuery,
     ...groupCategoriesQuery,
   ];
 
@@ -410,6 +392,48 @@ async function findNearbyCategoriesInBudget(
     category: category._id,
     frequency: category.count,
   }));
+}
+
+// https://docs.google.com/spreadsheets/d/1PKuS3NW2jiiBOwFOndKke_yMO0mWMXbgmvuM4PIsW_k/edit#gid=1852208849
+// From tests, the scoring algorithm with the highest correlation coefficient was: rating + log_10(reviews)
+function sortByRestaurantRankQuery(): any[] {
+  const addRankScore = {
+    $addFields: {
+      rank_score: { $add: [{ $log10: "$review_count" }, "$rating"] },
+    },
+  };
+  const sortByHighestRankScore = {
+    $sort: { rank_score: -1 },
+  };
+
+  return [addRankScore, sortByHighestRankScore];
+}
+
+async function findNearInBudgetRecommended(
+  coordinates: Coordinates,
+  searchRadius: Meters,
+  budget: number,
+  limit: number
+): Promise<NearbyRestaurantsResult> {
+  const nearbyQuery = generateNearbyQuery(coordinates, searchRadius);
+  const rankRestaurantsQuery = sortByRestaurantRankQuery();
+  const populateFoodsQuery = generatePopulateFoodsQuery();
+  const budgetFilterQuery = generateBudgetFoodsQuery(budget);
+  const limitRestaurants = generateRestaurantLimitQuery(0, limit);
+
+  const nearbyBudgetRecommendedQuery: any[] = [
+    nearbyQuery,
+    ...rankRestaurantsQuery,
+    ...populateFoodsQuery,
+    ...budgetFilterQuery,
+    ...limitRestaurants,
+  ];
+
+  const [foundRestaurants] = await RestaurantModel.aggregate(
+    nearbyBudgetRecommendedQuery
+  );
+
+  return foundRestaurants;
 }
 
 async function findByYelpId(yelpId: string): Promise<{
@@ -473,4 +497,5 @@ export default {
   findNearbyCategoriesInBudget,
   findByYelpId,
   findFoodCategories,
+  findNearInBudgetRecommended,
 };
