@@ -1,4 +1,4 @@
-const HUNTER_COLLEGE_COORDINATES = {
+export const HUNTER_COLLEGE_COORDINATES = {
   longitude: -73.9645291,
   latitude: 40.7678398,
 };
