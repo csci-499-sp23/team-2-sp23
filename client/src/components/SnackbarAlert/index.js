@@ -1,7 +1,7 @@
 import { Alert, Snackbar } from "@mui/material";
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { hideSnackbar } from "../store/reducers/snackbar";
+import { hideSnackbar } from "../../store/reducers/snackbar";
 
 export default function SnackbarAlert() {
   const dispatch = useDispatch();
