@@ -17,11 +17,11 @@ export default function RestaurantView({ restaurant, foods }) {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
       <Header restaurant={restaurant} />
+      <RestaurantInfo restaurant={restaurant} />
       <RestaurantMap
         restaurantLatitude={restaurant.location.coordinates[1]}
         restaurantLongitude={restaurant.location.coordinates[0]}
       />
-      <RestaurantInfo restaurant={restaurant} />
       <BudgetFilter
         foodsInBudget={foodsInBudget}
         budget={budget}
