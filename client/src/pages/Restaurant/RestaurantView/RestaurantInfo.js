@@ -39,9 +39,8 @@ const classes = {
 };
 
 export default function RestaurantInfo({ restaurant }) {
-  const { address, location, phone, transactions } = restaurant;
+  const { address, phone, transactions } = restaurant;
   const { address1, city, state, zip_code } = address;
-  const [longitude, latitude] = location.coordinates;
 
   const phoneNumber = formatPhoneNumber(phone);
 
@@ -63,7 +62,7 @@ export default function RestaurantInfo({ restaurant }) {
           <RedirectButton image={YelpLogo} url={restaurant.yelp_url} />
           <RedirectButton
             image={GoogleMapsLogo}
-            url={`https://www.google.com/maps/search/${latitude},${longitude}`}
+            url={`http://maps.google.com/?q=${address1} ${city},${state} ${zip_code}`}
           />
         </div>
       </div>
