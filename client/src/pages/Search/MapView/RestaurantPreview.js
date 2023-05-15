@@ -116,6 +116,9 @@ function RestaurantPreview({
           <Link style={classes.nameContainer} to={restaurantPage}>
             {restaurant.name}
           </Link>
+          <a href={`http://maps.google.com/?q=${restaurantAddress}`}>
+            <div style={{ color: "hsl(30,80%,40%)" }}>{restaurantAddress}</div>
+          </a>
           <div style={classes.reviewContainer}>
             <ReviewStars
               rating={restaurant.rating}
