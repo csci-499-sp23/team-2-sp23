@@ -138,7 +138,7 @@ function generatePopulateFoodsQuery(): any[] {
 function generateRestaurantLimitQuery(
   skippedDocuments: number,
   documentLimit: number
-) {
+): any[] {
   const limitQuery = [
     {
       $facet: {
@@ -261,7 +261,7 @@ function generateSortQuery(
 
 // To be after a restaurant pipeline with populated foods
 // Filters for restaurants containing foods in budget
-function generateBudgetFoodsQuery(budget: number) {
+function generateBudgetFoodsQuery(budget: number): any[] {
   const filterFoodsInBudget = {
     $addFields: {
       foods: {
@@ -394,6 +394,48 @@ async function findNearbyCategoriesInBudget(
   }));
 }
 
+// https://docs.google.com/spreadsheets/d/1PKuS3NW2jiiBOwFOndKke_yMO0mWMXbgmvuM4PIsW_k/edit#gid=1852208849
+// From tests, the scoring algorithm with the highest correlation coefficient was: rating + log_10(reviews)
+function sortByRestaurantRankQuery(): any[] {
+  const addRankScore = {
+    $addFields: {
+      rank_score: { $add: [{ $log10: "$review_count" }, "$rating"] },
+    },
+  };
+  const sortByHighestRankScore = {
+    $sort: { rank_score: -1 },
+  };
+
+  return [addRankScore, sortByHighestRankScore];
+}
+
+async function findNearInBudgetRecommended(
+  coordinates: Coordinates,
+  searchRadius: Meters,
+  budget: number,
+  limit: number
+): Promise<NearbyRestaurantsResult> {
+  const nearbyQuery = generateNearbyQuery(coordinates, searchRadius);
+  const rankRestaurantsQuery = sortByRestaurantRankQuery();
+  const populateFoodsQuery = generatePopulateFoodsQuery();
+  const budgetFilterQuery = generateBudgetFoodsQuery(budget);
+  const limitRestaurants = generateRestaurantLimitQuery(0, limit);
+
+  const nearbyBudgetRecommendedQuery: any[] = [
+    nearbyQuery,
+    ...rankRestaurantsQuery,
+    ...populateFoodsQuery,
+    ...budgetFilterQuery,
+    ...limitRestaurants,
+  ];
+
+  const [foundRestaurants] = await RestaurantModel.aggregate(
+    nearbyBudgetRecommendedQuery
+  );
+
+  return foundRestaurants;
+}
+
 async function findByYelpId(yelpId: string): Promise<{
   restaurant: RestaurantDocument;
   foods: FoodDocument[];
@@ -455,4 +497,5 @@ export default {
   findNearbyCategoriesInBudget,
   findByYelpId,
   findFoodCategories,
+  findNearInBudgetRecommended,
 };

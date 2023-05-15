@@ -11,5 +11,9 @@ router.get(
   "/find-nearby-food-categories",
   RestaurantController.findNearbyCategoriesInBudget
 );
+router.get(
+  "/nearby-in-budget-recommended",
+  RestaurantController.findNearInBudgetRecommended
+);
 
 export default router;
