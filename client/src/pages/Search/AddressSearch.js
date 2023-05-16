@@ -20,6 +20,7 @@ export default function AddressSearch({ updateFields }) {
       const longitude = location.lng();
       const latitude = location.lat();
 
+      localStorage.setItem("address-search", googlePlacesRef.current.value);
       updateFields({ longitude, latitude });
     },
     options: {
@@ -56,7 +57,9 @@ export default function AddressSearch({ updateFields }) {
       variant="standard"
       sx={{ width: "60%", minWidth: "300px" }}
       label="Address"
-      defaultValue={HUNTER_COLLEGE_ADDRESS}
+      defaultValue={
+        localStorage.getItem("address-search") ?? HUNTER_COLLEGE_ADDRESS
+      }
       InputProps={{
         endAdornment: (
           <InputAdornment position="end" padding={0}>
