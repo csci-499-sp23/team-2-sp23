@@ -13,7 +13,11 @@ const containerStyle = {
 
 function Map({ restaurantLatitude, restaurantLongitude }) {
   const [map, setMap] = React.useState(null);
-  const [userCoordinates, setUserCoordinates] = useState([]);
+  const [userCoordinates, setUserCoordinates] = useState(null);
+  const restaurantCoordinates = {
+    latitude: restaurantLatitude,
+    longitude: restaurantLongitude,
+  };
 
   const mapOptions = {
     zoomControlOptions: {
@@ -23,32 +27,38 @@ function Map({ restaurantLatitude, restaurantLongitude }) {
     streetViewControl: false,
   };
 
+  async function updateUserCoordinates() {
+    const retrievedCoordinates = await getUserCoordinates().catch(() => null);
+    if (!retrievedCoordinates) return;
+
+    setUserCoordinates({
+      longitude: retrievedCoordinates.longitude,
+      latitude: retrievedCoordinates.latitude,
+    });
+  }
+
+  // Update user coordinates on map and component load
+  React.useEffect(() => {
+    updateUserCoordinates();
+  }, [map]);
+
+  // Update map center on user coordinates change
   React.useEffect(() => {
     if (!map) return;
-    getUserCoordinates()
-      .then((result) => {
-        setUserCoordinates(result);
-        const restaurantCoordinates = {
-          longitude: restaurantLongitude,
-          latitude: restaurantLatitude,
-        };
-        const midpoint = computeMidpoint(
-          restaurantCoordinates,
-          userCoordinates
-        );
-
-        map.setCenter({
-          lat: midpoint.latitude,
-          lng: midpoint.longitude,
-        });
-      })
-      .catch(() => {
-        map.setCenter({
-          lat: restaurantLatitude,
-          lng: restaurantLongitude,
-        });
+    if (!userCoordinates) {
+      map.setCenter({
+        lat: restaurantCoordinates.latitude,
+        lng: restaurantCoordinates.longitude,
       });
-  }, [map, restaurantLatitude, restaurantLongitude, userCoordinates]);
+    } else {
+      const midpoint = computeMidpoint(restaurantCoordinates, userCoordinates);
+      map.setCenter({
+        lat: midpoint.latitude,
+        lng: midpoint.longitude,
+      });
+    }
+    // eslint-disable-next-line
+  }, [userCoordinates]);
 
   return (
     <GoogleMap
@@ -66,10 +76,12 @@ function Map({ restaurantLatitude, restaurantLongitude }) {
         latitude={restaurantLatitude}
         longitude={restaurantLongitude}
       />
-      <UserMarker
-        latitude={userCoordinates.latitude}
-        longitude={userCoordinates.longitude}
-      />
+      {!!userCoordinates && (
+        <UserMarker
+          latitude={userCoordinates.latitude}
+          longitude={userCoordinates.longitude}
+        />
+      )}
     </GoogleMap>
   );
 }
