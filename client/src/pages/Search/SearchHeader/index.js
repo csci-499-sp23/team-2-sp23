@@ -10,9 +10,10 @@ const classes = {
     flexDirection: "column",
     alignItems: "center",
     gap: "0.5rem",
-    marginBottom: "0.25rem",
+    marginBottom: "0.75rem",
   },
   separator: {
+    marginTop: "0.5rem",
     backgroundColor: "primary.main",
     width: "95%",
     height: "2px",

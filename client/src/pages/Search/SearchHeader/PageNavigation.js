@@ -8,7 +8,6 @@ const classes = {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    margin: "0.25rem",
   },
   pageArrow: { color: "primary.main", padding: "0.25rem" },
 };
@@ -19,7 +18,8 @@ export default function PageNavigation({
   page_number,
   updatePage,
 }) {
-  if (!total_count) return <div>No restaurants found...</div>;
+  if (!total_count)
+    return <div style={classes.container}>No restaurants found...</div>;
 
   const lowerBound = 1 + page_number * count_limit;
   const upperBound = Math.min((page_number + 1) * count_limit, total_count);

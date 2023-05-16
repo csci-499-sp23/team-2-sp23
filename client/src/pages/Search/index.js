@@ -15,6 +15,16 @@ import Recommendations from "./Recommendations";
 import PageNavigation from "./SearchHeader/PageNavigation";
 import ViewToggler from "./SearchHeader/ViewToggler";
 
+const classes = {
+  resultHeader: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    gap: "0.5rem",
+    margin: "0.5rem",
+  },
+};
+
 export default function Search() {
   const dispatch = useDispatch();
   const [restaurants, setRestaurants] = useState([]);
@@ -181,13 +191,15 @@ export default function Search() {
         setViewMode={setViewMode}
         pageNavigationProps={pageNavigationProps}
       />
-      <Recommendations
-        rows={recommendedRestaurants}
-        setModalFoods={setFoods}
-        openModal={openModal}
-      />
-      <ViewToggler viewMode={viewMode} setViewMode={setViewMode} />
-      <PageNavigation {...pageNavigationProps} />
+      <div style={classes.resultHeader}>
+        <Recommendations
+          rows={recommendedRestaurants}
+          setModalFoods={setFoods}
+          openModal={openModal}
+        />
+        <ViewToggler viewMode={viewMode} setViewMode={setViewMode} />
+        <PageNavigation {...pageNavigationProps} />
+      </div>
       {viewMode === "grid" && (
         <GridView
           rows={restaurants}

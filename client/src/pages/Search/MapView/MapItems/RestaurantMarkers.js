@@ -33,7 +33,6 @@ export default function RestaurantMarkers({
             onClick={() => {
               showRestaurant(row);
               setSelectedRestaurantId(restaurant.yelp_id);
-              setMapCenter(restaurantPosition);
             }}
           />
         );
