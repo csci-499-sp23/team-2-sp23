@@ -3,15 +3,13 @@ import SearchField from "./SearchField";
 import SortQuery from "./SortQuery";
 import { Box } from "@mui/material";
 import RestaurantFilters from "./RestaurantFilter";
-import PageNavigation from "./PageNavigation";
-import ViewToggler from "./ViewToggler";
 
 const classes = {
   headerContainer: {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    gap: "1rem",
+    gap: "0.5rem",
     marginBottom: "0.25rem",
   },
   separator: {
@@ -29,9 +27,6 @@ export default function SearchHeader({
   setPriceFilter,
   foodCategories,
   setFoodCategories,
-  viewMode,
-  setViewMode,
-  pageNavigationProps,
 }) {
   return (
     <div style={classes.headerContainer}>
@@ -44,8 +39,6 @@ export default function SearchHeader({
         setFoodCategories={setFoodCategories}
       />
       <Box sx={classes.separator} />
-      <ViewToggler viewMode={viewMode} setViewMode={setViewMode} />
-      <PageNavigation {...pageNavigationProps} />
     </div>
   );
 }

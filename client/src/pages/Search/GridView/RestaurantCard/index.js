@@ -42,9 +42,15 @@ const classes = {
   },
 };
 
-function RestaurantCard({ restaurant, foods, setModalFoods, openModal }) {
+function RestaurantCard({
+  restaurant,
+  foods,
+  setModalFoods,
+  openModal,
+  style,
+}) {
   return (
-    <div style={classes.cardContainer}>
+    <div style={{ ...classes.cardContainer, ...style }}>
       <div style={classes.retaurantInfo}>
         <ImageCard
           src={restaurant.image_url}

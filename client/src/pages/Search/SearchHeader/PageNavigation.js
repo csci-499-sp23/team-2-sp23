@@ -8,6 +8,7 @@ const classes = {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
+    margin: "0.25rem",
   },
   pageArrow: { color: "primary.main", padding: "0.25rem" },
 };
