@@ -4,7 +4,6 @@ import { GoogleMap } from "@react-google-maps/api";
 import RestaurantMarker from "./RestaurantMarker";
 import UserMarker from "./UserMarker";
 import getUserCoordinates from "../../../utils/getUserCoordinates";
-import computeMidpoint from "../../../utils/computeMidpoint";
 
 const containerStyle = {
   width: "100%",
@@ -18,7 +17,6 @@ function Map({ restaurantLatitude, restaurantLongitude }) {
     latitude: restaurantLatitude,
     longitude: restaurantLongitude,
   };
-
   const mapOptions = {
     zoomControlOptions: {
       position: google.maps.ControlPosition.RIGHT_TOP,
@@ -39,34 +37,45 @@ function Map({ restaurantLatitude, restaurantLongitude }) {
 
   // Update user coordinates on map and component load
   React.useEffect(() => {
+    if (!map) return;
     updateUserCoordinates();
   }, [map]);
 
-  // Update map center on user coordinates change
   React.useEffect(() => {
     if (!map) return;
-    if (!userCoordinates) {
-      map.setCenter({
-        lat: restaurantCoordinates.latitude,
-        lng: restaurantCoordinates.longitude,
-      });
-    } else {
-      const midpoint = computeMidpoint(restaurantCoordinates, userCoordinates);
-      map.setCenter({
-        lat: midpoint.latitude,
-        lng: midpoint.longitude,
-      });
-    }
+    if (renderedMarkerCount > 1) setMapCenterToMarkers(map);
+    else setMapCenterToRestaurant(map);
     // eslint-disable-next-line
-  }, [userCoordinates]);
+  }, [map, userCoordinates]);
+
+  const markers = [restaurantCoordinates, userCoordinates];
+  const renderedMarkerCount = markers.filter((marker) => !!marker).length;
+
+  function setMapCenterToMarkers(map) {
+    const mapBounds = new window.google.maps.LatLngBounds();
+    markers.forEach((marker) => {
+      if (!marker) return;
+      mapBounds.extend({
+        lat: marker.latitude,
+        lng: marker.longitude,
+      });
+    });
+    map.fitBounds(mapBounds);
+  }
+
+  function setMapCenterToRestaurant(map) {
+    map.setZoom(16);
+    map.setCenter({
+      lat: restaurantLatitude,
+      lng: restaurantLongitude,
+    });
+  }
 
   return (
     <GoogleMap
       state={map}
       mapContainerStyle={containerStyle}
       onLoad={(map) => {
-        map.setZoom(12);
-        map.setCenter({ lat: restaurantLatitude, lng: restaurantLongitude });
         setMap(map);
       }}
       onUnmount={() => setMap(null)}
