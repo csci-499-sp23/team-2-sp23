@@ -27,7 +27,7 @@ function Map({ restaurantLatitude, restaurantLongitude }) {
     if (!map) return;
     getUserCoordinates()
       .then((result) => {
-        setUserCoordinates(result.coordinates);
+        setUserCoordinates(result);
         const restaurantCoordinates = {
           longitude: restaurantLongitude,
           latitude: restaurantLatitude,

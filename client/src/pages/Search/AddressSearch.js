@@ -40,10 +40,9 @@ export default function AddressSearch({ updateFields }) {
   async function updateToUserAddress({ updateFields }) {
     try {
       const coordinates = await getUserCoordinates();
-      const latitude = coordinates.coordinates.latitude;
-      const longitude = coordinates.coordinates.longitude;
+      const { longitude, latitude } = coordinates;
       updateFields({ longitude, latitude });
-      
+
       const userAddress = await getAddress(latitude, longitude);
       googlePlacesRef.current.value = userAddress;
     } catch {
