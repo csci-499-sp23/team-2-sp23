@@ -4,8 +4,8 @@ import StarIcon from "@mui/icons-material/Star";
 
 const classes = {
   container: {
-    margin: "0.75rem",
     marginInline: "0.5rem",
+    width: "100%",
   },
   foodContainer: {
     width: "100%",
